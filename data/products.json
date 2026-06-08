@@ -1,112 +1,200 @@
 [
   {
-    "id": "dragon-keychain",
-    "categoryKey": "keychains",
-    "name": {
-      "he": "מחזיק מפתחות דרקון",
-      "en": "Dragon Keychain",
-      "ar": "ميدالية تنين"
-    },
-    "description": {
-      "he": "מחזיק מפתחות קטן ומודפס בתלת־ממד. קליל, צבעוני וכיפי.",
-      "en": "Small 3D printed keychain. Lightweight, colorful, and fun.",
-      "ar": "ميدالية صغيرة مطبوعة ثلاثية الأبعاد. خفيفة وملونة وممتعة."
-    },
-    "price": 25,
-    "image": "assets/product-placeholder-1.jpg",
-    "available": true,
-    "tags": {
-      "he": ["מתנה", "קטן", "פופולרי"],
-      "en": ["Gift", "Small", "Popular"],
-      "ar": ["هدية", "صغير", "شائع"]
-    }
-  },
-  {
-    "id": "coffee-truck-magnet",
-    "categoryKey": "magnets",
-    "name": {
-      "he": "מגנט משאית הקפה",
-      "en": "Coffee Truck Magnet",
-      "ar": "مغناطيس عربة القهوة"
-    },
-    "description": {
-      "he": "מגנט חמוד בהשראת האווירה של משאית הקפה.",
-      "en": "A cute printed magnet inspired by the coffee truck vibe.",
-      "ar": "مغناطيس لطيف مستوحى من أجواء عربة القهوة."
-    },
-    "price": 18,
-    "image": "assets/product-placeholder-2.jpg",
-    "available": true,
-    "tags": {
-      "he": ["מגנט", "מזכרת"],
-      "en": ["Magnet", "Souvenir"],
-      "ar": ["مغناطيس", "تذكار"]
-    }
-  },
-  {
-    "id": "mini-plant-pot",
-    "categoryKey": "homeDecor",
-    "name": {
-      "he": "עציץ קטן",
-      "en": "Mini Plant Pot",
-      "ar": "أصيص صغير"
-    },
-    "description": {
-      "he": "עציץ דקורטיבי קטן לשולחן, מדף או פינת קפה.",
-      "en": "Tiny decorative planter for a desk, shelf, or coffee corner.",
-      "ar": "أصيص ديكوري صغير للمكتب أو الرف أو زاوية القهوة."
-    },
-    "price": 35,
-    "image": "assets/product-placeholder-3.jpg",
-    "available": true,
-    "tags": {
-      "he": ["דקורציה", "שולחן"],
-      "en": ["Decor", "Desk"],
-      "ar": ["ديكور", "مكتب"]
-    }
-  },
-  {
-    "id": "cute-creature-figure",
+    "id": "articulated-dragon",
     "categoryKey": "figures",
     "name": {
-      "he": "דמות חמודה",
-      "en": "Cute Creature Figure",
-      "ar": "مجسم مخلوق لطيف"
+      "he": "דרקון מפרקי גמיש",
+      "en": "Articulated Dragon",
+      "ar": "تنين مفصلي مرن"
     },
     "description": {
-      "he": "דמות קטנה בסגנון אספנות, מודפסת בתלת־ממד.",
-      "en": "Small collectible-style 3D printed character figure.",
-      "ar": "مجسم صغير مطبوع ثلاثي الأبعاد بأسلوب قابل للاقتناء."
+      "he": "דרקון קריסטל מפרקי מרשים וגמיש בתנועה מלאה, מודפס בצבעים מרהיבים.",
+      "en": "Stunning and fully flexible crystal dragon with fluid movement.",
+      "ar": "تنين كريستالي مفصلي رائع וمرن بحركة كاملة."
     },
-    "price": 45,
-    "image": "assets/product-placeholder-4.jpg",
+    "price": 60,
+    "image": "assets/articulated-dragon.png",
     "available": true,
     "tags": {
-      "he": ["דמות", "אספנות"],
-      "en": ["Figure", "Collectible"],
-      "ar": ["مجسم", "قابل للاقتناء"]
+      "he": ["דרקון", "מפרקי", "פופולרי"],
+      "en": ["Dragon", "Articulated", "Best Seller"],
+      "ar": ["تنين", "مفصلي", "شائع"]
     }
   },
   {
-    "id": "custom-name-sign",
+    "id": "dancing-ballerina",
     "categoryKey": "customPrints",
     "name": {
-      "he": "שלט שם מותאם אישית",
-      "en": "Custom Name Sign",
-      "ar": "لافتة اسم مخصصة"
+      "he": "בלרינה רוקדת (מדף + מעמד מסתובב)",
+      "en": "Dancing Ballerina (Spinable + Stand)",
+      "ar": "باليرينا راقصة (مع قاعدة متحركة)"
     },
     "description": {
-      "he": "שלט שם מודפס בהתאמה אישית. יש לשאול בדוכן לפני ההזמנה.",
-      "en": "Personalized 3D printed name sign. Ask at the truck before ordering.",
-      "ar": "لافتة اسم مطبوعة حسب الطلب. اسأل عند العربة قبل الطلب."
+      "he": "פסלון בלרינה אלגנטי הכולל מעמד תצוגה ייחודי ומנגנון סיבוב מכני.",
+      "en": "Elegant ballerina figure featuring a custom display stand and mechanical spinning mechanism.",
+      "ar": "مجسم باليرينا أنيق يتضمن قاعدة عرض مخصصة وآلية دوران ميكانيكية."
     },
-    "price": 60,
-    "image": "assets/product-placeholder-5.jpg",
+    "price": 50,
+    "image": "assets/custom-sign.png",
     "available": true,
     "tags": {
-      "he": ["מותאם אישית", "הזמנה"],
-      "en": ["Custom", "Personalized"],
-      "ar": ["مخصص", "شخصي"]
+      "he": ["בלרינה", "מסתובב", "דקורציה"],
+      "en": ["Ballerina", "Spinning", "Decor"],
+      "ar": ["باليرينا", "دوران", "ديكور"]
+    }
+  },
+  {
+    "id": "articulated-prank-coffee-mug",
+    "categoryKey": "customPrints",
+    "name": {
+      "he": "ספל קפה נשפך (אשליית תלת־ממד)",
+      "en": "Articulated Prank Coffee Mug",
+      "ar": "كوب القهوة المنسكب الخادع"
+    },
+    "description": {
+      "he": "אשליה אופטית משעשעת של ספל קפה נשפך באוויר. מעמד עיצובי מושלם לשולחן העבודה.",
+      "en": "A hilarious optical illusion spilling coffee cup stand, perfect for desk and coffee corners.",
+      "ar": "خداع بصري ممتع لكوب قهوة منسكب، مجسم مثالي للمكتب وركن القهوة."
+    },
+    "price": 45,
+    "image": "assets/prank-coffee-mug.jpg",
+    "available": true,
+    "tags": {
+      "he": ["קפה", "גימיק", "למשרד"],
+      "en": ["Coffee", "Prank", "Office"],
+      "ar": ["قهوة", "خدعة", "مكتب"]
+    }
+  },
+  {
+    "id": "articulated-spinner-big",
+    "categoryKey": "figures",
+    "name": {
+      "he": "ספינר מפרקי גדול",
+      "en": "Articulated Spinner (Large)",
+      "ar": "سبينר مفصلي كبير"
+    },
+    "description": {
+      "he": "ספינר פידג'ט רחב, מפרקי וגמיש, המספק תחושה טקטילית נהדרת להפגת מתחים.",
+      "en": "Large-scale articulated fidget spinner offering an incredible tactile experience.",
+      "ar": "سبينר مفصلي كبير يوفر تجربة حسية رائعة لتخفيف التوتر."
+    },
+    "price": 35,
+    "image": "assets/spinner-large.png",
+    "available": true,
+    "tags": {
+      "he": ["ספינר", "פידג'ט", "גדול"],
+      "en": ["Spinner", "Fidget", "Large"],
+      "ar": ["سبينر", "لعبة", "كبير"]
+    }
+  },
+  {
+    "id": "articulated-spinner-small",
+    "categoryKey": "figures",
+    "name": {
+      "he": "ספינר מפרקי קטן",
+      "en": "Articulated Spinner (Small)",
+      "ar": "سبينر مفصلي صغير"
+    },
+    "description": {
+      "he": "גרסה קומפקטית של הספינר המפרקי הגמיש. נכנס בקלות לכיס לקחת לכל מקום.",
+      "en": "Compact pocket-sized version of our articulated flexible fidget spinner.",
+      "ar": "نسخة مدمجة بحجم الجيب من السبينر المفصלי المرن."
+    },
+    "price": 20,
+    "image": "assets/spinner-small.png",
+    "available": true,
+    "tags": {
+      "he": ["ספינר", "פידג'ט", "כיס"],
+      "en": ["Spinner", "Fidget", "Pocket"],
+      "ar": ["سبينر", "لعبة", "صغير"]
+    }
+  },
+  {
+    "id": "ice-quartz-sculpture",
+    "categoryKey": "figures",
+    "name": {
+      "he": "פסל קריסטל Ice Quartz",
+      "en": "Ice Quartz Sculpture",
+      "ar": "منحوتة كريستال آيس كوارتز"
+    },
+    "description": {
+      "he": "פסלון גיאומטרי מרהיב במרקם המדמה גבישי קוורץ שקופים וייחודיים.",
+      "en": "Stunning geometric low-poly sculpture with beautiful crystal-like reflections.",
+      "ar": "منحوتة هندسية رائعة تعكس مظهر بلورات الكوارتز الجميلة."
+    },
+    "price": 40,
+    "image": "assets/ice-quartz.png",
+    "available": true,
+    "tags": {
+      "he": ["קריסטל", "עיצוב", "אומנות"],
+      "en": ["Crystal", "Sculpture", "Art"],
+      "ar": ["كريستال", "منحوتة", "فن"]
+    }
+  },
+  {
+    "id": "fidget-spinner",
+    "categoryKey": "figures",
+    "name": {
+      "he": "ספינר פידג'ט קלאסי",
+      "en": "Classic Fidget Spinner",
+      "ar": "سبينר كلاسيكي"
+    },
+    "description": {
+      "he": "ספינר שולחני איכותי עם סיבוב חלק וממושך. מעולה לריכוז ומיקוד.",
+      "en": "High-speed desktop spinner with smooth, satisfying rotations for focus.",
+      "ar": "سبينר مكتبي عالي السرعة مع دوران سلس وممتع للتركيز."
+    },
+    "price": 15,
+    "image": "assets/hex-spinner.png",
+    "available": true,
+    "tags": {
+      "he": ["ספינר", "ריכוז", "קלאסי"],
+      "en": ["Spinner", "Focus", "Classic"],
+      "ar": ["سبينר", "تركيز", "كلاسيكي"]
+    }
+  },
+  {
+    "id": "fidget-towers",
+    "categoryKey": "figures",
+    "name": {
+      "he": "מגדלי פידג'ט טלסקופיים",
+      "en": "Fidget Towers",
+      "ar": "أبراج فيجيت تلسكوبية"
+    },
+    "description": {
+      "he": "מגדל פופ-אפ טלסקופי נפתח ונסגר בצליל קליק ממכר, מושלם לשולחן העבודה.",
+      "en": "Collapsible, cascading telescopic towers that snap open and closed beautifully.",
+      "ar": "أبراج تلسكوبية قابلة للطي تفتح وتغلق بصوت نقرة ممتع."
+    },
+    "price": 30,
+    "image": "assets/fidget-tower.png",
+    "available": true,
+    "tags": {
+      "he": ["מגדל", "טקטילי", "צעצוע"],
+      "en": ["Tower", ["Tactile"], "Fidget"],
+      "ar": ["برج", "حسي", "لعبة"]
+    }
+  },
+  {
+    "id": "keychains-and-clickers",
+    "categoryKey": "keychains",
+    "name": {
+      "he": "מחזיקי מפתחות וקליקרים",
+      "en": "Keychains and Clickers",
+      "ar": "ميداليات ونقارات פידג'ט"
+    },
+    "description": {
+      "he": "מבחר קליקרים ומחזיקי מפתחות במבצע: 1 ב-₪10 / 3 ב-₪25 / 5 ב-₪35!",
+      "en": "Assorted keychains and clicker toys. Deal: 1 for ₪10 / 3 for ₪25 / 5 for ₪35!",
+      "ar": "تشكيلة ميداليات ونقارات متنوعة. العرض: 1 بـ ₪10 / 3 بـ ₪25 / 5 بـ ₪35!"
+    },
+    "price": 10,
+    "image": "assets/keychain-star.png",
+    "available": true,
+    "tags": {
+      "he": ["מבצע", "קליקר", "מחזיק מפתחות"],
+      "en": ["Special Deal", "Clicker", "Keychain"],
+      "ar": ["عرض خاص", "نقارة", "ميدالية"]
     }
   }
 ]
