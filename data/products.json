@@ -211,5 +211,28 @@
         "price": 40
       }
     ]
+  },
+  {
+    "id": "spiral-fidget",
+    "categoryKey": "figures",
+    "name": {
+      "en": "Small Spiral Fidget",
+      "he": "פידג'ט ספירלה",
+      "ar": "العربية"
+    },
+    "description": {
+      "en": "Insanely addictive and satisfying! Features a smooth, endless cascading motion that is perfect for stress relief, deep focus, or just a quick distraction while waiting for your coffee.",
+      "he": "צעצוע פידג'ט ממכר ומספק בטירוף! זורם בצורה חלקה ואינסופית, מושלם להפגת מתחים, לריכוז או סתם למשחק על הדרך לצד הקפה.",
+      "ar": "اسم المنتج: فيدجيت اللولب اللامتناهي\nالوصف: لعبة فيدجيت ممتعة ومريحة للغاية! تتحرك بانسيابية ونعومة لا نهاية لها، مثالية لتخفيف التوتر، زيادة التركيز، או للتسلية مع كوب قهوتك."
+    },
+    "price": 15,
+    "image": "assets/spiral-fidget.png",
+    "available": true,
+    "tags": {
+      "he": [],
+      "en": [],
+      "ar": []
+    },
+    "pricingTier": []
   }
 ]
