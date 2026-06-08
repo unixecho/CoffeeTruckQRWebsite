@@ -1,5 +1,5 @@
 const PRODUCTS_URL = "data/products.json";
-const BIT_PAYMENT_LINK = "https://www.bitpay.co.il/"; // replace later
+const BIT_PAYMENT_LINK = "https://www.bitpay.co.il/app/me/2436F027-F158-1BBB-5486-B4ED45C3DC40E2A1"; // replace later
 
 let products = [];
 let activeCategory = "all";
@@ -10,7 +10,7 @@ const RTL_LANGUAGES = ["he", "ar"];
 
 const i18n = {
   he: {
-    landingEyebrow: "הדפסות תלת־ממד ממשאית הקפה",
+    landingEyebrow: "הדפסות תלת־ממד מעגלת הקפה",
     landingTitle: "מוצרים מודפסים שאפשר לקחת על הדרך.",
     landingText:
       "סורקים, בוחרים מוצרים, רואים את הסכום הסופי ומשלמים בביט בדלפק.",
