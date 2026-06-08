@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coffee Truck 3D Prints</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Fixed Language Switcher -->
+    <div class="lang-switcher" id="langSwitcher">
+      <button
+        id="langToggleBtn"
+        class="lang-toggle"
+        aria-label="Change language"
+      >
+        🌐
+      </button>
+
+      <div id="langMenu" class="lang-menu hidden">
+        <button class="lang-option" data-lang="he">עברית</button>
+        <button class="lang-option" data-lang="en">English</button>
+        <button class="lang-option" data-lang="ar">العربية</button>
+      </div>
+    </div>
+
+    <div class="app-shell">
+      <!-- Landing -->
+      <section id="landingView" class="landing-view">
+        <div class="hero-card">
+          <div class="logo-badge">3D</div>
+
+          <p class="eyebrow" id="landingEyebrow"></p>
+          <h1 id="landingTitle"></h1>
+          <p class="hero-text" id="landingText"></p>
+
+          <div class="portal-actions">
+            <button id="openStoreBtn" class="primary-btn"></button>
+            <button
+              id="onlineOrderingBtn"
+              class="secondary-btn disabled-btn"
+              disabled
+            ></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Store -->
+      <section id="storeView" class="store-view hidden">
+        <div class="store-header-wrap">
+          <div class="store-header-card">
+            <button id="backToLandingBtn" class="back-btn" aria-label="Back">
+              →
+            </button>
+
+            <div class="store-header-text">
+              <p class="eyebrow" id="storeEyebrow"></p>
+              <h2 class="store-main-title" id="storeTitle"></h2>
+            </div>
+
+            <button id="cartToggleBtn" class="cart-pill">
+              <span id="cartLabel"></span>
+              <span id="cartCount">0</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="infoBanner" class="info-banner"></div>
+
+        <div id="categoryFilters" class="category-filters"></div>
+
+        <main id="productsGrid" class="products-grid"></main>
+      </section>
+
+      <!-- Cart Drawer -->
+      <aside id="cartDrawer" class="cart-drawer hidden">
+        <div class="cart-header">
+          <div>
+            <p class="eyebrow" id="cartEyebrow"></p>
+            <h3 id="cartTitle"></h3>
+          </div>
+
+          <button id="closeCartBtn" class="icon-btn">×</button>
+        </div>
+
+        <div id="cartItems" class="cart-items"></div>
+
+        <div class="cart-footer">
+          <div class="total-row">
+            <span id="totalLabel"></span>
+            <strong id="cartTotal">₪0</strong>
+          </div>
+
+          <button id="copyNoteBtn" class="secondary-btn full-width"></button>
+          <button id="payWithBitBtn" class="primary-btn full-width"></button>
+
+          <p id="paymentNote" class="payment-note"></p>
+        </div>
+      </aside>
+
+      <div id="overlay" class="overlay hidden"></div>
+      <div id="toast" class="toast hidden">Copied</div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

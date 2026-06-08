@@ -1,0 +1,112 @@
+[
+  {
+    "id": "dragon-keychain",
+    "categoryKey": "keychains",
+    "name": {
+      "he": "מחזיק מפתחות דרקון",
+      "en": "Dragon Keychain",
+      "ar": "ميدالية تنين"
+    },
+    "description": {
+      "he": "מחזיק מפתחות קטן ומודפס בתלת־ממד. קליל, צבעוני וכיפי.",
+      "en": "Small 3D printed keychain. Lightweight, colorful, and fun.",
+      "ar": "ميدالية صغيرة مطبوعة ثلاثية الأبعاد. خفيفة وملونة وممتعة."
+    },
+    "price": 25,
+    "image": "assets/product-placeholder-1.jpg",
+    "available": true,
+    "tags": {
+      "he": ["מתנה", "קטן", "פופולרי"],
+      "en": ["Gift", "Small", "Popular"],
+      "ar": ["هدية", "صغير", "شائع"]
+    }
+  },
+  {
+    "id": "coffee-truck-magnet",
+    "categoryKey": "magnets",
+    "name": {
+      "he": "מגנט משאית הקפה",
+      "en": "Coffee Truck Magnet",
+      "ar": "مغناطيس عربة القهوة"
+    },
+    "description": {
+      "he": "מגנט חמוד בהשראת האווירה של משאית הקפה.",
+      "en": "A cute printed magnet inspired by the coffee truck vibe.",
+      "ar": "مغناطيس لطيف مستوحى من أجواء عربة القهوة."
+    },
+    "price": 18,
+    "image": "assets/product-placeholder-2.jpg",
+    "available": true,
+    "tags": {
+      "he": ["מגנט", "מזכרת"],
+      "en": ["Magnet", "Souvenir"],
+      "ar": ["مغناطيس", "تذكار"]
+    }
+  },
+  {
+    "id": "mini-plant-pot",
+    "categoryKey": "homeDecor",
+    "name": {
+      "he": "עציץ קטן",
+      "en": "Mini Plant Pot",
+      "ar": "أصيص صغير"
+    },
+    "description": {
+      "he": "עציץ דקורטיבי קטן לשולחן, מדף או פינת קפה.",
+      "en": "Tiny decorative planter for a desk, shelf, or coffee corner.",
+      "ar": "أصيص ديكوري صغير للمكتب أو الرف أو زاوية القهوة."
+    },
+    "price": 35,
+    "image": "assets/product-placeholder-3.jpg",
+    "available": true,
+    "tags": {
+      "he": ["דקורציה", "שולחן"],
+      "en": ["Decor", "Desk"],
+      "ar": ["ديكور", "مكتب"]
+    }
+  },
+  {
+    "id": "cute-creature-figure",
+    "categoryKey": "figures",
+    "name": {
+      "he": "דמות חמודה",
+      "en": "Cute Creature Figure",
+      "ar": "مجسم مخلوق لطيف"
+    },
+    "description": {
+      "he": "דמות קטנה בסגנון אספנות, מודפסת בתלת־ממד.",
+      "en": "Small collectible-style 3D printed character figure.",
+      "ar": "مجسم صغير مطبوع ثلاثي الأبعاد بأسلوب قابل للاقتناء."
+    },
+    "price": 45,
+    "image": "assets/product-placeholder-4.jpg",
+    "available": true,
+    "tags": {
+      "he": ["דמות", "אספנות"],
+      "en": ["Figure", "Collectible"],
+      "ar": ["مجسم", "قابل للاقتناء"]
+    }
+  },
+  {
+    "id": "custom-name-sign",
+    "categoryKey": "customPrints",
+    "name": {
+      "he": "שלט שם מותאם אישית",
+      "en": "Custom Name Sign",
+      "ar": "لافتة اسم مخصصة"
+    },
+    "description": {
+      "he": "שלט שם מודפס בהתאמה אישית. יש לשאול בדוכן לפני ההזמנה.",
+      "en": "Personalized 3D printed name sign. Ask at the truck before ordering.",
+      "ar": "لافتة اسم مطبوعة حسب الطلب. اسأل عند العربة قبل الطلب."
+    },
+    "price": 60,
+    "image": "assets/product-placeholder-5.jpg",
+    "available": true,
+    "tags": {
+      "he": ["מותאם אישית", "הזמנה"],
+      "en": ["Custom", "Personalized"],
+      "ar": ["مخصص", "شخصي"]
+    }
+  }
+]
