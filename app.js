@@ -1,5 +1,5 @@
 const PRODUCTS_URL = "data/products.json";
-const BIT_PAYMENT_LINK = "https://www.bitpay.co.il/app/me/2436F027-F158-1BBB-5486-B4ED45C3DC40E2A1"; // replace later
+const BIT_PAYMENT_LINK = "https://www.bitpay.co.il/"; // replace later
 
 let products = [];
 let activeCategory = "all";
@@ -10,7 +10,7 @@ const RTL_LANGUAGES = ["he", "ar"];
 
 const i18n = {
   he: {
-    landingEyebrow: "הדפסות תלת־ממד מעגלת הקפה",
+    landingEyebrow: "הדפסות תלת־ממד ממשאית הקפה",
     landingTitle: "מוצרים מודפסים שאפשר לקחת על הדרך.",
     landingText:
       "סורקים, בוחרים מוצרים, רואים את הסכום הסופי ומשלמים בביט בדלפק.",
@@ -418,12 +418,42 @@ function getCartProducts() {
       if (!product) return null;
 
       const localizedName = getLocalizedValue(product.name);
+      const quantity = cart[productId];
+      let lineTotal = 0;
+
+      // Check if product has special wholesale pricing tiers (e.g. 1 for 10, 3 for 25, 5 for 35)
+      if (
+        product.pricingTier &&
+        Array.isArray(product.pricingTier) &&
+        product.pricingTier.length > 0
+      ) {
+        // Sort tiers descending by quantity requirement to apply largest bundles first
+        const sortedTiers = [...product.pricingTier].sort(
+          (a, b) => b.qty - a.qty
+        );
+        let remainingQty = quantity;
+
+        for (const tier of sortedTiers) {
+          if (remainingQty >= tier.qty) {
+            const bundleCount = Math.floor(remainingQty / tier.qty);
+            lineTotal += bundleCount * tier.price;
+            remainingQty = remainingQty % tier.qty;
+          }
+        }
+        // Catch any remaining standalone items at standard base price
+        if (remainingQty > 0) {
+          lineTotal += remainingQty * product.price;
+        }
+      } else {
+        // Fallback default calculation if no bulk scheme is set
+        lineTotal = quantity * product.price;
+      }
 
       return {
         ...product,
         localizedName,
-        quantity: cart[productId],
-        lineTotal: cart[productId] * product.price,
+        quantity,
+        lineTotal,
       };
     })
     .filter(Boolean);
