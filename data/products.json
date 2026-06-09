@@ -249,7 +249,7 @@
       "ar": "مجسم ذهبي ضخم يجسد كأس العالم فيفا، يتميز بتصميمه اللولبي الذي يحمل الكرة الأرضية، ويُعرض في الفعاليات الكبرى ليتنافس المشجعون على التقاط الصور معه."
     },
     "price": 70,
-    "image": "assets/fifa-cup-large",
+    "image": "assets/fifa-cup-large.png",
     "available": true,
     "tags": {
       "he": [],
@@ -272,7 +272,7 @@
       "ar": "المجموعة الأقوى لمشروب الطاقة مونستر – هسّا مع غطاء للعلبة وفتاحة!"
     },
     "price": 60,
-    "image": "assets/monster-bundle",
+    "image": "assets/monster-bundle.png",
     "available": true,
     "tags": {
       "he": [],
