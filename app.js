@@ -1,5 +1,5 @@
 const PRODUCTS_URL = "data/products.json";
-const BIT_PAYMENT_LINK = "https://www.bitpay.co.il/"; // replace later
+const BIT_PAYMENT_LINK = "https://www.bitpay.co.il/app/me/2436F027-F158-1BBB-5486-B4ED45C3DC40E2A1"; // replace later
 
 let products = [];
 let activeCategory = "all";
@@ -10,10 +10,10 @@ const RTL_LANGUAGES = ["he", "ar"];
 
 const i18n = {
   he: {
-    landingEyebrow: "הדפסות תלת־ממד ממשאית הקפה",
-    landingTitle: "מוצרים מודפסים שאפשר לקחת על הדרך.",
+    landingEyebrow: "מוצרים · מתנות · הדפסות תלת־ממד",
+    landingTitle: "גלו הדפסות קטנות שעושות וואו.",
     landingText:
-      "סורקים, בוחרים מוצרים, רואים את הסכום הסופי ומשלמים בביט בדלפק.",
+      "חנות קטנה ומהירה למוצרי תלת־ממד ליד עגלת הקפה: בוחרים מוצר, רואים מחיר, ומשלמים בביט בדלפק.",
     buyAtTruck: "קנייה בדוכן",
     onlineSoon: "הזמנות אונליין · בקרוב",
 
@@ -54,10 +54,10 @@ const i18n = {
   },
 
   en: {
-    landingEyebrow: "Coffee Truck 3D Prints",
-    landingTitle: "Small printed items you can grab on the go.",
+    landingEyebrow: "Offers · Gifts · 3D Prints",
+    landingTitle: "Explore small prints with big character.",
     landingText:
-      "Scan, pick your items, check the final total, and pay with Bit at the counter.",
+      "A fast mini-store for 3D printed gifts near the coffee truck: pick an item, check the price, and pay with Bit at the counter.",
     buyAtTruck: "Buy at the Truck",
     onlineSoon: "Online Ordering · Coming Soon",
 
@@ -98,10 +98,10 @@ const i18n = {
   },
 
   ar: {
-    landingEyebrow: "مطبوعات ثلاثية الأبعاد من عربة القهوة",
-    landingTitle: "منتجات مطبوعة يمكنك أخذها بسرعة.",
+    landingEyebrow: "عروض · هدايا · طباعة ثلاثية الأبعاد",
+    landingTitle: "اكتشف مطبوعات صغيرة بطابع مميز.",
     landingText:
-      "امسح الرمز، اختر المنتجات، شاهد المجموع النهائي وادفع عبر Bit عند الكاونتر.",
+      "متجر سريع لهدايا مطبوعة ثلاثية الأبعاد قرب عربة القهوة: اختر المنتج، شاهد السعر، وادفع عبر Bit عند الكاونتر.",
     buyAtTruck: "الشراء من العربة",
     onlineSoon: "الطلب أونلاين · قريباً",
 
