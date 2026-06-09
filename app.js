@@ -264,7 +264,11 @@ async function loadProducts() {
       throw new Error("Could not load products.json");
     }
 
-    products = await response.json();
+    const data = await response.json();
+    
+    // Sort products by price ascending (lowest to highest) by default
+    products = data.sort((a, b) => a.price - b.price);
+
     renderCategories();
     renderProducts();
     renderCart();
