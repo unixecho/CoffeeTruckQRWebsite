@@ -1,5 +1,6 @@
 const PRODUCTS_URL = "data/products.json";
-const BIT_PAYMENT_LINK = "https://www.bitpay.co.il/app/me/2436F027-F158-1BBB-5486-B4ED45C3DC40E2A1"; // replace later
+const BIT_PAYMENT_LINK =
+  "https://www.bitpay.co.il/app/me/2436F027-F158-1BBB-5486-B4ED45C3DC40E2A1"; // replace later
 
 let products = [];
 let activeCategory = "all";
@@ -265,7 +266,7 @@ async function loadProducts() {
     }
 
     const data = await response.json();
-    
+
     // Sort products by price ascending (lowest to highest) by default
     products = data.sort((a, b) => a.price - b.price);
 
@@ -398,9 +399,58 @@ function renderProducts() {
 }
 
 function addToCart(productId) {
+  // 1. Core State Update
   cart[productId] = (cart[productId] || 0) + 1;
   renderCart();
   showToast(i18n[currentLanguage].messages.added);
+
+  // 2. Locate Interface Elements for the Micro-interactions
+  const clickedButton = document.querySelector(
+    `.add-btn[data-id="${productId}"]`
+  );
+  const cartTargetContainer = document.getElementById("cartToggleBtn");
+
+  // Safety fallback if buttons are missing from view context
+  if (!clickedButton || !cartTargetContainer) return;
+
+  // 3. Extract exact screen positions
+  const btnRect = clickedButton.getBoundingClientRect();
+  const cartRect = cartTargetContainer.getBoundingClientRect();
+
+  // Create the flying particle node
+  const particle = document.createElement("div");
+  particle.className = "flying-particle";
+
+  // Center the particle on the clicked "Add to Cart" button coordinate origin
+  const originX = btnRect.left + btnRect.width / 2 - 8;
+  const originY = btnRect.top + btnRect.height / 2 - 8;
+
+  particle.style.left = `${originX}px`;
+  particle.style.top = `${originY}px`;
+  document.body.appendChild(particle);
+
+  // 4. Trigger the translation animation path toward the header cart container
+  requestAnimationFrame(() => {
+    const targetX = cartRect.left + cartRect.width / 2 - 8;
+    const targetY = cartRect.top + cartRect.height / 2 - 8;
+
+    const moveX = targetX - originX;
+    const moveY = targetY - originY;
+
+    particle.style.transform = `translate(${moveX}px, ${moveY}px) scale(0.4)`;
+    particle.style.opacity = "0.2";
+  });
+
+  // 5. Cleanup particle and trigger the Cart Container Highlight/Shake on impact
+  setTimeout(() => {
+    particle.remove();
+
+    // Force reset the animation container wrapper class if clicked rapidly
+    cartTargetContainer.classList.remove("cart-highlight-active");
+    void cartTargetContainer.offsetWidth; // Trigger DOM reflow to re-arm keyframes
+
+    cartTargetContainer.classList.add("cart-highlight-active");
+  }, 600); // Transitions finish exactly inside the 600ms window
 }
 
 function removeFromCart(productId) {
