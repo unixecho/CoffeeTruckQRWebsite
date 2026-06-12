@@ -4,7 +4,7 @@ const BIT_PAYMENT_LINK =
 
 const WHATSAPP_PHONE = "972549109603";
 const WHATSAPP_MESSAGE =
-  "היי, הגעתי אלייך דרך האתר לגבי יצירת קשר להדפסת תלת מימד";
+  "היי, הגעתי לכאן דרך האתר על מנת ליצור קשר לגבי הדפסת תלת מימד";
 
 let products = [];
 let activeCategory = "all";
