@@ -17,6 +17,7 @@ const i18n = {
       "חנות קטנה ומהירה למוצרי תלת־ממד ליד עגלת הקפה: בוחרים מוצר, רואים מחיר, ומשלמים בביט בדלפק.",
     buyAtTruck: "קנייה בדוכן",
     onlineSoon: "הזמנות אונליין · בקרוב",
+    quickBit: "⚡ יודעים מה אתם רוצים? ישר לביט",
 
     storeEyebrow: "חנות פיזית",
     storeTitle: "מוצרים מודפסים בתלת־ממד",
@@ -61,6 +62,7 @@ const i18n = {
       "A fast mini-store for 3D printed gifts near the coffee truck: pick an item, check the price, and pay with Bit at the counter.",
     buyAtTruck: "Buy at the Truck",
     onlineSoon: "Online Ordering · Coming Soon",
+    quickBit: "⚡ Know what you want? Straight to Bit",
 
     storeEyebrow: "Physical Store",
     storeTitle: "3D Printed Items",
@@ -105,6 +107,7 @@ const i18n = {
       "متجر سريع لهدايا مطبوعة ثلاثية الأبعاد قرب عربة القهوة: اختر المنتج، شاهد السعر، وادفع عبر Bit عند الكاونتر.",
     buyAtTruck: "الشراء من العربة",
     onlineSoon: "الطلب أونلاين · قريباً",
+    quickBit: "⚡ تعرف ماذا تريد؟ مباشرة إلى Bit",
 
     storeEyebrow: "المتجر الفعلي",
     storeTitle: "منتجات مطبوعة ثلاثية الأبعاد",
@@ -166,7 +169,18 @@ const toast = document.getElementById("toast");
 
 const langSwitcher = document.getElementById("langSwitcher");
 const langToggleBtn = document.getElementById("langToggleBtn");
-const langMenu = document.getElementById("langMenu");
+
+const landingBitBtn = document.getElementById("landingBitBtn");
+
+const productModal = document.getElementById("productModal");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const modalImage = document.getElementById("modalImage");
+const modalName = document.getElementById("modalName");
+const modalPrice = document.getElementById("modalPrice");
+const modalDescription = document.getElementById("modalDescription");
+const modalAddBtn = document.getElementById("modalAddBtn");
+
+let modalProductId = null;
 
 openStoreBtn.addEventListener("click", () => {
   landingView.classList.add("hidden");
@@ -187,10 +201,32 @@ overlay.addEventListener("click", closeCart);
 copyNoteBtn.addEventListener("click", copyOrderNote);
 payWithBitBtn.addEventListener("click", payWithBit);
 
+landingBitBtn.addEventListener("click", () => {
+  window.open(BIT_PAYMENT_LINK, "_blank");
+});
+
+closeModalBtn.addEventListener("click", closeProductModal);
+productModal.addEventListener("click", (event) => {
+  if (event.target === productModal) closeProductModal();
+});
+modalAddBtn.addEventListener("click", () => {
+  if (modalProductId) addToCart(modalProductId, modalAddBtn);
+});
+modalImage.addEventListener("error", () => {
+  modalImage.style.display = "none";
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeProductModal();
+    closeCart();
+    closeLanguageMenu();
+  }
+});
+
 langToggleBtn.addEventListener("click", (event) => {
   event.stopPropagation();
-  langSwitcher.classList.add("open");
-  langMenu.classList.remove("hidden");
+  langSwitcher.classList.toggle("open");
 });
 
 document.querySelectorAll(".lang-option").forEach((button) => {
@@ -223,16 +259,20 @@ function setLanguage(lang) {
   document.documentElement.lang = lang;
   document.documentElement.dir = RTL_LANGUAGES.includes(lang) ? "rtl" : "ltr";
 
+  document.querySelectorAll(".lang-option").forEach((button) => {
+    button.classList.toggle("active", button.dataset.lang === lang);
+  });
+
   updateStaticText();
   renderCategories();
   renderProducts();
   renderCart();
+  refreshProductModal();
   closeLanguageMenu();
 }
 
 function closeLanguageMenu() {
   langSwitcher.classList.remove("open");
-  langMenu.classList.add("hidden");
 }
 
 function updateStaticText() {
@@ -241,6 +281,7 @@ function updateStaticText() {
   document.getElementById("landingText").textContent = t("landingText");
   document.getElementById("openStoreBtn").textContent = t("buyAtTruck");
   document.getElementById("onlineOrderingBtn").textContent = t("onlineSoon");
+  document.getElementById("landingBitBtn").textContent = t("quickBit");
 
   document.getElementById("storeEyebrow").textContent = t("storeEyebrow");
   document.getElementById("storeTitle").textContent = t("storeTitle");
@@ -361,7 +402,7 @@ function renderProducts() {
       const tags = getLocalizedTags(product);
 
       return `
-        <article class="product-card" style="--card-index: ${index}">
+        <article class="product-card" data-id="${product.id}" style="--card-index: ${index}">
           <div class="product-image-box">
             <img
               class="product-image"
@@ -393,23 +434,61 @@ function renderProducts() {
     })
     .join("");
 
-  document.querySelectorAll(".add-btn").forEach((button) => {
+  document.querySelectorAll(".products-grid .add-btn").forEach((button) => {
     button.addEventListener("click", () => {
-      addToCart(button.dataset.id);
+      addToCart(button.dataset.id, button);
+    });
+  });
+
+  document.querySelectorAll(".product-card").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest(".add-btn")) return;
+      openProductModal(card.dataset.id);
     });
   });
 }
 
-function addToCart(productId) {
+function openProductModal(productId) {
+  const product = products.find((item) => item.id === productId);
+  if (!product) return;
+
+  modalProductId = productId;
+  modalImage.style.display = "";
+  modalImage.src = product.image;
+  modalImage.alt = getLocalizedValue(product.name);
+  modalName.textContent = getLocalizedValue(product.name);
+  modalPrice.textContent = `₪${product.price}`;
+  modalDescription.textContent = getLocalizedValue(product.description);
+  modalAddBtn.textContent = t("addToCart");
+
+  productModal.classList.add("open");
+  document.body.classList.add("no-scroll");
+}
+
+function refreshProductModal() {
+  if (!modalProductId || !productModal.classList.contains("open")) return;
+  openProductModal(modalProductId);
+}
+
+function closeProductModal() {
+  productModal.classList.remove("open");
+  modalProductId = null;
+
+  if (!cartDrawer.classList.contains("open")) {
+    document.body.classList.remove("no-scroll");
+  }
+}
+
+function addToCart(productId, sourceButton) {
   // 1. Core State Update
   cart[productId] = (cart[productId] || 0) + 1;
   renderCart();
   showToast(i18n[currentLanguage].messages.added);
 
   // 2. Locate Interface Elements for the Micro-interactions
-  const clickedButton = document.querySelector(
-    `.add-btn[data-id="${productId}"]`
-  );
+  const clickedButton =
+    sourceButton ||
+    document.querySelector(`.add-btn[data-id="${productId}"]`);
   const cartTargetContainer = document.getElementById("cartToggleBtn");
 
   // Safety fallback if buttons are missing from view context
@@ -558,7 +637,9 @@ function renderCart() {
     .join("");
 
   document.querySelectorAll(".increase-btn").forEach((button) => {
-    button.addEventListener("click", () => addToCart(button.dataset.id));
+    button.addEventListener("click", () =>
+      addToCart(button.dataset.id, button)
+    );
   });
 
   document.querySelectorAll(".decrease-btn").forEach((button) => {

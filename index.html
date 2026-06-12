@@ -16,9 +16,11 @@
       >
         🌐
       </button>
-      <div id="langMenu" class="lang-menu hidden">
+      <div id="langMenu" class="lang-menu">
         <button class="lang-option" data-lang="he">עברית</button>
+        <span class="lang-sep" aria-hidden="true"></span>
         <button class="lang-option" data-lang="en">English</button>
+        <span class="lang-sep" aria-hidden="true"></span>
         <button class="lang-option" data-lang="ar">العربية</button>
       </div>
     </div>
@@ -48,6 +50,7 @@
                 class="secondary-btn disabled-btn"
                 disabled
               ></button>
+              <button id="landingBitBtn" class="bit-btn"></button>
             </div>
           </div>
 
@@ -160,6 +163,21 @@
           <p id="paymentNote" class="payment-note"></p>
         </div>
       </aside>
+
+      <div id="productModal" class="product-modal">
+        <div class="product-modal-card">
+          <button id="closeModalBtn" class="icon-btn modal-close">×</button>
+          <img id="modalImage" class="modal-image" alt="" />
+          <div class="modal-body">
+            <div class="modal-top">
+              <h3 id="modalName"></h3>
+              <div class="modal-price" id="modalPrice"></div>
+            </div>
+            <p id="modalDescription" class="modal-description"></p>
+            <button id="modalAddBtn" class="add-btn"></button>
+          </div>
+        </div>
+      </div>
 
       <div id="overlay" class="overlay"></div>
       <div id="toast" class="toast">Copied</div>
