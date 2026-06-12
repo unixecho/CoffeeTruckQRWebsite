@@ -171,11 +171,13 @@ const langMenu = document.getElementById("langMenu");
 openStoreBtn.addEventListener("click", () => {
   landingView.classList.add("hidden");
   storeView.classList.remove("hidden");
+  window.scrollTo(0, 0);
 });
 
 backToLandingBtn.addEventListener("click", () => {
   storeView.classList.add("hidden");
   landingView.classList.remove("hidden");
+  window.scrollTo(0, 0);
 });
 
 cartToggleBtn.addEventListener("click", openCart);
@@ -353,13 +355,13 @@ function renderProducts() {
   }
 
   productsGrid.innerHTML = availableProducts
-    .map((product) => {
+    .map((product, index) => {
       const name = getLocalizedValue(product.name);
       const description = getLocalizedValue(product.description);
       const tags = getLocalizedTags(product);
 
       return `
-        <article class="product-card">
+        <article class="product-card" style="--card-index: ${index}">
           <div class="product-image-box">
             <img
               class="product-image"
@@ -565,13 +567,15 @@ function renderCart() {
 }
 
 function openCart() {
-  cartDrawer.classList.remove("hidden");
-  overlay.classList.remove("hidden");
+  cartDrawer.classList.add("open");
+  overlay.classList.add("open");
+  document.body.classList.add("no-scroll");
 }
 
 function closeCart() {
-  cartDrawer.classList.add("hidden");
-  overlay.classList.add("hidden");
+  cartDrawer.classList.remove("open");
+  overlay.classList.remove("open");
+  document.body.classList.remove("no-scroll");
 }
 
 function buildOrderNote() {
@@ -611,11 +615,14 @@ function payWithBit() {
   window.open(BIT_PAYMENT_LINK, "_blank");
 }
 
+let toastTimer = null;
+
 function showToast(message) {
   toast.textContent = message;
-  toast.classList.remove("hidden");
+  toast.classList.add("show");
 
-  setTimeout(() => {
-    toast.classList.add("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
   }, 1600);
 }
