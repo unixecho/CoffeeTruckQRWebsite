@@ -1305,6 +1305,62 @@ h3 {
   }
 }
 
+/* WhatsApp contact widget — pinned bottom-right in every language */
+.whatsapp-widget {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 70;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25d366;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 12px 28px rgba(37, 211, 102, 0.45);
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s ease;
+}
+.whatsapp-widget::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #25d366;
+  animation: whatsapp-ring 3s ease-out infinite;
+}
+@keyframes whatsapp-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  40%,
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+.whatsapp-widget:hover {
+  transform: scale(1.1);
+  box-shadow: 0 16px 34px rgba(37, 211, 102, 0.55);
+}
+.whatsapp-widget:active {
+  transform: scale(0.95);
+}
+.whatsapp-widget svg {
+  width: 30px;
+  height: 30px;
+  fill: #fff;
+}
+@media (max-width: 560px) {
+  .whatsapp-widget {
+    bottom: 14px;
+    right: 14px;
+    width: 54px;
+    height: 54px;
+  }
+}
+
 /* Respect users who prefer less motion */
 @media (prefers-reduced-motion: reduce) {
   *,

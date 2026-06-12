@@ -2,6 +2,10 @@ const PRODUCTS_URL = "data/products.json";
 const BIT_PAYMENT_LINK =
   "https://www.bitpay.co.il/app/me/2436F027-F158-1BBB-5486-B4ED45C3DC40E2A1"; // replace later
 
+const WHATSAPP_PHONE = "972549109603";
+const WHATSAPP_MESSAGE =
+  "היי, הגעתי אלייך דרך האתר לגבי יצירת קשר להדפסת תלת מימד";
+
 let products = [];
 let activeCategory = "all";
 let cart = {};
@@ -204,6 +208,12 @@ payWithBitBtn.addEventListener("click", payWithBit);
 landingBitBtn.addEventListener("click", () => {
   window.open(BIT_PAYMENT_LINK, "_blank");
 });
+
+document.getElementById(
+  "whatsappWidget"
+).href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(
+  WHATSAPP_MESSAGE
+)}`;
 
 closeModalBtn.addEventListener("click", closeProductModal);
 productModal.addEventListener("click", (event) => {
