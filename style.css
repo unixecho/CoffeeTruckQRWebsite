@@ -356,6 +356,27 @@ h3 {
 .bit-btn:active {
   transform: scale(0.95);
 }
+.suggest-btn {
+  flex-basis: 100%;
+  border-radius: 999px;
+  background: rgba(37, 211, 102, 0.1);
+  border: 1.5px solid rgba(37, 211, 102, 0.45);
+  color: #11854a;
+  padding: 12px 20px;
+  font-weight: 800;
+  transition: transform 0.16s ease, box-shadow 0.22s ease,
+    background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+}
+.suggest-btn:hover {
+  background: #25d366;
+  border-color: #25d366;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(37, 211, 102, 0.32);
+}
+.suggest-btn:active {
+  transform: scale(0.97);
+}
 .full-width {
   width: 100%;
 }

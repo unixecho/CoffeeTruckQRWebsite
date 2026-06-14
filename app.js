@@ -5,6 +5,12 @@ const BIT_PAYMENT_LINK =
 const WHATSAPP_PHONE = "972549109603";
 const WHATSAPP_MESSAGE =
   "היי, הגעתי לכאן דרך האתר על מנת ליצור קשר לגבי הדפסת תלת מימד";
+const WHATSAPP_SUGGESTION_MESSAGE =
+  "היי, הגעתי דרך האתר ויש לי הצעה או בקשה לגבי הדפסת תלת מימד:";
+
+function buildWhatsappLink(message) {
+  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+}
 
 let products = [];
 let activeCategory = "all";
@@ -22,6 +28,7 @@ const i18n = {
     buyAtTruck: "קנייה בדוכן",
     onlineSoon: "הזמנות אונליין · בקרוב",
     quickBit: "⚡ יודעים מה אתם רוצים? ישר לביט",
+    suggestions: "💡 יש לכם הצעה או בקשה? דברו איתי",
 
     storeEyebrow: "חנות פיזית",
     storeTitle: "מוצרים מודפסים בתלת־ממד",
@@ -67,6 +74,7 @@ const i18n = {
     buyAtTruck: "Buy at the Truck",
     onlineSoon: "Online Ordering · Coming Soon",
     quickBit: "⚡ Know what you want? Straight to Bit",
+    suggestions: "💡 Got a suggestion or request? Message me",
 
     storeEyebrow: "Physical Store",
     storeTitle: "3D Printed Items",
@@ -112,6 +120,7 @@ const i18n = {
     buyAtTruck: "الشراء من العربة",
     onlineSoon: "الطلب أونلاين · قريباً",
     quickBit: "⚡ تعرف ماذا تريد؟ مباشرة إلى Bit",
+    suggestions: "💡 لديك اقتراح أو طلب؟ راسلني",
 
     storeEyebrow: "المتجر الفعلي",
     storeTitle: "منتجات مطبوعة ثلاثية الأبعاد",
@@ -175,6 +184,7 @@ const langSwitcher = document.getElementById("langSwitcher");
 const langToggleBtn = document.getElementById("langToggleBtn");
 
 const landingBitBtn = document.getElementById("landingBitBtn");
+const suggestionBtn = document.getElementById("suggestionBtn");
 
 const productModal = document.getElementById("productModal");
 const closeModalBtn = document.getElementById("closeModalBtn");
@@ -209,11 +219,12 @@ landingBitBtn.addEventListener("click", () => {
   window.open(BIT_PAYMENT_LINK, "_blank");
 });
 
-document.getElementById(
-  "whatsappWidget"
-).href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(
-  WHATSAPP_MESSAGE
-)}`;
+suggestionBtn.addEventListener("click", () => {
+  window.open(buildWhatsappLink(WHATSAPP_SUGGESTION_MESSAGE), "_blank");
+});
+
+document.getElementById("whatsappWidget").href =
+  buildWhatsappLink(WHATSAPP_MESSAGE);
 
 closeModalBtn.addEventListener("click", closeProductModal);
 productModal.addEventListener("click", (event) => {
@@ -292,6 +303,7 @@ function updateStaticText() {
   document.getElementById("openStoreBtn").textContent = t("buyAtTruck");
   document.getElementById("onlineOrderingBtn").textContent = t("onlineSoon");
   document.getElementById("landingBitBtn").textContent = t("quickBit");
+  document.getElementById("suggestionBtn").textContent = t("suggestions");
 
   document.getElementById("storeEyebrow").textContent = t("storeEyebrow");
   document.getElementById("storeTitle").textContent = t("storeTitle");
