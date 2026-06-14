@@ -30,6 +30,7 @@ Hebrew is the default and primary language.
 | `app.js`              | All behavior: i18n, rendering, cart, modal, payment/contact links.  |
 | `data/products.json`  | Product catalog (the only "content" file the owner edits often).    |
 | `assets/`             | Product images (`.png`/`.jpg`).                                     |
+| `assets/fonts/`       | Self-hosted Rubik woff2 subsets (Hebrew/Latin/Arabic).              |
 
 ## How to run locally
 
@@ -64,6 +65,17 @@ npm start          # runs `serve`
     marked `// replace later`).
   - `WHATSAPP_PHONE` / `WHATSAPP_MESSAGE` — the floating contact widget and the
     landing-page suggestions button (prefilled `wa.me` deep links).
+
+## Typography
+
+- One font for the whole site: **Rubik**, self-hosted as variable woff2 subsets
+  in `assets/fonts/` (Hebrew, Arabic, Latin, Latin-ext). It covers all three
+  languages so type is unified everywhere; no external CDN at runtime.
+- `@font-face` blocks (with per-subset `unicode-range`) live at the top of
+  `style.css`; the body uses `font-family: "Rubik", system-ui, …`.
+  Hebrew + Latin subsets are `<link rel="preload">`ed in `index.html`.
+- Rubik's variable weight axis is **300–900**. Avoid `font-weight` above 900
+  (it clamps); don't reintroduce a second typeface.
 
 ## Conventions
 

@@ -28,6 +28,16 @@ Unchecked = not done yet. Owner actions are marked **(owner)**.
 
 ## Session log
 
+### 2026-06-14 — Unified typography (Rubik)
+
+- Replaced the `system-ui` stack (which rendered Hebrew, Latin, and Arabic in
+  different fonts and faux-bolded the non-standard weights) with **Rubik**,
+  self-hosted as variable woff2 subsets in `assets/fonts/`.
+- Added `@font-face` blocks with per-subset `unicode-range`, set the body font,
+  and preloaded the Hebrew + Latin subsets. Verified all three languages now
+  render in one consistent typeface.
+- Status: shipped to `main`.
+
 ### 2026-06-14 — Project docs + suggestions button
 
 - Added `CLAUDE.md` (project overview, architecture, conventions, workflow).
