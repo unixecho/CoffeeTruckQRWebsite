@@ -1,5 +1,16 @@
 const PRODUCTS_URL = "data/products.json";
-const BIT_PAYMENT_LINK = "https://www.bitpay.co.il/"; // replace later
+const BIT_PAYMENT_LINK =
+  "https://www.bitpay.co.il/app/me/2436F027-F158-1BBB-5486-B4ED45C3DC40E2A1"; // replace later
+
+const WHATSAPP_PHONE = "972549109603";
+const WHATSAPP_MESSAGE =
+  "היי, הגעתי לכאן דרך האתר על מנת ליצור קשר לגבי הדפסת תלת מימד";
+const WHATSAPP_SUGGESTION_MESSAGE =
+  "היי, הגעתי דרך האתר ויש לי הצעה או בקשה לגבי הדפסת תלת מימד:";
+
+function buildWhatsappLink(message) {
+  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+}
 
 let products = [];
 let activeCategory = "all";
@@ -10,12 +21,14 @@ const RTL_LANGUAGES = ["he", "ar"];
 
 const i18n = {
   he: {
-    landingEyebrow: "הדפסות תלת־ממד ממשאית הקפה",
-    landingTitle: "מוצרים מודפסים שאפשר לקחת על הדרך.",
+    landingEyebrow: "מוצרים · מתנות · הדפסות תלת־ממד",
+    landingTitle: "גלו הדפסות קטנות שעושות וואו.",
     landingText:
-      "סורקים, בוחרים מוצרים, רואים את הסכום הסופי ומשלמים בביט בדלפק.",
+      "חנות קטנה ומהירה למוצרי תלת־ממד ליד עגלת הקפה: בוחרים מוצר, רואים מחיר, ומשלמים בביט בדלפק.",
     buyAtTruck: "קנייה בדוכן",
     onlineSoon: "הזמנות אונליין · בקרוב",
+    quickBit: "⚡ יודעים מה אתם רוצים? ישר לביט",
+    suggestions: "💡 יש לכם הצעה או בקשה? דברו איתי",
 
     storeEyebrow: "חנות פיזית",
     storeTitle: "מוצרים מודפסים בתלת־ממד",
@@ -54,12 +67,14 @@ const i18n = {
   },
 
   en: {
-    landingEyebrow: "Coffee Truck 3D Prints",
-    landingTitle: "Small printed items you can grab on the go.",
+    landingEyebrow: "Offers · Gifts · 3D Prints",
+    landingTitle: "Explore small prints with big character.",
     landingText:
-      "Scan, pick your items, check the final total, and pay with Bit at the counter.",
+      "A fast mini-store for 3D printed gifts near the coffee truck: pick an item, check the price, and pay with Bit at the counter.",
     buyAtTruck: "Buy at the Truck",
     onlineSoon: "Online Ordering · Coming Soon",
+    quickBit: "⚡ Know what you want? Straight to Bit",
+    suggestions: "💡 Got a suggestion or request? Message me",
 
     storeEyebrow: "Physical Store",
     storeTitle: "3D Printed Items",
@@ -98,12 +113,14 @@ const i18n = {
   },
 
   ar: {
-    landingEyebrow: "مطبوعات ثلاثية الأبعاد من عربة القهوة",
-    landingTitle: "منتجات مطبوعة يمكنك أخذها بسرعة.",
+    landingEyebrow: "عروض · هدايا · طباعة ثلاثية الأبعاد",
+    landingTitle: "اكتشف مطبوعات صغيرة بطابع مميز.",
     landingText:
-      "امسح الرمز، اختر المنتجات، شاهد المجموع النهائي وادفع عبر Bit عند الكاونتر.",
+      "متجر سريع لهدايا مطبوعة ثلاثية الأبعاد قرب عربة القهوة: اختر المنتج، شاهد السعر، وادفع عبر Bit عند الكاونتر.",
     buyAtTruck: "الشراء من العربة",
     onlineSoon: "الطلب أونلاين · قريباً",
+    quickBit: "⚡ تعرف ماذا تريد؟ مباشرة إلى Bit",
+    suggestions: "💡 لديك اقتراح أو طلب؟ راسلني",
 
     storeEyebrow: "المتجر الفعلي",
     storeTitle: "منتجات مطبوعة ثلاثية الأبعاد",
@@ -165,16 +182,30 @@ const toast = document.getElementById("toast");
 
 const langSwitcher = document.getElementById("langSwitcher");
 const langToggleBtn = document.getElementById("langToggleBtn");
-const langMenu = document.getElementById("langMenu");
+
+const landingBitBtn = document.getElementById("landingBitBtn");
+const suggestionBtn = document.getElementById("suggestionBtn");
+
+const productModal = document.getElementById("productModal");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const modalImage = document.getElementById("modalImage");
+const modalName = document.getElementById("modalName");
+const modalPrice = document.getElementById("modalPrice");
+const modalDescription = document.getElementById("modalDescription");
+const modalAddBtn = document.getElementById("modalAddBtn");
+
+let modalProductId = null;
 
 openStoreBtn.addEventListener("click", () => {
   landingView.classList.add("hidden");
   storeView.classList.remove("hidden");
+  window.scrollTo(0, 0);
 });
 
 backToLandingBtn.addEventListener("click", () => {
   storeView.classList.add("hidden");
   landingView.classList.remove("hidden");
+  window.scrollTo(0, 0);
 });
 
 cartToggleBtn.addEventListener("click", openCart);
@@ -184,10 +215,39 @@ overlay.addEventListener("click", closeCart);
 copyNoteBtn.addEventListener("click", copyOrderNote);
 payWithBitBtn.addEventListener("click", payWithBit);
 
+landingBitBtn.addEventListener("click", () => {
+  window.open(BIT_PAYMENT_LINK, "_blank");
+});
+
+suggestionBtn.addEventListener("click", () => {
+  window.open(buildWhatsappLink(WHATSAPP_SUGGESTION_MESSAGE), "_blank");
+});
+
+document.getElementById("whatsappWidget").href =
+  buildWhatsappLink(WHATSAPP_MESSAGE);
+
+closeModalBtn.addEventListener("click", closeProductModal);
+productModal.addEventListener("click", (event) => {
+  if (event.target === productModal) closeProductModal();
+});
+modalAddBtn.addEventListener("click", () => {
+  if (modalProductId) addToCart(modalProductId, modalAddBtn);
+});
+modalImage.addEventListener("error", () => {
+  modalImage.style.display = "none";
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeProductModal();
+    closeCart();
+    closeLanguageMenu();
+  }
+});
+
 langToggleBtn.addEventListener("click", (event) => {
   event.stopPropagation();
-  langSwitcher.classList.add("open");
-  langMenu.classList.remove("hidden");
+  langSwitcher.classList.toggle("open");
 });
 
 document.querySelectorAll(".lang-option").forEach((button) => {
@@ -220,16 +280,20 @@ function setLanguage(lang) {
   document.documentElement.lang = lang;
   document.documentElement.dir = RTL_LANGUAGES.includes(lang) ? "rtl" : "ltr";
 
+  document.querySelectorAll(".lang-option").forEach((button) => {
+    button.classList.toggle("active", button.dataset.lang === lang);
+  });
+
   updateStaticText();
   renderCategories();
   renderProducts();
   renderCart();
+  refreshProductModal();
   closeLanguageMenu();
 }
 
 function closeLanguageMenu() {
   langSwitcher.classList.remove("open");
-  langMenu.classList.add("hidden");
 }
 
 function updateStaticText() {
@@ -238,6 +302,8 @@ function updateStaticText() {
   document.getElementById("landingText").textContent = t("landingText");
   document.getElementById("openStoreBtn").textContent = t("buyAtTruck");
   document.getElementById("onlineOrderingBtn").textContent = t("onlineSoon");
+  document.getElementById("landingBitBtn").textContent = t("quickBit");
+  document.getElementById("suggestionBtn").textContent = t("suggestions");
 
   document.getElementById("storeEyebrow").textContent = t("storeEyebrow");
   document.getElementById("storeTitle").textContent = t("storeTitle");
@@ -264,7 +330,11 @@ async function loadProducts() {
       throw new Error("Could not load products.json");
     }
 
-    products = await response.json();
+    const data = await response.json();
+
+    // Sort products by price ascending (lowest to highest) by default
+    products = data.sort((a, b) => a.price - b.price);
+
     renderCategories();
     renderProducts();
     renderCart();
@@ -348,13 +418,13 @@ function renderProducts() {
   }
 
   productsGrid.innerHTML = availableProducts
-    .map((product) => {
+    .map((product, index) => {
       const name = getLocalizedValue(product.name);
       const description = getLocalizedValue(product.description);
       const tags = getLocalizedTags(product);
 
       return `
-        <article class="product-card">
+        <article class="product-card" data-id="${product.id}" style="--card-index: ${index}">
           <div class="product-image-box">
             <img
               class="product-image"
@@ -386,17 +456,104 @@ function renderProducts() {
     })
     .join("");
 
-  document.querySelectorAll(".add-btn").forEach((button) => {
+  document.querySelectorAll(".products-grid .add-btn").forEach((button) => {
     button.addEventListener("click", () => {
-      addToCart(button.dataset.id);
+      addToCart(button.dataset.id, button);
+    });
+  });
+
+  document.querySelectorAll(".product-card").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest(".add-btn")) return;
+      openProductModal(card.dataset.id);
     });
   });
 }
 
-function addToCart(productId) {
+function openProductModal(productId) {
+  const product = products.find((item) => item.id === productId);
+  if (!product) return;
+
+  modalProductId = productId;
+  modalImage.style.display = "";
+  modalImage.src = product.image;
+  modalImage.alt = getLocalizedValue(product.name);
+  modalName.textContent = getLocalizedValue(product.name);
+  modalPrice.textContent = `₪${product.price}`;
+  modalDescription.textContent = getLocalizedValue(product.description);
+  modalAddBtn.textContent = t("addToCart");
+
+  productModal.classList.add("open");
+  document.body.classList.add("no-scroll");
+}
+
+function refreshProductModal() {
+  if (!modalProductId || !productModal.classList.contains("open")) return;
+  openProductModal(modalProductId);
+}
+
+function closeProductModal() {
+  productModal.classList.remove("open");
+  modalProductId = null;
+
+  if (!cartDrawer.classList.contains("open")) {
+    document.body.classList.remove("no-scroll");
+  }
+}
+
+function addToCart(productId, sourceButton) {
+  // 1. Core State Update
   cart[productId] = (cart[productId] || 0) + 1;
   renderCart();
   showToast(i18n[currentLanguage].messages.added);
+
+  // 2. Locate Interface Elements for the Micro-interactions
+  const clickedButton =
+    sourceButton ||
+    document.querySelector(`.add-btn[data-id="${productId}"]`);
+  const cartTargetContainer = document.getElementById("cartToggleBtn");
+
+  // Safety fallback if buttons are missing from view context
+  if (!clickedButton || !cartTargetContainer) return;
+
+  // 3. Extract exact screen positions
+  const btnRect = clickedButton.getBoundingClientRect();
+  const cartRect = cartTargetContainer.getBoundingClientRect();
+
+  // Create the flying particle node
+  const particle = document.createElement("div");
+  particle.className = "flying-particle";
+
+  // Center the particle on the clicked "Add to Cart" button coordinate origin
+  const originX = btnRect.left + btnRect.width / 2 - 8;
+  const originY = btnRect.top + btnRect.height / 2 - 8;
+
+  particle.style.left = `${originX}px`;
+  particle.style.top = `${originY}px`;
+  document.body.appendChild(particle);
+
+  // 4. Trigger the translation animation path toward the header cart container
+  requestAnimationFrame(() => {
+    const targetX = cartRect.left + cartRect.width / 2 - 8;
+    const targetY = cartRect.top + cartRect.height / 2 - 8;
+
+    const moveX = targetX - originX;
+    const moveY = targetY - originY;
+
+    particle.style.transform = `translate(${moveX}px, ${moveY}px) scale(0.4)`;
+    particle.style.opacity = "0.2";
+  });
+
+  // 5. Cleanup particle and trigger the Cart Container Highlight/Shake on impact
+  setTimeout(() => {
+    particle.remove();
+
+    // Force reset the animation container wrapper class if clicked rapidly
+    cartTargetContainer.classList.remove("cart-highlight-active");
+    void cartTargetContainer.offsetWidth; // Trigger DOM reflow to re-arm keyframes
+
+    cartTargetContainer.classList.add("cart-highlight-active");
+  }, 600); // Transitions finish exactly inside the 600ms window
 }
 
 function removeFromCart(productId) {
@@ -502,7 +659,9 @@ function renderCart() {
     .join("");
 
   document.querySelectorAll(".increase-btn").forEach((button) => {
-    button.addEventListener("click", () => addToCart(button.dataset.id));
+    button.addEventListener("click", () =>
+      addToCart(button.dataset.id, button)
+    );
   });
 
   document.querySelectorAll(".decrease-btn").forEach((button) => {
@@ -511,13 +670,15 @@ function renderCart() {
 }
 
 function openCart() {
-  cartDrawer.classList.remove("hidden");
-  overlay.classList.remove("hidden");
+  cartDrawer.classList.add("open");
+  overlay.classList.add("open");
+  document.body.classList.add("no-scroll");
 }
 
 function closeCart() {
-  cartDrawer.classList.add("hidden");
-  overlay.classList.add("hidden");
+  cartDrawer.classList.remove("open");
+  overlay.classList.remove("open");
+  document.body.classList.remove("no-scroll");
 }
 
 function buildOrderNote() {
@@ -557,11 +718,14 @@ function payWithBit() {
   window.open(BIT_PAYMENT_LINK, "_blank");
 }
 
+let toastTimer = null;
+
 function showToast(message) {
   toast.textContent = message;
-  toast.classList.remove("hidden");
+  toast.classList.add("show");
 
-  setTimeout(() => {
-    toast.classList.add("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
   }, 1600);
 }

@@ -234,5 +234,51 @@
       "ar": []
     },
     "pricingTier": []
+  },
+  {
+    "id": "fifa-cup-large",
+    "categoryKey": "customPrints",
+    "name": {
+      "en": "Large world cup sculpture",
+      "he": "פסל אליפות העולם בכדורגל - גדול",
+      "ar": "تمثال كأس العالم فيفا الكبير"
+    },
+    "description": {
+      "en": "A large Fifa world cup sculpture.",
+      "he": "פסל אליפות העולם בכדורגל - פיפא - גדול",
+      "ar": "مجسم ذهبي ضخم يجسد كأس العالم فيفا، يتميز بتصميمه اللولبي الذي يحمل الكرة الأرضية، ويُعرض في الفعاليات الكبرى ليتنافس المشجعون على التقاط الصور معه."
+    },
+    "price": 70,
+    "image": "assets/fifa-cup-large.png",
+    "available": true,
+    "tags": {
+      "he": [],
+      "en": [],
+      "ar": []
+    },
+    "pricingTier": []
+  },
+  {
+    "id": "monster-cup-bundle",
+    "categoryKey": "customPrints",
+    "name": {
+      "en": "Monster Koozie Pack",
+      "he": "מארז מחזיק פחיות מונסטר",
+      "ar": "مجموعة حامل علب مونستر"
+    },
+    "description": {
+      "en": "The ultimate Monster energy drink Koozie pack now with a can cover and opener!",
+      "he": "המארז האולטימטיבי למשקה האנרגיה מונסטר – עכשיו עם כיסוי לפחית ופותחן מובנה!",
+      "ar": "المجموعة الأقوى لمشروب الطاقة مونستر – هسّا مع غطاء للعلبة وفتاحة!"
+    },
+    "price": 60,
+    "image": "assets/monster-bundle.png",
+    "available": true,
+    "tags": {
+      "he": [],
+      "en": [],
+      "ar": []
+    },
+    "pricingTier": []
   }
 ]
