@@ -1,0 +1,87 @@
+{
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\.codesandbox\\tasks.json": {
+    "mtime": 1780937896.4054768,
+    "ast_hash": "070f0a0ce465773926b0b6abf6f03add",
+    "semantic_hash": "070f0a0ce465773926b0b6abf6f03add"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\.codesandbox\\template.json": {
+    "mtime": 1780937896.406477,
+    "ast_hash": "a65e217eb339241e8b70928302eef376",
+    "semantic_hash": "a65e217eb339241e8b70928302eef376"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\.eslintrc.json": {
+    "mtime": 1780937896.406477,
+    "ast_hash": "027d5a18f8266eef5bb9c8ca881fcd92",
+    "semantic_hash": "027d5a18f8266eef5bb9c8ca881fcd92"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\app.js": {
+    "mtime": 1780949434.9201038,
+    "ast_hash": "e585cfbde8369fd889e8cab2a0ce58d8",
+    "semantic_hash": "e585cfbde8369fd889e8cab2a0ce58d8"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\data\\products.json": {
+    "mtime": 1780950224.79838,
+    "ast_hash": "db17d46f4b6588af1285b85e179e9676",
+    "semantic_hash": "db17d46f4b6588af1285b85e179e9676"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\package.json": {
+    "mtime": 1780937896.4376214,
+    "ast_hash": "dd52e1f1ad3ad199fe089b3a34724a97",
+    "semantic_hash": "dd52e1f1ad3ad199fe089b3a34724a97"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\README.md": {
+    "mtime": 1780937896.4356205,
+    "ast_hash": "57799d345f16ba3057ce55510094cf4a",
+    "semantic_hash": "57799d345f16ba3057ce55510094cf4a"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\index.html": {
+    "mtime": 1780937896.4376214,
+    "ast_hash": "0191d1670df4564b312be6a1f90dfb86",
+    "semantic_hash": "0191d1670df4564b312be6a1f90dfb86"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\assets\\articulated-dragon.png": {
+    "mtime": 1780937896.410478,
+    "ast_hash": "5cdc64d07faef770847f0accf4c199a5",
+    "semantic_hash": "5cdc64d07faef770847f0accf4c199a5"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\assets\\custom-sign.png": {
+    "mtime": 1780937896.4124765,
+    "ast_hash": "d236a92614ce57a228271eb7054e6feb",
+    "semantic_hash": "d236a92614ce57a228271eb7054e6feb"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\assets\\fidget-tower.png": {
+    "mtime": 1780937896.4216204,
+    "ast_hash": "35bc453a2e0965c4b08ba96a1e3cd4d3",
+    "semantic_hash": "35bc453a2e0965c4b08ba96a1e3cd4d3"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\assets\\geometric-fidget.png": {
+    "mtime": 1780937896.418617,
+    "ast_hash": "bc5076503c9af54d24b25144cd446115",
+    "semantic_hash": "bc5076503c9af54d24b25144cd446115"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\assets\\hex-spinner.png": {
+    "mtime": 1780937896.4276206,
+    "ast_hash": "e92abffbd8b4f9bdc2bed0c32ad98ec4",
+    "semantic_hash": "e92abffbd8b4f9bdc2bed0c32ad98ec4"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\assets\\ice-quartz.png": {
+    "mtime": 1780937896.4246204,
+    "ast_hash": "5ce1f6829302d915208575090aa8a709",
+    "semantic_hash": "5ce1f6829302d915208575090aa8a709"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\assets\\keychain-star.png": {
+    "mtime": 1780949821.0924494,
+    "ast_hash": "50cfc82ff6aa6cdc5d943d0a4c5bf73e",
+    "semantic_hash": "50cfc82ff6aa6cdc5d943d0a4c5bf73e"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\assets\\prank-coffee-mug.jpg": {
+    "mtime": 1780938005.9678063,
+    "ast_hash": "7747fe397645c829c1c3a687295aae45",
+    "semantic_hash": "7747fe397645c829c1c3a687295aae45"
+  },
+  "C:\\Users\\Johnathan\\Documents\\GitHub\\CoffeeTruckQRWebsite\\assets\\spiral-fidget.png": {
+    "mtime": 1780937896.4306202,
+    "ast_hash": "e8467ad0cb83957c5244d075ed477bac",
+    "semantic_hash": "e8467ad0cb83957c5244d075ed477bac"
+  }
+}

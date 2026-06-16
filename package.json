@@ -14,5 +14,9 @@
   "license": "MIT",
   "devDependencies": {
     "serve": "11.2.0"
+  },
+  "dependencies": {
+    "framer-motion": "^12.40.0",
+    "motion": "^12.40.0"
   }
 }

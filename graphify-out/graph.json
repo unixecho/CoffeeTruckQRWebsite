@@ -1,0 +1,2301 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "spa_view_navigation_flow",
+        "label": "Single-Page View Navigation Flow",
+        "nodes": [
+          "index_landing_view",
+          "index_store_view",
+          "index_cart_drawer"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "index.html"
+      },
+      {
+        "id": "store_browsing_pipeline",
+        "label": "Store Browsing and Filtering Pipeline",
+        "nodes": [
+          "index_category_filters",
+          "index_products_grid",
+          "index_cart_drawer"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "index.html"
+      },
+      {
+        "id": "checkout_completion_flow",
+        "label": "Cart Checkout Completion Flow",
+        "nodes": [
+          "index_cart_drawer",
+          "index_bit_payment",
+          "index_copy_note"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "index.html"
+      },
+      {
+        "id": "three_d_printed_product_line",
+        "label": "3D-Printed Product Line",
+        "nodes": [
+          "assets_articulated_dragon",
+          "assets_custom_sign",
+          "assets_fidget_tower"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "assets/"
+      },
+      {
+        "id": "printed_decorative_objects",
+        "label": "3D-Printed Decorative Display Objects",
+        "nodes": [
+          "assets_geometric_fidget",
+          "assets_hex_spinner",
+          "assets_ice_quartz"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.75,
+        "source_file": "assets/"
+      },
+      {
+        "id": "printed_novelty_products",
+        "label": "3D-Printed Novelty Products",
+        "nodes": [
+          "assets_keychain_star",
+          "assets_prank_coffee_mug",
+          "assets_spiral_fidget"
+        ],
+        "relation": "participate_in",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "assets/keychain-star.png"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": ".eslintrc.json",
+      "file_type": "code",
+      "source_file": ".eslintrc.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "eslintrc",
+      "community": 4,
+      "norm_label": ".eslintrc.json"
+    },
+    {
+      "label": "env",
+      "file_type": "code",
+      "source_file": ".eslintrc.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "eslintrc_env",
+      "community": 4,
+      "norm_label": "env"
+    },
+    {
+      "label": "browser",
+      "file_type": "code",
+      "source_file": ".eslintrc.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "eslintrc_env_browser",
+      "community": 4,
+      "norm_label": "browser"
+    },
+    {
+      "label": "es2021",
+      "file_type": "code",
+      "source_file": ".eslintrc.json",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "eslintrc_env_es2021",
+      "community": 4,
+      "norm_label": "es2021"
+    },
+    {
+      "label": "extends",
+      "file_type": "code",
+      "source_file": ".eslintrc.json",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "eslintrc_extends",
+      "community": 4,
+      "norm_label": "extends"
+    },
+    {
+      "label": "parser",
+      "file_type": "code",
+      "source_file": ".eslintrc.json",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "eslintrc_parser",
+      "community": 4,
+      "norm_label": "parser"
+    },
+    {
+      "label": "parserOptions",
+      "file_type": "code",
+      "source_file": ".eslintrc.json",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "eslintrc_parseroptions",
+      "community": 4,
+      "norm_label": "parseroptions"
+    },
+    {
+      "label": "ecmaVersion",
+      "file_type": "code",
+      "source_file": ".eslintrc.json",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "eslintrc_parseroptions_ecmaversion",
+      "community": 4,
+      "norm_label": "ecmaversion"
+    },
+    {
+      "label": "sourceType",
+      "file_type": "code",
+      "source_file": ".eslintrc.json",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "eslintrc_parseroptions_sourcetype",
+      "community": 4,
+      "norm_label": "sourcetype"
+    },
+    {
+      "label": "app.js",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "app",
+      "community": 0,
+      "norm_label": "app.js"
+    },
+    {
+      "label": "products",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "app_products",
+      "community": 0,
+      "norm_label": "products"
+    },
+    {
+      "label": "cart",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "app_cart",
+      "community": 0,
+      "norm_label": "cart"
+    },
+    {
+      "label": "RTL_LANGUAGES",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "app_rtl_languages",
+      "community": 0,
+      "norm_label": "rtl_languages"
+    },
+    {
+      "label": "i18n",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "app_i18n",
+      "community": 0,
+      "norm_label": "i18n"
+    },
+    {
+      "label": "landingView",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L145",
+      "_origin": "ast",
+      "id": "app_landingview",
+      "community": 0,
+      "norm_label": "landingview"
+    },
+    {
+      "label": "storeView",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L146",
+      "_origin": "ast",
+      "id": "app_storeview",
+      "community": 0,
+      "norm_label": "storeview"
+    },
+    {
+      "label": "openStoreBtn",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L147",
+      "_origin": "ast",
+      "id": "app_openstorebtn",
+      "community": 0,
+      "norm_label": "openstorebtn"
+    },
+    {
+      "label": "backToLandingBtn",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L148",
+      "_origin": "ast",
+      "id": "app_backtolandingbtn",
+      "community": 0,
+      "norm_label": "backtolandingbtn"
+    },
+    {
+      "label": "productsGrid",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L150",
+      "_origin": "ast",
+      "id": "app_productsgrid",
+      "community": 0,
+      "norm_label": "productsgrid"
+    },
+    {
+      "label": "categoryFilters",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L151",
+      "_origin": "ast",
+      "id": "app_categoryfilters",
+      "community": 0,
+      "norm_label": "categoryfilters"
+    },
+    {
+      "label": "cartToggleBtn",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L153",
+      "_origin": "ast",
+      "id": "app_carttogglebtn",
+      "community": 0,
+      "norm_label": "carttogglebtn"
+    },
+    {
+      "label": "closeCartBtn",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L154",
+      "_origin": "ast",
+      "id": "app_closecartbtn",
+      "community": 0,
+      "norm_label": "closecartbtn"
+    },
+    {
+      "label": "cartDrawer",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L155",
+      "_origin": "ast",
+      "id": "app_cartdrawer",
+      "community": 0,
+      "norm_label": "cartdrawer"
+    },
+    {
+      "label": "overlay",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L156",
+      "_origin": "ast",
+      "id": "app_overlay",
+      "community": 0,
+      "norm_label": "overlay"
+    },
+    {
+      "label": "cartCount",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L158",
+      "_origin": "ast",
+      "id": "app_cartcount",
+      "community": 0,
+      "norm_label": "cartcount"
+    },
+    {
+      "label": "cartItems",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L159",
+      "_origin": "ast",
+      "id": "app_cartitems",
+      "community": 0,
+      "norm_label": "cartitems"
+    },
+    {
+      "label": "cartTotal",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L160",
+      "_origin": "ast",
+      "id": "app_carttotal",
+      "community": 0,
+      "norm_label": "carttotal"
+    },
+    {
+      "label": "copyNoteBtn",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L162",
+      "_origin": "ast",
+      "id": "app_copynotebtn",
+      "community": 0,
+      "norm_label": "copynotebtn"
+    },
+    {
+      "label": "payWithBitBtn",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L163",
+      "_origin": "ast",
+      "id": "app_paywithbitbtn",
+      "community": 0,
+      "norm_label": "paywithbitbtn"
+    },
+    {
+      "label": "toast",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L164",
+      "_origin": "ast",
+      "id": "app_toast",
+      "community": 0,
+      "norm_label": "toast"
+    },
+    {
+      "label": "langSwitcher",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L166",
+      "_origin": "ast",
+      "id": "app_langswitcher",
+      "community": 0,
+      "norm_label": "langswitcher"
+    },
+    {
+      "label": "langToggleBtn",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L167",
+      "_origin": "ast",
+      "id": "app_langtogglebtn",
+      "community": 0,
+      "norm_label": "langtogglebtn"
+    },
+    {
+      "label": "langMenu",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L168",
+      "_origin": "ast",
+      "id": "app_langmenu",
+      "community": 0,
+      "norm_label": "langmenu"
+    },
+    {
+      "label": "t()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L210",
+      "_origin": "ast",
+      "id": "app_t",
+      "community": 5,
+      "norm_label": "t()"
+    },
+    {
+      "label": "setLanguage()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L214",
+      "_origin": "ast",
+      "id": "app_setlanguage",
+      "community": 5,
+      "norm_label": "setlanguage()"
+    },
+    {
+      "label": "closeLanguageMenu()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L230",
+      "_origin": "ast",
+      "id": "app_closelanguagemenu",
+      "community": 5,
+      "norm_label": "closelanguagemenu()"
+    },
+    {
+      "label": "updateStaticText()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L235",
+      "_origin": "ast",
+      "id": "app_updatestatictext",
+      "community": 5,
+      "norm_label": "updatestatictext()"
+    },
+    {
+      "label": "loadProducts()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L259",
+      "_origin": "ast",
+      "id": "app_loadproducts",
+      "community": 5,
+      "norm_label": "loadproducts()"
+    },
+    {
+      "label": "getLocalizedValue()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L281",
+      "_origin": "ast",
+      "id": "app_getlocalizedvalue",
+      "community": 0,
+      "norm_label": "getlocalizedvalue()"
+    },
+    {
+      "label": "getLocalizedTags()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L287",
+      "_origin": "ast",
+      "id": "app_getlocalizedtags",
+      "community": 0,
+      "norm_label": "getlocalizedtags()"
+    },
+    {
+      "label": "getCategoryLabel()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L298",
+      "_origin": "ast",
+      "id": "app_getcategorylabel",
+      "community": 5,
+      "norm_label": "getcategorylabel()"
+    },
+    {
+      "label": "renderCategories()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L303",
+      "_origin": "ast",
+      "id": "app_rendercategories",
+      "community": 5,
+      "norm_label": "rendercategories()"
+    },
+    {
+      "label": "renderProducts()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L331",
+      "_origin": "ast",
+      "id": "app_renderproducts",
+      "community": 5,
+      "norm_label": "renderproducts()"
+    },
+    {
+      "label": "addToCart()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L396",
+      "_origin": "ast",
+      "id": "app_addtocart",
+      "community": 3,
+      "norm_label": "addtocart()"
+    },
+    {
+      "label": "removeFromCart()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L402",
+      "_origin": "ast",
+      "id": "app_removefromcart",
+      "community": 3,
+      "norm_label": "removefromcart()"
+    },
+    {
+      "label": "getCartProducts()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L414",
+      "_origin": "ast",
+      "id": "app_getcartproducts",
+      "community": 3,
+      "norm_label": "getcartproducts()"
+    },
+    {
+      "label": "getCartTotal()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L462",
+      "_origin": "ast",
+      "id": "app_getcarttotal",
+      "community": 3,
+      "norm_label": "getcarttotal()"
+    },
+    {
+      "label": "getCartCount()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L466",
+      "_origin": "ast",
+      "id": "app_getcartcount",
+      "community": 3,
+      "norm_label": "getcartcount()"
+    },
+    {
+      "label": "renderCart()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L470",
+      "_origin": "ast",
+      "id": "app_rendercart",
+      "community": 3,
+      "norm_label": "rendercart()"
+    },
+    {
+      "label": "openCart()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L513",
+      "_origin": "ast",
+      "id": "app_opencart",
+      "community": 0,
+      "norm_label": "opencart()"
+    },
+    {
+      "label": "closeCart()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L518",
+      "_origin": "ast",
+      "id": "app_closecart",
+      "community": 0,
+      "norm_label": "closecart()"
+    },
+    {
+      "label": "buildOrderNote()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L523",
+      "_origin": "ast",
+      "id": "app_buildordernote",
+      "community": 3,
+      "norm_label": "buildordernote()"
+    },
+    {
+      "label": "copyOrderNote()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L539",
+      "_origin": "ast",
+      "id": "app_copyordernote",
+      "community": 3,
+      "norm_label": "copyordernote()"
+    },
+    {
+      "label": "payWithBit()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L551",
+      "_origin": "ast",
+      "id": "app_paywithbit",
+      "community": 3,
+      "norm_label": "paywithbit()"
+    },
+    {
+      "label": "showToast()",
+      "file_type": "code",
+      "source_file": "app.js",
+      "source_location": "L560",
+      "_origin": "ast",
+      "id": "app_showtoast",
+      "community": 3,
+      "norm_label": "showtoast()"
+    },
+    {
+      "label": "package.json",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "package",
+      "community": 2,
+      "norm_label": "package.json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "_origin": "ast",
+      "id": "package_name",
+      "community": 2,
+      "norm_label": "name"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "package_version",
+      "community": 2,
+      "norm_label": "version"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "package_description",
+      "community": 2,
+      "norm_label": "description"
+    },
+    {
+      "label": "main",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "package_main",
+      "community": 2,
+      "norm_label": "main"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "package_scripts",
+      "community": 2,
+      "norm_label": "scripts"
+    },
+    {
+      "label": "start",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "package_scripts_start",
+      "community": 2,
+      "norm_label": "start"
+    },
+    {
+      "label": "keywords",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "package_keywords",
+      "community": 2,
+      "norm_label": "keywords"
+    },
+    {
+      "label": "author",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "package_author",
+      "community": 2,
+      "norm_label": "author"
+    },
+    {
+      "label": "license",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "package_license",
+      "community": 2,
+      "norm_label": "license"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "package_devdependencies",
+      "community": 2,
+      "norm_label": "devdependencies"
+    },
+    {
+      "label": "serve",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "package_devdependencies_serve",
+      "community": 2,
+      "norm_label": "serve"
+    },
+    {
+      "label": "CoffeeTruckQRWebsite Project Overview",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_overview",
+      "community": 1,
+      "norm_label": "coffeetruckqrwebsite project overview"
+    },
+    {
+      "label": "Coffee Truck 3D Prints Page",
+      "file_type": "document",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_page",
+      "community": 1,
+      "norm_label": "coffee truck 3d prints page"
+    },
+    {
+      "label": "Multilingual Language Switcher (he/en/ar)",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "lines 10-25",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_language_switcher",
+      "community": 1,
+      "norm_label": "multilingual language switcher (he/en/ar)"
+    },
+    {
+      "label": "Landing View",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "lines 28-46",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_landing_view",
+      "community": 1,
+      "norm_label": "landing view"
+    },
+    {
+      "label": "Store View",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "lines 48-73",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_store_view",
+      "community": 1,
+      "norm_label": "store view"
+    },
+    {
+      "label": "Cart Drawer",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "lines 75-99",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_cart_drawer",
+      "community": 1,
+      "norm_label": "cart drawer"
+    },
+    {
+      "label": "Products Grid",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "line 72",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_products_grid",
+      "community": 1,
+      "norm_label": "products grid"
+    },
+    {
+      "label": "Category Filters",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "line 70",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_category_filters",
+      "community": 1,
+      "norm_label": "category filters"
+    },
+    {
+      "label": "Pay With Bit Checkout",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "lines 94-97",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_bit_payment",
+      "community": 1,
+      "norm_label": "pay with bit checkout"
+    },
+    {
+      "label": "Copy Order Note Action",
+      "file_type": "concept",
+      "source_file": "index.html",
+      "source_location": "lines 94, 102",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_copy_note",
+      "community": 1,
+      "norm_label": "copy order note action"
+    },
+    {
+      "label": "app.js Frontend Logic",
+      "file_type": "code",
+      "source_file": "index.html",
+      "source_location": "line 105",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_app_js",
+      "community": 1,
+      "norm_label": "app.js frontend logic"
+    },
+    {
+      "label": "style.css Stylesheet",
+      "file_type": "code",
+      "source_file": "index.html",
+      "source_location": "line 7",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_style_css",
+      "community": 1,
+      "norm_label": "style.css stylesheet"
+    },
+    {
+      "label": "Articulated Dragon (3D-Printed Flexi Toy)",
+      "file_type": "image",
+      "source_file": "assets/articulated-dragon.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "assets_articulated_dragon",
+      "community": 6,
+      "norm_label": "articulated dragon (3d-printed flexi toy)"
+    },
+    {
+      "label": "Custom Sign (Dancing Figurine Display Piece)",
+      "file_type": "image",
+      "source_file": "assets/custom-sign.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "assets_custom_sign",
+      "community": 6,
+      "norm_label": "custom sign (dancing figurine display piece)"
+    },
+    {
+      "label": "Fidget Tower (Tiered Spinning Fidget Toy)",
+      "file_type": "image",
+      "source_file": "assets/fidget-tower.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "assets_fidget_tower",
+      "community": 6,
+      "norm_label": "fidget tower (tiered spinning fidget toy)"
+    },
+    {
+      "label": "Geometric Fidget Sculpture",
+      "file_type": "image",
+      "source_file": "assets/geometric-fidget.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "assets_geometric_fidget",
+      "community": 8,
+      "norm_label": "geometric fidget sculpture"
+    },
+    {
+      "label": "Hex Spinner Fidget",
+      "file_type": "image",
+      "source_file": "assets/hex-spinner.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "assets_hex_spinner",
+      "community": 8,
+      "norm_label": "hex spinner fidget"
+    },
+    {
+      "label": "Ice Quartz Crystal Cluster",
+      "file_type": "image",
+      "source_file": "assets/ice-quartz.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "assets_ice_quartz",
+      "community": 9,
+      "norm_label": "ice quartz crystal cluster"
+    },
+    {
+      "label": "Star / Novelty Keychains Market Display",
+      "file_type": "image",
+      "source_file": "assets/keychain-star.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "assets_keychain_star",
+      "community": 7,
+      "norm_label": "star / novelty keychains market display"
+    },
+    {
+      "label": "Prank Coffee Mug ('Relax' Spiral Overflow)",
+      "file_type": "image",
+      "source_file": "assets/prank-coffee-mug.jpg",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "assets_prank_coffee_mug",
+      "community": 7,
+      "norm_label": "prank coffee mug ('relax' spiral overflow)"
+    },
+    {
+      "label": "Spiral Fidget Toy (Twisted Cone)",
+      "file_type": "image",
+      "source_file": "assets/spiral-fidget.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "assets_spiral_fidget",
+      "community": 7,
+      "norm_label": "spiral fidget toy (twisted cone)"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".eslintrc.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "eslintrc",
+      "target": "eslintrc_env",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".eslintrc.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "eslintrc",
+      "target": "eslintrc_extends",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".eslintrc.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "eslintrc",
+      "target": "eslintrc_parser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".eslintrc.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "eslintrc",
+      "target": "eslintrc_parseroptions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".eslintrc.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "eslintrc_env",
+      "target": "eslintrc_env_browser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".eslintrc.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "eslintrc_env",
+      "target": "eslintrc_env_es2021",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".eslintrc.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "eslintrc_parseroptions",
+      "target": "eslintrc_parseroptions_ecmaversion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".eslintrc.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "eslintrc_parseroptions",
+      "target": "eslintrc_parseroptions_sourcetype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L396",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_addtocart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L148",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_backtolandingbtn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L523",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_buildordernote",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_cart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_cartcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L155",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_cartdrawer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_cartitems",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L153",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_carttogglebtn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_carttotal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L151",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_categoryfilters",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L518",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_closecart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L154",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_closecartbtn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L230",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_closelanguagemenu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L162",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_copynotebtn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L539",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_copyordernote",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L466",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_getcartcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L414",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_getcartproducts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L462",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_getcarttotal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L298",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_getcategorylabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L287",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_getlocalizedtags",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L281",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_getlocalizedvalue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_i18n",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L145",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_landingview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_langmenu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_langswitcher",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L167",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_langtogglebtn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L259",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_loadproducts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L513",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_opencart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_openstorebtn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L156",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_overlay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L551",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_paywithbit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L163",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_paywithbitbtn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_products",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L150",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_productsgrid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L402",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_removefromcart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L470",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_rendercart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L303",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_rendercategories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L331",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_renderproducts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_rtl_languages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L214",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_setlanguage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L560",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L146",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_storeview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L210",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_toast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L235",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_updatestatictext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L527",
+      "weight": 1.0,
+      "source": "app_buildordernote",
+      "target": "app_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L299",
+      "weight": 1.0,
+      "source": "app_getcategorylabel",
+      "target": "app_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L275",
+      "weight": 1.0,
+      "source": "app_loadproducts",
+      "target": "app_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L479",
+      "weight": 1.0,
+      "source": "app_rendercart",
+      "target": "app_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L344",
+      "weight": 1.0,
+      "source": "app_renderproducts",
+      "target": "app_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L236",
+      "weight": 1.0,
+      "source": "app_updatestatictext",
+      "target": "app_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L227",
+      "weight": 1.0,
+      "source": "app_setlanguage",
+      "target": "app_closelanguagemenu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L226",
+      "weight": 1.0,
+      "source": "app_setlanguage",
+      "target": "app_rendercart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L224",
+      "weight": 1.0,
+      "source": "app_setlanguage",
+      "target": "app_rendercategories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L225",
+      "weight": 1.0,
+      "source": "app_setlanguage",
+      "target": "app_renderproducts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L223",
+      "weight": 1.0,
+      "source": "app_setlanguage",
+      "target": "app_updatestatictext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L270",
+      "weight": 1.0,
+      "source": "app_loadproducts",
+      "target": "app_rendercart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L268",
+      "weight": 1.0,
+      "source": "app_loadproducts",
+      "target": "app_rendercategories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L269",
+      "weight": 1.0,
+      "source": "app_loadproducts",
+      "target": "app_renderproducts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L398",
+      "weight": 1.0,
+      "source": "app_addtocart",
+      "target": "app_rendercart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L399",
+      "weight": 1.0,
+      "source": "app_addtocart",
+      "target": "app_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L411",
+      "weight": 1.0,
+      "source": "app_removefromcart",
+      "target": "app_rendercart",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L524",
+      "weight": 1.0,
+      "source": "app_buildordernote",
+      "target": "app_getcartproducts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L463",
+      "weight": 1.0,
+      "source": "app_getcarttotal",
+      "target": "app_getcartproducts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L471",
+      "weight": 1.0,
+      "source": "app_rendercart",
+      "target": "app_getcartproducts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L536",
+      "weight": 1.0,
+      "source": "app_buildordernote",
+      "target": "app_getcarttotal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L474",
+      "weight": 1.0,
+      "source": "app_rendercart",
+      "target": "app_getcarttotal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L552",
+      "weight": 1.0,
+      "source": "app_paywithbit",
+      "target": "app_getcartcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L473",
+      "weight": 1.0,
+      "source": "app_rendercart",
+      "target": "app_getcartcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L540",
+      "weight": 1.0,
+      "source": "app_copyordernote",
+      "target": "app_buildordernote",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L544",
+      "weight": 1.0,
+      "source": "app_copyordernote",
+      "target": "app_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.js",
+      "source_location": "L553",
+      "weight": 1.0,
+      "source": "app_paywithbit",
+      "target": "app_showtoast",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_author",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_description",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_devdependencies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_keywords",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_license",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_scripts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "package",
+      "target": "package_version",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "package_scripts",
+      "target": "package_scripts_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "package_devdependencies",
+      "target": "package_devdependencies_serve",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_overview",
+      "target": "index_page"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 105",
+      "weight": 1.0,
+      "source": "index_page",
+      "target": "index_app_js"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 75-99",
+      "weight": 1.0,
+      "source": "index_page",
+      "target": "index_cart_drawer"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 28-46",
+      "weight": 1.0,
+      "source": "index_page",
+      "target": "index_landing_view"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 10-25",
+      "weight": 1.0,
+      "source": "index_page",
+      "target": "index_language_switcher"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 48-73",
+      "weight": 1.0,
+      "source": "index_page",
+      "target": "index_store_view"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 7",
+      "weight": 1.0,
+      "source": "index_page",
+      "target": "index_style_css"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": "lines 13, 20, 105",
+      "weight": 1.0,
+      "source": "index_app_js",
+      "target": "index_language_switcher"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": "lines 38, 52",
+      "weight": 1.0,
+      "source": "index_landing_view",
+      "target": "index_store_view"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": "lines 61-64, 76",
+      "weight": 1.0,
+      "source": "index_store_view",
+      "target": "index_cart_drawer"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 70",
+      "weight": 1.0,
+      "source": "index_store_view",
+      "target": "index_category_filters"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 72",
+      "weight": 1.0,
+      "source": "index_store_view",
+      "target": "index_products_grid"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": "lines 76, 105",
+      "weight": 1.0,
+      "source": "index_app_js",
+      "target": "index_cart_drawer"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 88-98",
+      "weight": 1.0,
+      "source": "index_cart_drawer",
+      "target": "index_bit_payment"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "lines 94, 102",
+      "weight": 1.0,
+      "source": "index_cart_drawer",
+      "target": "index_copy_note"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": "lines 72, 86",
+      "weight": 1.0,
+      "source": "index_products_grid",
+      "target": "index_cart_drawer"
+    },
+    {
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": "lines 72, 105",
+      "weight": 1.0,
+      "source": "index_app_js",
+      "target": "index_products_grid"
+    },
+    {
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": "lines 70, 72",
+      "weight": 1.0,
+      "source": "index_category_filters",
+      "target": "index_products_grid"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "index.html",
+      "source_location": "lines 94-95",
+      "weight": 1.0,
+      "source": "index_bit_payment",
+      "target": "index_copy_note"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "assets/articulated-dragon.png",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "assets_articulated_dragon",
+      "target": "assets_custom_sign"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "assets/articulated-dragon.png",
+      "source_location": null,
+      "weight": 0.85,
+      "source": "assets_articulated_dragon",
+      "target": "assets_fidget_tower"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "assets/custom-sign.png",
+      "source_location": null,
+      "weight": 0.75,
+      "source": "assets_custom_sign",
+      "target": "assets_fidget_tower"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "assets/hex-spinner.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "assets_geometric_fidget",
+      "target": "assets_hex_spinner"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "assets/keychain-star.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "assets_keychain_star",
+      "target": "assets_spiral_fidget"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "assets/spiral-fidget.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "assets_prank_coffee_mug",
+      "target": "assets_spiral_fidget"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "spa_view_navigation_flow",
+      "label": "Single-Page View Navigation Flow",
+      "nodes": [
+        "index_landing_view",
+        "index_store_view",
+        "index_cart_drawer"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html"
+    },
+    {
+      "id": "store_browsing_pipeline",
+      "label": "Store Browsing and Filtering Pipeline",
+      "nodes": [
+        "index_category_filters",
+        "index_products_grid",
+        "index_cart_drawer"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html"
+    },
+    {
+      "id": "checkout_completion_flow",
+      "label": "Cart Checkout Completion Flow",
+      "nodes": [
+        "index_cart_drawer",
+        "index_bit_payment",
+        "index_copy_note"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html"
+    },
+    {
+      "id": "three_d_printed_product_line",
+      "label": "3D-Printed Product Line",
+      "nodes": [
+        "assets_articulated_dragon",
+        "assets_custom_sign",
+        "assets_fidget_tower"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "assets/"
+    },
+    {
+      "id": "printed_decorative_objects",
+      "label": "3D-Printed Decorative Display Objects",
+      "nodes": [
+        "assets_geometric_fidget",
+        "assets_hex_spinner",
+        "assets_ice_quartz"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "assets/"
+    },
+    {
+      "id": "printed_novelty_products",
+      "label": "3D-Printed Novelty Products",
+      "nodes": [
+        "assets_keychain_star",
+        "assets_prank_coffee_mug",
+        "assets_spiral_fidget"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "assets/keychain-star.png"
+    }
+  ],
+  "built_at_commit": "2deab9a5ee74c543361f5efb0d9db69404369380"
+}
