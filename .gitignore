@@ -1,1 +1,5 @@
 node_modules
+
+# Python bytecode cache (from the ui-ux-pro-max skill scripts)
+__pycache__/
+*.pyc

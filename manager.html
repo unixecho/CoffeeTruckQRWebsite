@@ -1,0 +1,1786 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Product Manager · Coffee Truck</title>
+    <style>
+      /* ---------- Theme tokens (coffee + warm gold) ---------- */
+      :root {
+        --coffee-900: #2a1206;
+        --coffee-800: #451a03;
+        --coffee-700: #78350f;
+        --coffee-600: #92400e;
+        --gold-500: #f59e0b;
+        --gold-400: #fbbf24;
+        --cream-50: #fdfbf7;
+        --cream-100: #faf5ec;
+        --line: #e7ddcc;
+        --line-strong: #d6c7ad;
+        --ink: #2c1a0c;
+        --muted: #6b5640;
+        --ok: #15803d;
+        --ok-bg: #dcfce7;
+        --warn: #b45309;
+        --warn-bg: #fef3c7;
+        --err: #b91c1c;
+        --err-bg: #fee2e2;
+        --radius: 12px;
+        --shadow-sm: 0 1px 2px rgba(69, 26, 3, 0.08);
+        --shadow-md: 0 6px 24px rgba(69, 26, 3, 0.12);
+        --shadow-lg: 0 20px 60px rgba(42, 18, 6, 0.28);
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Rubik", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: var(--cream-100);
+        color: var(--ink);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      a {
+        color: var(--coffee-700);
+      }
+
+      /* ---------- App header ---------- */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: linear-gradient(180deg, var(--coffee-800), var(--coffee-700));
+        color: #fff;
+        box-shadow: var(--shadow-md);
+      }
+
+      .topbar-inner {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-inline-end: auto;
+      }
+
+      .brand .logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--gold-400);
+        color: var(--coffee-800);
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+      }
+
+      .brand h1 {
+        font-size: 1.05rem;
+        line-height: 1.1;
+      }
+
+      .brand .sub {
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .topbar .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      /* ---------- Buttons ---------- */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        background: #fff;
+        color: var(--ink);
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.18s var(--ease), border-color 0.18s var(--ease),
+          color 0.18s var(--ease), box-shadow 0.18s var(--ease), opacity 0.18s var(--ease);
+        white-space: nowrap;
+      }
+
+      .btn svg {
+        width: 18px;
+        height: 18px;
+        flex: 0 0 auto;
+      }
+
+      .btn:hover {
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn:focus-visible {
+        outline: 3px solid var(--gold-400);
+        outline-offset: 2px;
+      }
+
+      .btn-primary {
+        background: var(--gold-400);
+        color: var(--coffee-900);
+        border-color: var(--gold-500);
+      }
+
+      .btn-primary:hover {
+        background: var(--gold-500);
+      }
+
+      .btn-ghost {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.22);
+      }
+
+      .btn-ghost:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .btn-soft {
+        background: var(--cream-50);
+        border-color: var(--line);
+        color: var(--coffee-700);
+      }
+
+      .btn-soft:hover {
+        background: #fff;
+        border-color: var(--line-strong);
+      }
+
+      .btn-danger {
+        background: #fff;
+        border-color: #f1c4c4;
+        color: var(--err);
+      }
+
+      .btn-danger:hover {
+        background: var(--err-bg);
+      }
+
+      .btn-icon {
+        padding: 7px;
+        border-radius: 9px;
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* ---------- Layout ---------- */
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+
+      .search {
+        position: relative;
+        flex: 1 1 240px;
+      }
+
+      .search input {
+        width: 100%;
+        padding: 10px 12px 10px 38px;
+        border-radius: 10px;
+        border: 1px solid var(--line-strong);
+        background: #fff;
+      }
+
+      .search svg {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        color: var(--muted);
+      }
+
+      .search input:focus {
+        outline: 3px solid var(--gold-400);
+        outline-offset: 0;
+        border-color: var(--gold-500);
+      }
+
+      select.filter {
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--line-strong);
+        background: #fff;
+        cursor: pointer;
+      }
+
+      .count-pill {
+        font-size: 0.85rem;
+        color: var(--muted);
+        background: #fff;
+        border: 1px solid var(--line);
+        padding: 6px 12px;
+        border-radius: 999px;
+      }
+
+      /* ---------- Status banner ---------- */
+      .banner {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        margin-bottom: 14px;
+        font-size: 0.9rem;
+      }
+
+      .banner.show {
+        display: flex;
+      }
+
+      .banner.ok {
+        background: var(--ok-bg);
+        color: var(--ok);
+      }
+
+      .banner.warn {
+        background: var(--warn-bg);
+        color: var(--warn);
+      }
+
+      .banner.err {
+        background: var(--err-bg);
+        color: var(--err);
+      }
+
+      .banner svg {
+        width: 18px;
+        height: 18px;
+        flex: 0 0 auto;
+      }
+
+      /* ---------- Product list ---------- */
+      .list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 12px;
+        box-shadow: var(--shadow-sm);
+        transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+      }
+
+      .card:hover {
+        border-color: var(--line-strong);
+        box-shadow: var(--shadow-md);
+      }
+
+      .card.dimmed {
+        opacity: 0.6;
+      }
+
+      .thumb {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        object-fit: cover;
+        background: var(--cream-100);
+        border: 1px solid var(--line);
+        flex: 0 0 auto;
+      }
+
+      .thumb.placeholder {
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+      }
+
+      .card-body {
+        min-width: 0;
+        flex: 1 1 auto;
+      }
+
+      .card-title {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .card-meta {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 4px;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
+      .tag {
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: var(--cream-100);
+        color: var(--coffee-700);
+        border: 1px solid var(--line);
+      }
+
+      .tag.off {
+        background: var(--err-bg);
+        color: var(--err);
+        border-color: #f1c4c4;
+      }
+
+      .price {
+        font-weight: 700;
+        color: var(--coffee-800);
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 4px;
+        flex: 0 0 auto;
+      }
+
+      .reorder {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-inline-end: 4px;
+      }
+
+      .reorder .btn-icon {
+        padding: 3px;
+      }
+
+      .empty {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--muted);
+      }
+
+      .empty svg {
+        width: 48px;
+        height: 48px;
+        opacity: 0.5;
+        margin-bottom: 12px;
+      }
+
+      /* ---------- Drawer / editor ---------- */
+      .scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(42, 18, 6, 0.45);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s var(--ease);
+        z-index: 40;
+      }
+
+      .scrim.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: min(560px, 100%);
+        background: var(--cream-50);
+        box-shadow: var(--shadow-lg);
+        transform: translateX(100%);
+        transition: transform 0.32s var(--ease);
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .drawer.open {
+        transform: translateX(0);
+      }
+
+      .drawer-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .drawer-head h2 {
+        font-size: 1.1rem;
+        margin-inline-end: auto;
+      }
+
+      .drawer-body {
+        overflow-y: auto;
+        padding: 20px;
+        flex: 1 1 auto;
+      }
+
+      .drawer-foot {
+        display: flex;
+        gap: 10px;
+        padding: 14px 20px;
+        border-top: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .drawer-foot .btn-primary {
+        margin-inline-start: auto;
+      }
+
+      /* ---------- Form ---------- */
+      fieldset {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 14px 16px 16px;
+        margin: 0 0 16px;
+        background: #fff;
+      }
+
+      legend {
+        font-weight: 700;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--coffee-600);
+        padding: 0 6px;
+      }
+
+      .field {
+        margin-bottom: 12px;
+      }
+
+      .field:last-child {
+        margin-bottom: 0;
+      }
+
+      label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: var(--coffee-800);
+      }
+
+      label .req {
+        color: var(--err);
+      }
+
+      label .hint {
+        font-weight: 400;
+        color: var(--muted);
+      }
+
+      input[type="text"],
+      input[type="number"],
+      textarea,
+      select.input {
+        width: 100%;
+        padding: 9px 11px;
+        border-radius: 9px;
+        border: 1px solid var(--line-strong);
+        background: #fff;
+      }
+
+      input:focus,
+      textarea:focus,
+      select.input:focus {
+        outline: 3px solid var(--gold-400);
+        outline-offset: 0;
+        border-color: var(--gold-500);
+      }
+
+      input.bad,
+      textarea.bad {
+        border-color: var(--err);
+        background: #fff7f7;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 64px;
+      }
+
+      .lang-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .lang-row label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .flagcode {
+        font-size: 0.68rem;
+        font-weight: 700;
+        background: var(--cream-100);
+        border: 1px solid var(--line);
+        color: var(--coffee-700);
+        border-radius: 5px;
+        padding: 1px 5px;
+        letter-spacing: 0.04em;
+      }
+
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .switch {
+        position: relative;
+        width: 44px;
+        height: 26px;
+        flex: 0 0 auto;
+      }
+
+      .switch input {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        cursor: pointer;
+      }
+
+      .switch .track {
+        position: absolute;
+        inset: 0;
+        background: var(--line-strong);
+        border-radius: 999px;
+        transition: background 0.2s var(--ease);
+      }
+
+      .switch .knob {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.2s var(--ease);
+      }
+
+      .switch input:checked + .track {
+        background: var(--ok);
+      }
+
+      .switch input:checked + .track + .knob {
+        transform: translateX(18px);
+      }
+
+      .switch input:focus-visible + .track {
+        outline: 3px solid var(--gold-400);
+        outline-offset: 2px;
+      }
+
+      .field-err {
+        display: none;
+        color: var(--err);
+        font-size: 0.78rem;
+        margin-top: 4px;
+      }
+
+      .field-err.show {
+        display: block;
+      }
+
+      .img-preview {
+        margin-top: 8px;
+        width: 96px;
+        height: 96px;
+        border-radius: 10px;
+        object-fit: cover;
+        border: 1px solid var(--line);
+        background: var(--cream-100);
+        display: none;
+      }
+
+      .img-preview.show {
+        display: block;
+      }
+
+      /* repeatable rows: tiers & tags */
+      .tier-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 8px;
+        align-items: end;
+        margin-bottom: 8px;
+      }
+
+      .tier-row .field {
+        margin: 0;
+      }
+
+      .chip-input {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 7px;
+        border: 1px solid var(--line-strong);
+        border-radius: 9px;
+        background: #fff;
+      }
+
+      .chip-input:focus-within {
+        outline: 3px solid var(--gold-400);
+        border-color: var(--gold-500);
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--cream-100);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 3px 6px 3px 10px;
+        font-size: 0.8rem;
+      }
+
+      .chip button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--muted);
+        padding: 0;
+        line-height: 0;
+      }
+
+      .chip button:hover {
+        color: var(--err);
+      }
+
+      .chip-input input {
+        border: none;
+        outline: none;
+        flex: 1 1 80px;
+        min-width: 80px;
+        padding: 4px;
+      }
+
+      .add-row {
+        margin-top: 4px;
+      }
+
+      .validation-summary {
+        background: var(--err-bg);
+        border: 1px solid #f1c4c4;
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin-bottom: 16px;
+        color: var(--err);
+        font-size: 0.86rem;
+        display: none;
+      }
+
+      .validation-summary.show {
+        display: block;
+      }
+
+      .validation-summary ul {
+        margin: 6px 0 0;
+        padding-inline-start: 18px;
+      }
+
+      /* visually hidden but accessible */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .help {
+        font-size: 0.84rem;
+        color: var(--muted);
+        background: #fff;
+        border: 1px dashed var(--line-strong);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 16px;
+      }
+
+      .help b {
+        color: var(--coffee-700);
+      }
+
+      @media (max-width: 560px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+        .brand .sub {
+          display: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <span class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+          </span>
+          <div>
+            <h1>Product Manager</h1>
+            <div class="sub">Coffee Truck · edits <code>data/products.json</code></div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-ghost" id="btnOpen" title="Open a products.json from disk">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>
+            Open file
+          </button>
+          <button class="btn btn-ghost" id="btnReload" title="Reload from the live site catalog">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+            Reload catalog
+          </button>
+          <button class="btn btn-ghost" id="btnExport" title="Download / save products.json">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+            <span id="exportLabel">Export file</span>
+          </button>
+          <button class="btn btn-primary" id="btnAdd">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+            Add item
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="banner" id="banner" role="status"></div>
+
+      <div class="help" id="helpBox">
+        <b>How this works:</b> it loads your current catalog, you add or edit items in a guided form,
+        and it writes out a clean <code>data/products.json</code> for you. The file is always
+        rebuilt from validated data — it can't be saved half-broken. In Chrome/Edge you can
+        <b>Open file</b> → edit → <b>Save</b> straight back to disk. In other browsers, <b>Export</b>
+        downloads the file and you drop it into <code>data/</code>. Categories and image files are
+        detected automatically — drop a new image in <code>assets/</code> or add a category in
+        <code>app.js</code> and it appears here on reload.
+      </div>
+
+      <div class="toolbar">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="searchInput" placeholder="Search by name or id…" aria-label="Search products" />
+        </div>
+        <select class="filter" id="categoryFilter" aria-label="Filter by category">
+          <option value="all">All categories</option>
+        </select>
+        <span class="count-pill" id="countPill">0 items</span>
+      </div>
+
+      <div class="list" id="list"></div>
+    </main>
+
+    <!-- Editor drawer -->
+    <div class="scrim" id="scrim"></div>
+    <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+      <div class="drawer-head">
+        <h2 id="drawerTitle">Add item</h2>
+        <button class="btn btn-soft btn-icon" id="btnCloseDrawer" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+      <div class="drawer-body">
+        <div class="validation-summary" id="validationSummary"></div>
+        <form id="form" novalidate>
+          <fieldset>
+            <legend>Basics</legend>
+            <div class="two-col">
+              <div class="field">
+                <label for="f-id">ID <span class="req">*</span> <span class="hint">(lowercase-dashes)</span></label>
+                <input type="text" id="f-id" autocomplete="off" spellcheck="false" />
+                <div class="field-err" id="err-id"></div>
+              </div>
+              <div class="field">
+                <label for="f-category">Category <span class="req">*</span></label>
+                <select class="input" id="f-category"></select>
+              </div>
+            </div>
+            <div class="field" id="newCatField" hidden>
+              <label for="newCatName">New category name</label>
+              <div style="display: flex; gap: 8px; align-items: flex-start">
+                <input type="text" id="newCatName" placeholder="e.g. Magnets" autocomplete="off" />
+                <button type="button" class="btn btn-primary" id="btnAddCat">Add</button>
+                <button type="button" class="btn btn-soft" id="btnCancelCat">Cancel</button>
+              </div>
+              <div class="field-err" id="err-newcat"></div>
+              <div style="font-size: 0.78rem; color: var(--muted); margin-top: 6px">
+                Tip: for a translated label on the site, also add this key to the
+                <code>categories</code> block (he/en/ar) in <code>app.js</code>. Until then the site shows the raw key.
+              </div>
+            </div>
+            <div class="two-col">
+              <div class="field">
+                <label for="f-price">Base price (₪) <span class="req">*</span></label>
+                <input type="number" id="f-price" min="0" step="1" inputmode="numeric" />
+                <div class="field-err" id="err-price"></div>
+              </div>
+              <div class="field">
+                <div class="toggle-row" style="margin-top: 26px">
+                  <span class="switch">
+                    <input type="checkbox" id="f-available" checked />
+                    <span class="track"></span><span class="knob"></span>
+                  </span>
+                  <label for="f-available" style="margin: 0">Available for sale</label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Name</legend>
+            <div class="lang-grid lang-row">
+              <div class="field">
+                <label for="f-name-he"><span class="flagcode">HE</span> Hebrew <span class="req">*</span></label>
+                <input type="text" id="f-name-he" dir="rtl" />
+                <div class="field-err" id="err-name-he"></div>
+              </div>
+              <div class="field">
+                <label for="f-name-en"><span class="flagcode">EN</span> English</label>
+                <input type="text" id="f-name-en" dir="ltr" />
+              </div>
+              <div class="field">
+                <label for="f-name-ar"><span class="flagcode">AR</span> Arabic</label>
+                <input type="text" id="f-name-ar" dir="rtl" />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Description</legend>
+            <div class="lang-grid lang-row">
+              <div class="field">
+                <label for="f-desc-he"><span class="flagcode">HE</span> Hebrew</label>
+                <textarea id="f-desc-he" dir="rtl"></textarea>
+              </div>
+              <div class="field">
+                <label for="f-desc-en"><span class="flagcode">EN</span> English</label>
+                <textarea id="f-desc-en" dir="ltr"></textarea>
+              </div>
+              <div class="field">
+                <label for="f-desc-ar"><span class="flagcode">AR</span> Arabic</label>
+                <textarea id="f-desc-ar" dir="rtl"></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Image</legend>
+            <div class="field">
+              <label for="f-image">Path <span class="hint">(e.g. assets/my-item.png)</span></label>
+              <input type="text" id="f-image" list="assetList" autocomplete="off" spellcheck="false" placeholder="assets/" />
+              <datalist id="assetList"></datalist>
+              <div class="field-err" id="err-image"></div>
+              <img class="img-preview" id="imgPreview" alt="Image preview" />
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Bundle pricing <span class="hint" style="text-transform: none; letter-spacing: 0">(optional)</span></legend>
+            <div id="tierList"></div>
+            <button type="button" class="btn btn-soft add-row" id="btnAddTier">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+              Add bundle tier
+            </button>
+          </fieldset>
+
+          <fieldset>
+            <legend>Tags <span class="hint" style="text-transform: none; letter-spacing: 0">(optional, Enter to add)</span></legend>
+            <div class="lang-grid">
+              <div class="field">
+                <label><span class="flagcode">HE</span> Hebrew tags</label>
+                <div class="chip-input" data-lang="he"><input type="text" dir="rtl" aria-label="Add Hebrew tag" /></div>
+              </div>
+              <div class="field">
+                <label><span class="flagcode">EN</span> English tags</label>
+                <div class="chip-input" data-lang="en"><input type="text" dir="ltr" aria-label="Add English tag" /></div>
+              </div>
+              <div class="field">
+                <label><span class="flagcode">AR</span> Arabic tags</label>
+                <div class="chip-input" data-lang="ar"><input type="text" dir="rtl" aria-label="Add Arabic tag" /></div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div class="drawer-foot">
+        <button class="btn btn-soft" id="btnCancel">Cancel</button>
+        <button class="btn btn-primary" id="btnSaveItem">Save item</button>
+      </div>
+    </aside>
+
+    <script>
+      "use strict";
+
+      // ---- Config ----
+      const LANGS = ["he", "en", "ar"];
+      const DATA_URL = "data/products.json";
+      const APP_URL = "app.js"; // source of truth for category keys
+      const ASSETS_DIR = "assets/"; // scanned for the image autocomplete
+      // Fallback category keys, used only if app.js can't be read (e.g. opened from disk).
+      const DEFAULT_CATEGORY_KEYS = ["keychains", "magnets", "homeDecor", "figures", "customPrints"];
+
+      // Discovered at runtime — both grow automatically as you add categories/images.
+      let categoryLabels = {}; // key -> display label
+      let knownAssets = []; // ["assets/foo.png", ...]
+
+      function prettifyKey(k) {
+        return String(k)
+          .replace(/[-_]+/g, " ")
+          .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+          .replace(/\s+/g, " ")
+          .trim()
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+      }
+      function toCamelKey(s) {
+        const w = String(s).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(" ").filter(Boolean);
+        return w.length ? w[0] + w.slice(1).map((x) => x[0].toUpperCase() + x.slice(1)).join("") : "";
+      }
+      function categoryKeyList() {
+        return Object.keys(categoryLabels);
+      }
+      function labelFor(key) {
+        return categoryLabels[key] || prettifyKey(key);
+      }
+      function registerCategories(keys) {
+        (keys || []).forEach((k) => {
+          if (k && k !== "__new__" && !(k in categoryLabels)) categoryLabels[k] = prettifyKey(k);
+        });
+      }
+
+      // ---- State ----
+      let products = []; // working copy
+      let editingIndex = -1; // -1 = adding new
+      let fileHandle = null; // File System Access API handle, if any
+      let dirty = false;
+      const supportsFS = "showOpenFilePicker" in window && "showSaveFilePicker" in window;
+
+      // ---- DOM ----
+      const $ = (id) => document.getElementById(id);
+      const listEl = $("list");
+      const searchInput = $("searchInput");
+      const categoryFilter = $("categoryFilter");
+      const countPill = $("countPill");
+      const banner = $("banner");
+      const drawer = $("drawer");
+      const scrim = $("scrim");
+
+      // ---- Helpers ----
+      function slugify(s) {
+        return (s || "")
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+      }
+
+      function escapeHtml(s) {
+        return String(s ?? "").replace(/[&<>"']/g, (c) =>
+          ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+        );
+      }
+
+      function showBanner(type, msg, autohide) {
+        banner.className = "banner show " + type;
+        banner.innerHTML =
+          (type === "ok"
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+            : type === "err"
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>') +
+          "<span>" + escapeHtml(msg) + "</span>";
+        if (autohide) {
+          setTimeout(() => banner.classList.remove("show"), 3500);
+        }
+      }
+
+      function markDirty() {
+        dirty = true;
+        updateExportLabel();
+      }
+
+      function updateExportLabel() {
+        const label = $("exportLabel");
+        if (fileHandle) {
+          label.textContent = dirty ? "Save file ●" : "Save file";
+        } else {
+          label.textContent = "Export file";
+        }
+      }
+
+      // ---- Normalize a raw product into the canonical shape ----
+      function normalize(raw) {
+        const p = raw || {};
+        const langObj = (src) => {
+          const o = {};
+          LANGS.forEach((l) => (o[l] = (src && typeof src[l] === "string") ? src[l] : ""));
+          return o;
+        };
+        const tagObj = (src) => {
+          const o = {};
+          LANGS.forEach((l) => (o[l] = Array.isArray(src && src[l]) ? src[l].filter((t) => typeof t === "string") : []));
+          return o;
+        };
+        const tiers = Array.isArray(p.pricingTier)
+          ? p.pricingTier
+              .map((t) => ({ qty: Number(t && t.qty), price: Number(t && t.price) }))
+              .filter((t) => Number.isFinite(t.qty) && Number.isFinite(t.price))
+          : [];
+        return {
+          id: typeof p.id === "string" ? p.id : "",
+          categoryKey:
+            typeof p.categoryKey === "string" && p.categoryKey ? p.categoryKey : categoryKeyList()[0] || "figures",
+          name: langObj(p.name),
+          description: langObj(p.description),
+          price: Number.isFinite(Number(p.price)) ? Number(p.price) : 0,
+          image: typeof p.image === "string" ? p.image : "",
+          available: p.available !== false,
+          tags: tagObj(p.tags),
+          pricingTier: tiers,
+        };
+      }
+
+      // ---- Serialize to the exact field order used in the repo ----
+      function toCanonical(p) {
+        return {
+          id: p.id,
+          categoryKey: p.categoryKey,
+          name: { en: p.name.en, he: p.name.he, ar: p.name.ar },
+          description: { en: p.description.en, he: p.description.he, ar: p.description.ar },
+          price: p.price,
+          image: p.image,
+          available: p.available,
+          tags: { he: p.tags.he, en: p.tags.en, ar: p.tags.ar },
+          pricingTier: p.pricingTier.map((t) => ({ qty: t.qty, price: t.price })),
+        };
+      }
+
+      function serialize() {
+        return JSON.stringify(products.map(toCanonical), null, 2) + "\n";
+      }
+
+      // ---- Load ----
+      async function loadFromCatalog() {
+        try {
+          const res = await fetch(DATA_URL, { cache: "no-store" });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          if (!Array.isArray(data)) throw new Error("Catalog is not a list");
+          products = data.map(normalize);
+          fileHandle = null;
+          dirty = false;
+          registerCategories(products.map((p) => p.categoryKey));
+          buildCategoryOptions();
+          rebuildCategoryFilter();
+          render();
+          updateExportLabel();
+          showBanner("ok", "Loaded " + products.length + " items from the live catalog.", true);
+          discoverCategories();
+          discoverAssets();
+        } catch (e) {
+          showBanner(
+            "err",
+            "Couldn't load " + DATA_URL + " (" + e.message + "). Run via a local server, or use Open file."
+          );
+        }
+      }
+
+      async function openFromDisk() {
+        if (!supportsFS) {
+          // Fallback: hidden file input
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = "application/json,.json";
+          input.onchange = async () => {
+            const file = input.files[0];
+            if (!file) return;
+            try {
+              const data = JSON.parse(await file.text());
+              if (!Array.isArray(data)) throw new Error("not a list");
+              products = data.map(normalize);
+              fileHandle = null;
+              dirty = false;
+              registerCategories(products.map((p) => p.categoryKey));
+              buildCategoryOptions();
+              rebuildCategoryFilter();
+              render();
+              showBanner("ok", "Loaded " + products.length + " items from " + file.name + ".", true);
+              discoverCategories();
+              discoverAssets();
+            } catch (e) {
+              showBanner("err", "That file isn't valid product JSON (" + e.message + ").");
+            }
+          };
+          input.click();
+          return;
+        }
+        try {
+          const [handle] = await window.showOpenFilePicker({
+            types: [{ description: "JSON", accept: { "application/json": [".json"] } }],
+          });
+          const file = await handle.getFile();
+          const data = JSON.parse(await file.text());
+          if (!Array.isArray(data)) throw new Error("not a list");
+          products = data.map(normalize);
+          fileHandle = handle;
+          dirty = false;
+          registerCategories(products.map((p) => p.categoryKey));
+          buildCategoryOptions();
+          rebuildCategoryFilter();
+          render();
+          updateExportLabel();
+          showBanner("ok", "Opened " + file.name + " — " + products.length + " items. Saves go straight back to this file.", true);
+          discoverCategories();
+          discoverAssets();
+        } catch (e) {
+          if (e.name !== "AbortError") showBanner("err", "Couldn't open the file (" + e.message + ").");
+        }
+      }
+
+      // ---- Export / Save ----
+      async function exportFile() {
+        const text = serialize();
+        if (fileHandle) {
+          try {
+            const writable = await fileHandle.createWritable();
+            await writable.write(text);
+            await writable.close();
+            dirty = false;
+            updateExportLabel();
+            showBanner("ok", "Saved to disk. The site will use it on next reload.", true);
+            return;
+          } catch (e) {
+            showBanner("err", "Save failed (" + e.message + "). Falling back to download.");
+          }
+        }
+        if (supportsFS) {
+          try {
+            const handle = await window.showSaveFilePicker({
+              suggestedName: "products.json",
+              types: [{ description: "JSON", accept: { "application/json": [".json"] } }],
+            });
+            const writable = await handle.createWritable();
+            await writable.write(text);
+            await writable.close();
+            fileHandle = handle;
+            dirty = false;
+            updateExportLabel();
+            showBanner("ok", "Saved products.json. Put it in your data/ folder.", true);
+            return;
+          } catch (e) {
+            if (e.name === "AbortError") return;
+          }
+        }
+        // Plain download fallback
+        const blob = new Blob([text], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "products.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        dirty = false;
+        updateExportLabel();
+        showBanner("ok", "Downloaded products.json — drop it into your data/ folder.", true);
+      }
+
+      // ---- Discovery: category keys from app.js + products, images from assets/ ----
+      async function discoverCategories() {
+        try {
+          const res = await fetch(APP_URL, { cache: "no-store" });
+          if (res.ok) {
+            const txt = await res.text();
+            const block = txt.match(/categories\s*:\s*\{([\s\S]*?)\}/);
+            if (block) {
+              const keys = [...block[1].matchAll(/([A-Za-z_$][\w$]*)\s*:/g)].map((m) => m[1]);
+              registerCategories(keys);
+            }
+          }
+        } catch (e) {
+          /* app.js unreadable (e.g. file://) — defaults already registered */
+        }
+        registerCategories(products.map((p) => p.categoryKey));
+        buildCategoryOptions();
+        rebuildCategoryFilter();
+      }
+
+      async function discoverAssets() {
+        const found = new Set(products.map((p) => p.image).filter(Boolean));
+        try {
+          const res = await fetch(ASSETS_DIR, { cache: "no-store" });
+          if (res.ok) {
+            const txt = await res.text();
+            const doc = new DOMParser().parseFromString(txt, "text/html");
+            doc.querySelectorAll("a").forEach((a) => {
+              const name = a.textContent.trim();
+              if (/\.(png|jpe?g|webp|gif|svg|avif)$/i.test(name) && !name.includes("/")) {
+                found.add(ASSETS_DIR + name);
+              }
+            });
+          }
+        } catch (e) {
+          /* no directory listing — fall back to images already in the catalog */
+        }
+        knownAssets = [...found].sort();
+        const dl = $("assetList");
+        if (dl) dl.innerHTML = knownAssets.map((a) => '<option value="' + escapeHtml(a) + '"></option>').join("");
+      }
+
+      // ---- Render list ----
+      function render() {
+        const q = searchInput.value.trim().toLowerCase();
+        const cat = categoryFilter.value;
+        countPill.textContent = products.length + (products.length === 1 ? " item" : " items");
+
+        const rows = products
+          .map((p, i) => ({ p, i }))
+          .filter(({ p }) => {
+            if (cat !== "all" && p.categoryKey !== cat) return false;
+            if (!q) return true;
+            const hay = (p.id + " " + Object.values(p.name).join(" ")).toLowerCase();
+            return hay.includes(q);
+          });
+
+        if (products.length === 0) {
+          listEl.innerHTML =
+            '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18"/><path d="M3 15h18"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg><div>No items yet. Click <b>Reload catalog</b> or <b>Add item</b>.</div></div>';
+          return;
+        }
+        if (rows.length === 0) {
+          listEl.innerHTML = '<div class="empty">No items match your filter.</div>';
+          return;
+        }
+
+        const isFiltered = q || cat !== "all";
+        listEl.innerHTML = rows
+          .map(({ p, i }) => {
+            const title = p.name.he || p.name.en || p.name.ar || "(untitled)";
+            const tierTxt = p.pricingTier.length
+              ? p.pricingTier.map((t) => t.qty + " for ₪" + t.price).join(" · ")
+              : "";
+            const thumb = p.image
+              ? '<img class="thumb" src="' + escapeHtml(p.image) + '" alt="" loading="lazy" onerror="this.classList.add(\'placeholder\');this.removeAttribute(\'src\');" />'
+              : '<div class="thumb placeholder"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg></div>';
+            return (
+              '<div class="card' + (p.available ? "" : " dimmed") + '">' +
+              (isFiltered
+                ? ""
+                : '<div class="reorder">' +
+                  '<button class="btn btn-soft btn-icon" data-act="up" data-i="' + i + '" title="Move up"' + (i === 0 ? " disabled" : "") + '><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>' +
+                  '<button class="btn btn-soft btn-icon" data-act="down" data-i="' + i + '" title="Move down"' + (i === products.length - 1 ? " disabled" : "") + '><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>' +
+                  "</div>") +
+              thumb +
+              '<div class="card-body">' +
+              '<div class="card-title">' + escapeHtml(title) + "</div>" +
+              '<div class="card-meta">' +
+              '<span class="tag">' + escapeHtml(labelFor(p.categoryKey)) + "</span>" +
+              '<span class="price">₪' + p.price + "</span>" +
+              (tierTxt ? "<span>" + escapeHtml(tierTxt) + "</span>" : "") +
+              (p.available ? "" : '<span class="tag off">Hidden</span>') +
+              '<span style="opacity:.6">' + escapeHtml(p.id) + "</span>" +
+              "</div></div>" +
+              '<div class="card-actions">' +
+              '<button class="btn btn-soft btn-icon" data-act="edit" data-i="' + i + '" title="Edit"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>' +
+              '<button class="btn btn-soft btn-icon" data-act="dup" data-i="' + i + '" title="Duplicate"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>' +
+              '<button class="btn btn-danger btn-icon" data-act="del" data-i="' + i + '" title="Delete"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="m19 6-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>' +
+              "</div></div>"
+            );
+          })
+          .join("");
+      }
+
+      // ---- List actions (delegated) ----
+      listEl.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-act]");
+        if (!btn) return;
+        const i = Number(btn.dataset.i);
+        const act = btn.dataset.act;
+        if (act === "edit") openDrawer(i);
+        else if (act === "dup") duplicateItem(i);
+        else if (act === "del") deleteItem(i);
+        else if (act === "up") moveItem(i, -1);
+        else if (act === "down") moveItem(i, 1);
+      });
+
+      function moveItem(i, dir) {
+        const j = i + dir;
+        if (j < 0 || j >= products.length) return;
+        [products[i], products[j]] = [products[j], products[i]];
+        markDirty();
+        render();
+      }
+
+      function duplicateItem(i) {
+        const copy = normalize(toCanonical(products[i]));
+        copy.id = uniqueId(copy.id + "-copy");
+        products.splice(i + 1, 0, copy);
+        markDirty();
+        render();
+        showBanner("ok", "Duplicated. Edit the copy's details and ID.", true);
+      }
+
+      function deleteItem(i) {
+        const title = products[i].name.he || products[i].name.en || products[i].id;
+        if (!confirm('Delete "' + title + '"? This only changes your working copy until you save.')) return;
+        products.splice(i, 1);
+        markDirty();
+        render();
+      }
+
+      function uniqueId(base, ignoreIndex) {
+        let id = base || "item";
+        let n = 2;
+        const taken = (cand) => products.some((p, idx) => idx !== ignoreIndex && p.id === cand);
+        while (taken(id)) {
+          id = base + "-" + n++;
+        }
+        return id;
+      }
+
+      // ---- Drawer / editor ----
+      let tierRows = [];
+      let tagState = { he: [], en: [], ar: [] };
+      let idEdited = false;
+
+      function openDrawer(index) {
+        editingIndex = index;
+        const isNew = index === -1;
+        $("drawerTitle").textContent = isNew ? "Add item" : "Edit item";
+        $("validationSummary").classList.remove("show");
+        clearFieldErrors();
+        idEdited = !isNew;
+
+        const p = isNew ? normalize({}) : products[index];
+        $("f-id").value = p.id;
+        // ensure this item's category is a selectable option even before discovery finishes
+        registerCategories([p.categoryKey]);
+        buildCategoryOptions();
+        $("newCatField").hidden = true;
+        $("f-category").value = p.categoryKey;
+        prevCatValue = p.categoryKey;
+        $("f-price").value = p.price;
+        $("f-available").checked = p.available;
+        LANGS.forEach((l) => {
+          $("f-name-" + l).value = p.name[l];
+          $("f-desc-" + l).value = p.description[l];
+        });
+        $("f-image").value = p.image;
+        updateImgPreview();
+
+        tierRows = p.pricingTier.map((t) => ({ ...t }));
+        renderTiers();
+        tagState = { he: [...p.tags.he], en: [...p.tags.en], ar: [...p.tags.ar] };
+        renderTags();
+
+        scrim.classList.add("open");
+        drawer.classList.add("open");
+        setTimeout(() => $("f-name-he").focus(), 300);
+      }
+
+      function closeDrawer() {
+        scrim.classList.remove("open");
+        drawer.classList.remove("open");
+      }
+
+      // Auto-suggest ID from English name (until the user edits ID manually)
+      $("f-name-en").addEventListener("input", () => {
+        if (editingIndex === -1 && !idEdited) {
+          $("f-id").value = slugify($("f-name-en").value);
+        }
+      });
+      $("f-id").addEventListener("input", () => {
+        idEdited = true;
+        $("f-id").value = $("f-id").value.toLowerCase().replace(/[^a-z0-9-]/g, "");
+      });
+      $("f-image").addEventListener("input", updateImgPreview);
+
+      // New-category inline creation
+      let prevCatValue = "";
+      $("f-category").addEventListener("focus", () => {
+        if ($("f-category").value !== "__new__") prevCatValue = $("f-category").value;
+      });
+      $("f-category").addEventListener("change", () => {
+        if ($("f-category").value === "__new__") {
+          $("newCatField").hidden = false;
+          $("newCatName").value = "";
+          $("err-newcat").classList.remove("show");
+          setTimeout(() => $("newCatName").focus(), 0);
+        } else {
+          $("newCatField").hidden = true;
+          prevCatValue = $("f-category").value;
+        }
+      });
+      function cancelNewCat() {
+        $("newCatField").hidden = true;
+        $("f-category").value = categoryKeyList().includes(prevCatValue) ? prevCatValue : categoryKeyList()[0] || "";
+      }
+      function addNewCat() {
+        const name = $("newCatName").value.trim();
+        const key = toCamelKey(name);
+        const err = $("err-newcat");
+        if (!name || !key) {
+          err.textContent = "Enter a category name (letters or numbers).";
+          err.classList.add("show");
+          return;
+        }
+        if (!(key in categoryLabels)) categoryLabels[key] = name;
+        buildCategoryOptions();
+        rebuildCategoryFilter();
+        $("f-category").value = key;
+        prevCatValue = key;
+        $("newCatField").hidden = true;
+      }
+      $("btnAddCat").addEventListener("click", addNewCat);
+      $("btnCancelCat").addEventListener("click", cancelNewCat);
+      $("newCatName").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          addNewCat();
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          cancelNewCat();
+        }
+      });
+
+      function updateImgPreview() {
+        const img = $("imgPreview");
+        const val = $("f-image").value.trim();
+        if (val) {
+          img.src = val;
+          img.classList.add("show");
+          img.onerror = () => img.classList.remove("show");
+        } else {
+          img.classList.remove("show");
+          img.removeAttribute("src");
+        }
+      }
+
+      // Tiers
+      function renderTiers() {
+        const wrap = $("tierList");
+        wrap.innerHTML = tierRows
+          .map(
+            (t, i) =>
+              '<div class="tier-row">' +
+              '<div class="field"><label>Quantity</label><input type="number" min="2" step="1" data-tier="' + i + '" data-k="qty" value="' + (t.qty || "") + '" /></div>' +
+              '<div class="field"><label>Bundle price (₪)</label><input type="number" min="0" step="1" data-tier="' + i + '" data-k="price" value="' + (t.price || "") + '" /></div>' +
+              '<button type="button" class="btn btn-danger btn-icon" data-tier-del="' + i + '" title="Remove tier"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="m19 6-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>' +
+              "</div>"
+          )
+          .join("");
+      }
+      $("tierList").addEventListener("input", (e) => {
+        const inp = e.target.closest("input[data-tier]");
+        if (!inp) return;
+        const i = Number(inp.dataset.tier);
+        tierRows[i][inp.dataset.k] = inp.value === "" ? "" : Number(inp.value);
+      });
+      $("tierList").addEventListener("click", (e) => {
+        const del = e.target.closest("[data-tier-del]");
+        if (!del) return;
+        tierRows.splice(Number(del.dataset.tierDel), 1);
+        renderTiers();
+      });
+      $("btnAddTier").addEventListener("click", () => {
+        tierRows.push({ qty: "", price: "" });
+        renderTiers();
+      });
+
+      // Tags (chip inputs)
+      function renderTags() {
+        document.querySelectorAll(".chip-input").forEach((box) => {
+          const lang = box.dataset.lang;
+          const input = box.querySelector("input");
+          box.querySelectorAll(".chip").forEach((c) => c.remove());
+          tagState[lang].forEach((tag, i) => {
+            const chip = document.createElement("span");
+            chip.className = "chip";
+            chip.innerHTML =
+              escapeHtml(tag) +
+              '<button type="button" aria-label="Remove tag"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>';
+            chip.querySelector("button").addEventListener("click", () => {
+              tagState[lang].splice(i, 1);
+              renderTags();
+            });
+            box.insertBefore(chip, input);
+          });
+        });
+      }
+      document.querySelectorAll(".chip-input").forEach((box) => {
+        const lang = box.dataset.lang;
+        const input = box.querySelector("input");
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+            const val = input.value.trim();
+            if (val && !tagState[lang].includes(val)) {
+              tagState[lang].push(val);
+              renderTags();
+            }
+            input.value = "";
+          } else if (e.key === "Backspace" && !input.value && tagState[lang].length) {
+            tagState[lang].pop();
+            renderTags();
+          }
+        });
+        box.addEventListener("click", () => input.focus());
+      });
+
+      // ---- Validation + save ----
+      function clearFieldErrors() {
+        document.querySelectorAll(".field-err").forEach((e) => e.classList.remove("show"));
+        document.querySelectorAll("input.bad, textarea.bad").forEach((e) => e.classList.remove("bad"));
+      }
+
+      function setFieldError(field, msg) {
+        const errEl = $("err-" + field);
+        const inp = $("f-" + field);
+        if (errEl) {
+          errEl.textContent = msg;
+          errEl.classList.add("show");
+        }
+        if (inp) inp.classList.add("bad");
+      }
+
+      function collectForm() {
+        return {
+          id: $("f-id").value.trim(),
+          categoryKey: $("f-category").value,
+          name: { he: $("f-name-he").value.trim(), en: $("f-name-en").value.trim(), ar: $("f-name-ar").value.trim() },
+          description: { he: $("f-desc-he").value.trim(), en: $("f-desc-en").value.trim(), ar: $("f-desc-ar").value.trim() },
+          price: $("f-price").value === "" ? NaN : Number($("f-price").value),
+          image: $("f-image").value.trim(),
+          available: $("f-available").checked,
+          tags: { he: [...tagState.he], en: [...tagState.en], ar: [...tagState.ar] },
+          pricingTier: tierRows
+            .map((t) => ({ qty: Number(t.qty), price: Number(t.price) }))
+            .filter((t) => t.qty !== 0 || t.price !== 0),
+        };
+      }
+
+      function validate(p) {
+        const errors = [];
+        clearFieldErrors();
+
+        if (!p.id) {
+          errors.push("ID is required.");
+          setFieldError("id", "Required.");
+        } else if (!/^[a-z0-9-]+$/.test(p.id)) {
+          errors.push("ID may only contain lowercase letters, numbers and dashes.");
+          setFieldError("id", "Lowercase letters, numbers, dashes only.");
+        } else if (products.some((x, idx) => idx !== editingIndex && x.id === p.id)) {
+          errors.push("ID “" + p.id + "” is already used by another item.");
+          setFieldError("id", "Already in use.");
+        }
+
+        if (!categoryKeyList().includes(p.categoryKey)) errors.push("Pick a valid category.");
+
+        if (!p.name.he) {
+          errors.push("Hebrew name is required (it's the primary language).");
+          setFieldError("name-he", "Required.");
+        }
+
+        if (!Number.isFinite(p.price) || p.price < 0) {
+          errors.push("Base price must be a number of 0 or more.");
+          setFieldError("price", "Enter a valid price.");
+        }
+
+        if (!p.image) {
+          errors.push("Image path is required.");
+          setFieldError("image", "Required.");
+        } else if (!/^assets\//.test(p.image)) {
+          // not fatal, just warn in the summary
+          errors.push("⚠ Image path usually starts with “assets/”. Saving anyway is allowed if you click Save again.");
+          setFieldError("image", "Expected to start with assets/");
+        }
+
+        for (let i = 0; i < p.pricingTier.length; i++) {
+          const t = p.pricingTier[i];
+          if (!Number.isInteger(t.qty) || t.qty < 2)
+            errors.push("Bundle tier " + (i + 1) + ": quantity must be a whole number of 2 or more.");
+          if (!Number.isFinite(t.price) || t.price < 0)
+            errors.push("Bundle tier " + (i + 1) + ": price must be 0 or more.");
+        }
+
+        return errors;
+      }
+
+      // Two-stage save: hard errors block; the image-prefix warning can be confirmed by saving twice
+      let lastWarnOnlyId = null;
+      function saveItem() {
+        const p = collectForm();
+        const errors = validate(p);
+
+        const onlyImageWarn =
+          errors.length === 1 && errors[0].startsWith("⚠ Image path");
+        if (onlyImageWarn && lastWarnOnlyId === p.id) {
+          // user confirmed by clicking Save again — proceed
+        } else if (errors.length) {
+          const summary = $("validationSummary");
+          summary.innerHTML =
+            "<b>Please fix the following:</b><ul>" +
+            errors.map((e) => "<li>" + escapeHtml(e) + "</li>").join("") +
+            "</ul>" +
+            (onlyImageWarn ? "<div style='margin-top:6px'>Click <b>Save item</b> again to keep this path anyway.</div>" : "");
+          summary.classList.add("show");
+          summary.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          lastWarnOnlyId = onlyImageWarn ? p.id : null;
+          return;
+        }
+        lastWarnOnlyId = null;
+
+        const clean = normalize(p);
+        if (editingIndex === -1) {
+          products.push(clean);
+        } else {
+          products[editingIndex] = clean;
+        }
+        markDirty();
+        rebuildCategoryFilter();
+        render();
+        closeDrawer();
+        showBanner("ok", (editingIndex === -1 ? "Added" : "Updated") + " “" + (clean.name.he || clean.id) + "”. Remember to save the file.", true);
+      }
+
+      // ---- Wire up ----
+      function buildCategoryOptions() {
+        const sel = $("f-category");
+        const cur = sel.value;
+        sel.innerHTML =
+          categoryKeyList()
+            .map((c) => '<option value="' + c + '">' + escapeHtml(labelFor(c)) + "</option>")
+            .join("") + '<option value="__new__">+ Add new category…</option>';
+        if (categoryKeyList().includes(cur)) sel.value = cur;
+      }
+
+      function rebuildCategoryFilter() {
+        const used = [...new Set(products.map((p) => p.categoryKey).filter(Boolean))];
+        const cur = categoryFilter.value;
+        categoryFilter.innerHTML =
+          '<option value="all">All categories</option>' +
+          used.map((c) => '<option value="' + c + '">' + escapeHtml(labelFor(c)) + "</option>").join("");
+        if ([...categoryFilter.options].some((o) => o.value === cur)) categoryFilter.value = cur;
+      }
+
+      $("btnAdd").addEventListener("click", () => openDrawer(-1));
+      $("btnReload").addEventListener("click", loadFromCatalog);
+      $("btnOpen").addEventListener("click", openFromDisk);
+      $("btnExport").addEventListener("click", exportFile);
+      $("btnCloseDrawer").addEventListener("click", closeDrawer);
+      $("btnCancel").addEventListener("click", closeDrawer);
+      $("btnSaveItem").addEventListener("click", saveItem);
+      scrim.addEventListener("click", closeDrawer);
+      searchInput.addEventListener("input", render);
+      categoryFilter.addEventListener("change", render);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer();
+      });
+      window.addEventListener("beforeunload", (e) => {
+        if (dirty) {
+          e.preventDefault();
+          e.returnValue = "";
+        }
+      });
+
+      // Hide the FS-only hint if unsupported
+      if (!supportsFS) {
+        $("btnOpen").style.display = "none";
+      }
+
+      // ---- Init ----
+      registerCategories(DEFAULT_CATEGORY_KEYS);
+      buildCategoryOptions();
+      rebuildCategoryFilter();
+      render();
+      loadFromCatalog();
+    </script>
+  </body>
+</html>

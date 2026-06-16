@@ -23,10 +23,46 @@ Unchecked = not done yet. Owner actions are marked **(owner)**.
       intentionally disabled / "coming soon").
 - [ ] Consider persisting the cart to `localStorage` so it survives a refresh.
 - [ ] Add real product photography where placeholders/emoji are still used.
+- [ ] **Make `products.json` the single source of truth for categories.** Today
+      the manager (`manager.html`) reads category *keys* from the `categories`
+      block in `app.js`, and a brand-new category created in the manager has no
+      translated label on the site until its key is added to `app.js` (he/en/ar).
+      Idea: let the JSON itself carry category definitions (key + localized
+      labels), have `app.js` build its category list from the JSON instead of the
+      hardcoded `i18n.categories` blocks, and have the manager edit those
+      definitions. Then adding a category in the manager would "just work" on the
+      site with no `app.js` edit. Deferred — needs an `app.js` refactor.
 
 ---
 
 ## Session log
+
+### 2026-06-16 — Product manager tool (`manager.html`)
+
+- Added a standalone, dependency-free **product manager** (`manager.html`, opened
+  at `/manager.html` on the local server; marked `noindex`). It loads the live
+  `data/products.json`, lets the owner add / edit / duplicate / delete / reorder
+  items in a guided form, and writes out a clean `products.json`.
+- **Safe by construction:** the file is always re-serialized from validated,
+  normalized objects (never hand-patched), in the repo's exact field order with a
+  trailing newline — it can't be saved half-broken. Validation blocks duplicate
+  IDs, bad ID format, missing Hebrew name (primary language), invalid price,
+  missing image, and malformed bundle tiers. An unsaved-changes guard warns before
+  leaving. In Chrome/Edge it can Open→edit→Save straight to disk via the File
+  System Access API; elsewhere it downloads the file.
+- **Auto-discovery (no hardcoded lists):** category keys are read from the
+  `categories` block in `app.js` and merged with keys present in the catalog;
+  image paths are read from the `assets/` directory listing the dev server
+  exposes, merged with images already referenced. New categories can be created
+  inline in the editor (camelCase key). Graceful fallback to default keys +
+  catalog data if `app.js` / the listing can't be read.
+- Verified in-browser: load, validation, new-category create + save, schema/field
+  order, image + category discovery — no console errors.
+- **Open follow-up (see backlog):** a brand-new category still needs its localized
+  label added to `app.js` to display translated on the site. The agreed direction
+  is to eventually make `products.json` itself the source of truth for category
+  definitions so the manager update is all that's needed. Deferred.
+- Status: shipped to `main`.
 
 ### 2026-06-14 — Unified typography (Rubik)
 
