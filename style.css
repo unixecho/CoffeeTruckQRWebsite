@@ -1105,6 +1105,7 @@ h3 {
   align-items: center;
   justify-content: center;
   gap: 16px;
+  direction: ltr;
 }
 .modal-qty-display {
   font-size: 22px;
@@ -1192,6 +1193,7 @@ h3 {
   display: flex;
   align-items: center;
   gap: 8px;
+  direction: ltr;
 }
 .qty-btn {
   width: 34px;
