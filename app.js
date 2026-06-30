@@ -46,6 +46,8 @@ const i18n = {
     noItemsInCategory: "אין כרגע מוצרים זמינים בקטגוריה הזו.",
     cartEmpty: "העגלה ריקה.",
     loadError: "לא ניתן לטעון את המוצרים. בדוק שקובץ data/products.json קיים.",
+    units: "יח'",
+    tierFor: "ב-",
 
     messages: {
       added: "נוסף לעגלה",
@@ -92,6 +94,8 @@ const i18n = {
     noItemsInCategory: "No available items in this category right now.",
     cartEmpty: "Your cart is empty.",
     loadError: "Could not load products. Check that data/products.json exists.",
+    units: "pcs",
+    tierFor: "for",
 
     messages: {
       added: "Added to cart",
@@ -138,6 +142,8 @@ const i18n = {
     noItemsInCategory: "لا توجد منتجات متاحة حالياً في هذه الفئة.",
     cartEmpty: "السلة فارغة.",
     loadError: "تعذر تحميل المنتجات. تأكد من وجود الملف data/products.json.",
+    units: "قطع",
+    tierFor: "بـ",
 
     messages: {
       added: "تمت الإضافة إلى السلة",
@@ -192,9 +198,12 @@ const modalImage = document.getElementById("modalImage");
 const modalName = document.getElementById("modalName");
 const modalPrice = document.getElementById("modalPrice");
 const modalDescription = document.getElementById("modalDescription");
+const modalTierPricing = document.getElementById("modalTierPricing");
+const modalQtySection = document.getElementById("modalQtySection");
 const modalAddBtn = document.getElementById("modalAddBtn");
 
 let modalProductId = null;
+let modalQuantity = 1;
 
 openStoreBtn.addEventListener("click", () => {
   landingView.classList.add("hidden");
@@ -231,7 +240,7 @@ productModal.addEventListener("click", (event) => {
   if (event.target === productModal) closeProductModal();
 });
 modalAddBtn.addEventListener("click", () => {
-  if (modalProductId) addToCart(modalProductId, modalAddBtn);
+  if (modalProductId) addToCart(modalProductId, modalAddBtn, modalQuantity);
 });
 modalImage.addEventListener("error", () => {
   modalImage.style.display = "none";
@@ -398,6 +407,23 @@ function renderCategories() {
   });
 }
 
+function calcLineTotal(product, quantity) {
+  if (product.pricingTier && product.pricingTier.length > 0) {
+    const sorted = [...product.pricingTier].sort((a, b) => b.qty - a.qty);
+    let remaining = quantity;
+    let total = 0;
+    for (const tier of sorted) {
+      if (remaining >= tier.qty) {
+        const bundles = Math.floor(remaining / tier.qty);
+        total += bundles * tier.price;
+        remaining = remaining % tier.qty;
+      }
+    }
+    return total + remaining * product.price;
+  }
+  return quantity * product.price;
+}
+
 function renderTierDeals(product) {
   if (!product.pricingTier || product.pricingTier.length === 0) return "";
   const deals = product.pricingTier
@@ -487,16 +513,91 @@ function openProductModal(productId) {
   if (!product) return;
 
   modalProductId = productId;
+  modalQuantity = 1;
   modalImage.style.display = "";
   modalImage.src = product.image;
   modalImage.alt = getLocalizedValue(product.name);
   modalName.textContent = getLocalizedValue(product.name);
-  modalPrice.textContent = `₪${product.price}`;
   modalDescription.textContent = getLocalizedValue(product.description);
   modalAddBtn.textContent = t("addToCart");
 
+  const hasTiers =
+    product.pricingTier && product.pricingTier.length > 0;
+
+  if (hasTiers) {
+    const tiers = [...product.pricingTier].sort((a, b) => a.qty - b.qty);
+
+    // Pricing summary line in description area
+    const forWord = t("tierFor");
+    modalTierPricing.textContent = tiers
+      .map((tier) => `${tier.qty} ${forWord} ₪${tier.price}`)
+      .join("  ·  ");
+    modalTierPricing.classList.remove("hidden");
+
+    // Quantity selector
+    modalQtySection.innerHTML = `
+      <div class="modal-tier-btns">
+        ${tiers
+          .map(
+            (tier) => `
+          <button class="tier-btn${tier.qty === 1 ? " active" : ""}" data-qty="${tier.qty}">
+            ×${tier.qty}<span>₪${tier.price}</span>
+          </button>`
+          )
+          .join("")}
+      </div>
+      <div class="modal-qty-stepper">
+        <button class="qty-btn modal-stepper-minus">−</button>
+        <span class="modal-qty-display">1</span>
+        <button class="qty-btn modal-stepper-plus">+</button>
+      </div>
+    `;
+    modalQtySection.classList.remove("hidden");
+
+    modalQtySection.querySelectorAll(".tier-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        modalQuantity = parseInt(btn.dataset.qty, 10);
+        updateModalQtyUI(product);
+      });
+    });
+    modalQtySection
+      .querySelector(".modal-stepper-plus")
+      .addEventListener("click", () => {
+        modalQuantity++;
+        updateModalQtyUI(product);
+      });
+    modalQtySection
+      .querySelector(".modal-stepper-minus")
+      .addEventListener("click", () => {
+        if (modalQuantity > 1) {
+          modalQuantity--;
+          updateModalQtyUI(product);
+        }
+      });
+
+    updateModalQtyUI(product);
+  } else {
+    modalTierPricing.classList.add("hidden");
+    modalQtySection.classList.add("hidden");
+    modalQtySection.innerHTML = "";
+    modalPrice.textContent = `₪${product.price}`;
+  }
+
   productModal.classList.add("open");
   document.body.classList.add("no-scroll");
+}
+
+function updateModalQtyUI(product) {
+  const total = calcLineTotal(product, modalQuantity);
+  modalPrice.textContent = `₪${total}`;
+  modalQtySection.querySelector(".modal-qty-display").textContent =
+    modalQuantity;
+  modalQtySection.querySelectorAll(".tier-btn").forEach((btn) => {
+    btn.classList.toggle(
+      "active",
+      parseInt(btn.dataset.qty, 10) === modalQuantity
+    );
+  });
 }
 
 function refreshProductModal() {
@@ -513,9 +614,9 @@ function closeProductModal() {
   }
 }
 
-function addToCart(productId, sourceButton) {
+function addToCart(productId, sourceButton, quantity = 1) {
   // 1. Core State Update
-  cart[productId] = (cart[productId] || 0) + 1;
+  cart[productId] = (cart[productId] || 0) + quantity;
   renderCart();
   showToast(i18n[currentLanguage].messages.added);
 
@@ -585,44 +686,12 @@ function getCartProducts() {
     .map((productId) => {
       const product = products.find((item) => item.id === productId);
       if (!product) return null;
-
-      const localizedName = getLocalizedValue(product.name);
       const quantity = cart[productId];
-      let lineTotal = 0;
-
-      // Check if product has special wholesale pricing tiers (e.g. 1 for 10, 3 for 25, 5 for 35)
-      if (
-        product.pricingTier &&
-        Array.isArray(product.pricingTier) &&
-        product.pricingTier.length > 0
-      ) {
-        // Sort tiers descending by quantity requirement to apply largest bundles first
-        const sortedTiers = [...product.pricingTier].sort(
-          (a, b) => b.qty - a.qty
-        );
-        let remainingQty = quantity;
-
-        for (const tier of sortedTiers) {
-          if (remainingQty >= tier.qty) {
-            const bundleCount = Math.floor(remainingQty / tier.qty);
-            lineTotal += bundleCount * tier.price;
-            remainingQty = remainingQty % tier.qty;
-          }
-        }
-        // Catch any remaining standalone items at standard base price
-        if (remainingQty > 0) {
-          lineTotal += remainingQty * product.price;
-        }
-      } else {
-        // Fallback default calculation if no bulk scheme is set
-        lineTotal = quantity * product.price;
-      }
-
       return {
         ...product,
-        localizedName,
+        localizedName: getLocalizedValue(product.name),
         quantity,
-        lineTotal,
+        lineTotal: calcLineTotal(product, quantity),
       };
     })
     .filter(Boolean);
@@ -657,7 +726,11 @@ function renderCart() {
       <div class="cart-item">
         <div>
           <div class="cart-item-name">${item.localizedName}</div>
-          <div class="cart-item-price">₪${item.price} × ${item.quantity} = ₪${item.lineTotal}</div>
+          <div class="cart-item-price">${
+            item.pricingTier && item.pricingTier.length > 0
+              ? `${item.quantity} ${t("units")} · ₪${item.lineTotal}`
+              : `₪${item.price} × ${item.quantity} = ₪${item.lineTotal}`
+          }</div>
         </div>
 
         <div class="qty-controls">

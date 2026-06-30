@@ -1056,6 +1056,62 @@ h3 {
   font-size: 15px;
   line-height: 1.55;
 }
+.modal-tier-pricing {
+  margin: 6px 0 0;
+  font-size: 13px;
+  font-weight: 750;
+  color: #c05f00;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+#modalQtySection {
+  display: grid;
+  gap: 12px;
+}
+.modal-tier-btns {
+  display: flex;
+  gap: 8px;
+}
+.tier-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: none;
+  background: var(--accent-soft);
+  color: #4a2a05;
+  font-family: inherit;
+  font-weight: 850;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease;
+}
+.tier-btn span {
+  font-size: 13px;
+  font-weight: 900;
+}
+.tier-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+.tier-btn:active {
+  transform: scale(0.93);
+}
+.modal-qty-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.modal-qty-display {
+  font-size: 22px;
+  font-weight: 900;
+  min-width: 32px;
+  text-align: center;
+}
 
 /* Cart */
 .overlay {
