@@ -37,6 +37,17 @@ Unchecked = not done yet. Owner actions are marked **(owner)**.
 
 ## Session log
 
+### 2026-06-30 — Tier quantity selector in product modal
+
+- **Bundle picker in the lightbox:** tiered products now show one button per pricing tier (e.g. ×3 / ×5) in the modal so customers can pick a bundle before adding. A +/− stepper beneath allows freeform quantity on top of the tier choice. The modal price updates live as quantity or tier changes, using the same bundle-math as the cart.
+- **Tier summary line** ("3 ב- ₪18 · 5 ב- ₪25") shown beneath the product description for any product that has `pricingTier`.
+- **addToCart() quantity param:** modal now passes the selected quantity so the full bundle amount is added at once instead of always 1.
+- **Cart line display fix:** tiered-product lines no longer show the misleading "₪10 × 8 = ₪65" format; replaced with "8 יח' · ₪65" (quantity + total only).
+- **`calcLineTotal()` extracted** as a shared helper used by both the modal price display and the cart renderer — single source of truth for bundle math.
+- **i18n additions** in all three language blocks: `units` (יח' / pcs / قطع) and `tierFor` (ב- / for / بـ).
+- **CSS additions:** `.tier-btn`, `.modal-tier-btns`, `.modal-qty-stepper`, `.modal-qty-display`, `.modal-tier-pricing`.
+- Verified in Playwright: tier buttons render correctly for a 2-tier product; base price at qty=1; ×3 → ₪18; qty=4 (bundle of 3 + 1 single) → ₪25; adding 4 at once → cart count 4.
+
 ### 2026-06-30 — Small keychains product + store UI polish
 
 - **Split keychains into two separate products** on the catalog:
