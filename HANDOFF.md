@@ -22,8 +22,6 @@ Unchecked = not done yet. Owner actions are marked **(owner)**.
 - [ ] Enable real "Online Ordering" (button exists on the landing page but is
       intentionally disabled / "coming soon").
 - [ ] Consider persisting the cart to `localStorage` so it survives a refresh.
-- [ ] **(owner)** Add a separate image for clickers (`assets/clicker.png` or similar) — currently both "Small Keychains" and "Clickers" use the same `keychain-star.png` photo.
-- [ ] **(owner)** Confirm clicker 5-pack price: physical stand sign says ₪35, but JSON has ₪40. Update whichever is wrong.
 - [ ] Add real product photography where placeholders/emoji are still used.
 - [ ] **Make `products.json` the single source of truth for categories.** Today
       the manager (`manager.html`) reads category *keys* from the `categories`
