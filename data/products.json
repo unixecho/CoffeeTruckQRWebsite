@@ -134,7 +134,7 @@
     },
     "description": {
       "en": "High-speed desktop spinner with smooth, satisfying rotations for focus.",
-      "he": "ספינר שולחני איכותי עם סיבוב חלק וממושך. מעולה לריכוז ומיקוד.",
+      "he": "ספינר שולחני איכותי עם סיבוב חלק וממושך. מעולה לריכוز ומיקוד.",
       "ar": "سبينר مكتبي عالي السرعة مع دوران سلس وممتع للتركيز."
     },
     "price": 15,
@@ -185,16 +185,16 @@
     "categoryKey": "keychains",
     "name": {
       "en": "Small Keychains",
-      "he": "מחזיקי מפתחות קטנים",
+      "he": "מחزיקי מפתחות קטנים",
       "ar": "ميداليات صغيرة"
     },
     "description": {
       "en": "Cute mini keychains — perfect for bags, keys, or as a little gift.",
-      "he": "מחזיקי מפתחות מיני חמודים — מושלמים לתיק, למפתחות, או כמתנה קטנה.",
+      "he": "מחزיקי מפתחות מיני חמודים — מושלמים לתיק, למפתחות, או כמתנה קטנה.",
       "ar": "ميداليات صغيرة لطيفة — مثالية للحقيبة أو المفاتيح أو كهدية صغيرة."
     },
     "price": 7,
-    "image": "assets/small-keychains.jpg",
+    "image": "assets/clickers.jpg",
     "available": true,
     "tags": {
       "he": [],
@@ -222,11 +222,11 @@
     },
     "description": {
       "en": "Satisfying clicker fidget toys — great for focus and stress relief.",
-      "he": "קליקרים ממכרים ומספקים — נהדרים להפגת מתחים ולריכוז.",
+      "he": "קליקרים ממכרים ומספקים — נהדרים להפגת מתחים ולריכוز.",
       "ar": "نقارات فيدجيت مُرضية — رائعة للتركيز وتخفيف التوتر."
     },
     "price": 10,
-    "image": "assets/clickers.jpg",
+    "image": "assets/small-keychains.jpg",
     "available": true,
     "tags": {
       "he": [],
@@ -254,7 +254,7 @@
     },
     "description": {
       "en": "Insanely addictive and satisfying! Features a smooth, endless cascading motion that is perfect for stress relief, deep focus, or just a quick distraction while waiting for your coffee.",
-      "he": "צעצוע פידג'ט ממכר ומספק בטירוף! זורם בצורה חלקה ואינסופית, מושלם להפגת מתחים, לריכוז או סתם למשחק על הדרך לצד הקפה.",
+      "he": "צעצוע פידג'ט ממכר ומספק בטירוף! زורם בצורה חלקה ואינסופית, מושלם להפגת מתחים, לריכוز או סתם למשחק על הדרך לצד הקפה.",
       "ar": "اسم المنتج: فيدجيت اللولب اللامتناهي\nالوصف: لعبة فيدجيت ممتعة ومريحة للغاية! تتحرك بانسيابية ونعومة لا نهاية لها، مثالية لتخفيف التوتر، زيادة التركيز، או للتسلية مع كوب قهوتك."
     },
     "price": 15,
@@ -295,12 +295,12 @@
     "categoryKey": "customPrints",
     "name": {
       "en": "Monster Koozie Pack",
-      "he": "מארז מחזיק פחיות מונסטר",
+      "he": "מארز מחزיק פחיות מונסטר",
       "ar": "مجموعة حامل علب مونستر"
     },
     "description": {
       "en": "The ultimate Monster energy drink Koozie pack now with a can cover and opener!",
-      "he": "המארז האולטימטיבי למשקה האנרגיה מונסטר – עכשיו עם כיסוי לפחית ופותחן מובנה!",
+      "he": "המארز האולטימטיבי למשקה האנרגיה מונסטר – עכשיו עם כיסוי לפחית ופותחן מובנה!",
       "ar": "المجموعة الأقوى لمشروب الطاقة مونستر – هسّا مع غطاء للعلبة وفتاحة!"
     },
     "price": 60,
