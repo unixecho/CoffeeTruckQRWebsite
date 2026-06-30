@@ -398,6 +398,16 @@ function renderCategories() {
   });
 }
 
+function renderTierDeals(product) {
+  if (!product.pricingTier || product.pricingTier.length === 0) return "";
+  const deals = product.pricingTier
+    .slice()
+    .sort((a, b) => a.qty - b.qty)
+    .map((tier) => `${tier.qty} / ₪${tier.price}`)
+    .join("  ·  ");
+  return `<p class="product-tier-deals">${deals}</p>`;
+}
+
 function renderProducts() {
   const filteredProducts =
     activeCategory === "all"
@@ -440,6 +450,8 @@ function renderProducts() {
               <div class="product-name">${name}</div>
               <div class="product-price">₪${product.price}</div>
             </div>
+
+            ${renderTierDeals(product)}
 
             <p class="product-description">${description}</p>
 

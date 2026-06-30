@@ -22,6 +22,8 @@ Unchecked = not done yet. Owner actions are marked **(owner)**.
 - [ ] Enable real "Online Ordering" (button exists on the landing page but is
       intentionally disabled / "coming soon").
 - [ ] Consider persisting the cart to `localStorage` so it survives a refresh.
+- [ ] **(owner)** Add a separate image for clickers (`assets/clicker.png` or similar) — currently both "Small Keychains" and "Clickers" use the same `keychain-star.png` photo.
+- [ ] **(owner)** Confirm clicker 5-pack price: physical stand sign says ₪35, but JSON has ₪40. Update whichever is wrong.
 - [ ] Add real product photography where placeholders/emoji are still used.
 - [ ] **Make `products.json` the single source of truth for categories.** Today
       the manager (`manager.html`) reads category *keys* from the `categories`
@@ -36,6 +38,16 @@ Unchecked = not done yet. Owner actions are marked **(owner)**.
 ---
 
 ## Session log
+
+### 2026-06-30 — Small keychains product + store UI polish
+
+- **Split keychains into two separate products** on the catalog:
+  - "Small Keychains" (`small-keychains`): ₪7 each, bundle tiers 3/₪18 · 5/₪25 — new product
+  - "Clickers" (`clickers`): ₪10 each, bundle tiers 3/₪25 · 5/₪40 — renamed from former "Keychains and Clickers"; descriptions cleaned up (pricing no longer baked in)
+  - Both share `keychain-star.png` for now; owner needs to add a separate clicker photo (see backlog)
+- **Bundle pricing visible on product cards**: new `renderTierDeals()` helper in `app.js` shows tier deals (e.g. "3 / ₪18 · 5 / ₪25") in orange beneath the base price on every card that has pricing tiers.
+- **Store grid modernised**: switched from single-column horizontal cards to a 2-column grid with vertical (image-on-top) cards at ≥540px viewport width. Mobile (<540px) retains the horizontal card layout. Description lines are clamped to 3 lines on the vertical layout.
+- Verified in Playwright: Hebrew RTL at 1280px and 390px, English LTR, keychains category filter, tier deal display.
 
 ### 2026-06-16 — Product manager tool (`manager.html`)
 

@@ -181,17 +181,49 @@
     ]
   },
   {
-    "id": "keychains-and-clickers",
+    "id": "small-keychains",
     "categoryKey": "keychains",
     "name": {
-      "en": "Keychains and Clickers",
-      "he": "מחזיקי מפתחות וקליקרים",
-      "ar": "ميداليات ونقارات פידג'ט"
+      "en": "Small Keychains",
+      "he": "מחזיקי מפתחות קטנים",
+      "ar": "ميداليات صغيرة"
     },
     "description": {
-      "en": "Assorted keychains and clicker toys. Deal: 1 for ₪10 / 3 for ₪25 / 5 for ₪35!",
-      "he": "מבחר קליקרים ומחזיקי מפתחות במבצע: 1 ב-₪10 / 3 ב-₪25 / 5 ב-₪35!",
-      "ar": "تشكيلة ميداليات ونقارات متنوعة. العرض: 1 بـ ₪10 / 3 بـ ₪25 / 5 بـ ₪35!"
+      "en": "Cute mini keychains — perfect for bags, keys, or as a little gift.",
+      "he": "מחזיקי מפתחות מיני חמודים — מושלמים לתיק, למפתחות, או כמתנה קטנה.",
+      "ar": "ميداليات صغيرة لطيفة — مثالية للحقيبة أو المفاتيح أو كهدية صغيرة."
+    },
+    "price": 7,
+    "image": "assets/keychain-star.png",
+    "available": true,
+    "tags": {
+      "he": [],
+      "en": [],
+      "ar": []
+    },
+    "pricingTier": [
+      {
+        "qty": 3,
+        "price": 18
+      },
+      {
+        "qty": 5,
+        "price": 25
+      }
+    ]
+  },
+  {
+    "id": "clickers",
+    "categoryKey": "keychains",
+    "name": {
+      "en": "Clickers",
+      "he": "קליקרים",
+      "ar": "نقارات"
+    },
+    "description": {
+      "en": "Satisfying clicker fidget toys — great for focus and stress relief.",
+      "he": "קליקרים ממכרים ומספקים — נהדרים להפגת מתחים ולריכוז.",
+      "ar": "نقارات فيدجيت مُرضية — رائعة للتركيز وتخفيف التوتر."
     },
     "price": 10,
     "image": "assets/keychain-star.png",
