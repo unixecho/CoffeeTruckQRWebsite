@@ -12,20 +12,29 @@ Start a session by reading the top entry below and the open items.
 **(owner)** marks something only you can do — it needs a browser login and
 cannot be automated from here.
 
-### Before this is live
+### Before this is live — do these in order
 
-- [ ] **(owner)** Provision Supabase and connect it. Full checklist in
-      [`docs/SETUP.md`](docs/SETUP.md). Roughly: `npx supabase login`, create the
-      project, `supabase link`, `supabase db push`, then copy three keys into
-      `.env.local` and into the Vercel project.
-- [ ] **(owner)** Create the Google OAuth client and enable Google in the
-      Supabase Auth dashboard. Without it there is no way into the manager.
-      `docs/SETUP.md` §2 has the exact redirect URI.
-- [ ] **(owner)** Set the real **Bit payment link** in the manager's Settings
-      screen. It ships empty, and the storefront deliberately hides the pay
-      button rather than showing a dead one.
-- [ ] Run `node scripts/seed-supabase.mjs` once the database is up, to load the
-      11 existing products and their photos.
+Everything below is in [`docs/SETUP.md`](docs/SETUP.md) with the exact
+commands. Four steps need a browser and cannot be automated from a terminal.
+
+- [ ] **(owner)** `npx supabase login`, create the project, `supabase link`,
+      `supabase db push`. ~15 min, mostly waiting for the project to build.
+- [ ] **(owner)** Google OAuth client + enable Google in the Supabase Auth
+      dashboard. Without it there is no way into the manager at all.
+      `docs/SETUP.md` §2 has the exact redirect URI — getting that wrong is the
+      usual cause of `redirect_uri_mismatch`.
+- [ ] **(owner)** Put the four env vars in `.env.local` **and** in Vercel
+      (Production + Preview), then redeploy — Vercel does not pick up new
+      variables until the next build.
+- [ ] `node scripts/seed-supabase.mjs` to load the 11 products and their photos.
+- [ ] **(owner)** Set the **Bit payment link** in Settings. It ships empty, and
+      the storefront deliberately hides the pay button rather than showing a
+      dead one.
+
+**Check `bootstrap_owner_email()` in `supabase/migrations/003_owners.sql`
+before pushing.** It is set to `nikolsburgj@gmail.com`. That address, on its
+first Google sign-in, becomes the owner. Sign in with a different one and you
+land on `/no-access` with no way to grant yourself access.
 
 ### Known open
 
@@ -110,3 +119,46 @@ someone more than the sign in front of them says. Change it in the manager if
 **Not built, on purpose:** online ordering and payment capture. The shop still
 ends at "here is your total, pay with Bit at the counter", which is what the
 business actually does. Nothing here forecloses adding it later.
+
+**Verified, not asserted.** Everything below was checked against a running
+server, and every defect in the list after it was found that way rather than by
+reading the code:
+
+- `/manager` → 307 to `/login?next=%2Fmanager`; `/shop` stays public.
+- Every write route → 401 with no session, 403 to a foreign `Origin` (checked
+  before auth, so a cross-site post never reaches the guard).
+- Cart: two dragons → ₪70 before discounts, ₪50 total, "you saved −₪20", with
+  the applied deal named.
+- Manager on a 375px viewport: Hebrew RTL, the three keychain subclasses, and
+  the live "5 for ₪35" caption derived from the pricing engine.
+- `npm run check` — lint, typecheck, 36 tests. `npm run build` — 24 routes.
+
+Defects found and fixed during that pass:
+
+1. **A wrong price claim on the storefront.** Group headings were derived with
+   `ladderFor` on a sample product, which includes that product's *own* deal —
+   so a "2 for ₪50" scoped to one dragon rendered as the whole Figures
+   category's offer. A customer taking any two figures to the counter would
+   have been charged ₪70. Now uses `groupLadder`, with a test asserting that an
+   advertised group price is what `priceCart` actually charges.
+2. `ListRow` wrapped the whole row in a `<button>` *including* `trailing`, so
+   the reorder arrows nested a button inside a button — invalid HTML that broke
+   hydration outright.
+3. `imageUrl` lived in the `server-only` catalog module, so importing it from a
+   client component pulled `next/headers` into the browser bundle.
+4. The auth pages passed a Lucide icon from a Server Component to a Client
+   Component. A function cannot cross that boundary; the production build
+   failed on it.
+5. The ESLint flat config used `FlatCompat`, which died on a circular structure
+   before linting a single file.
+6. `middleware.ts` → `proxy.ts` for the Next 16 convention. The export name has
+   to match the filename or the file silently stops running — which here would
+   mean the manager stops being gated.
+
+**One thing to be aware of:** a stray `.mcp.json` appeared in
+the repo root mid-session, pointing a Supabase MCP server at project ref
+`sbjqgqarcavxljfnyloe` — which is **not** this project's and not Ayeka's
+(`uemnappyzjqntildlhlr`). It responded to a live request, so it is somebody's
+real project. It was deleted and `.mcp.json` is now gitignored. If you did not
+create it deliberately, nothing was lost; if you did, note that pointing this
+repo's tooling at another project's database would have sent `db push` there.

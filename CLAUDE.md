@@ -4,161 +4,162 @@ Guidance for working in this repository.
 
 ## What this is
 
-A storefront plus an owner's catalogue manager for a coffee truck that also
-sells 3D prints. Customers scan a QR code, browse, build a cart, see a total,
-and pay at the counter with **Bit**. No checkout, no shipping, no customer
-accounts. The owner signs in with Google at `/manager` and edits the catalogue
-from a phone, standing at the stand. Trilingual: Hebrew (primary), English,
-Arabic — Hebrew and Arabic are RTL.
+A storefront and catalogue manager for a coffee-truck side business selling
+3D-printed items. Customers scan a QR code at the truck, browse, build a cart,
+see a total, and pay manually via **Bit** at the counter. There is no online
+checkout — the site's job is to present the catalogue, price it correctly, and
+hand off to payment.
 
-## Stack
+The **manager** is the other half and the one under real pressure: the owner
+uses it on a phone, one-handed, standing at the truck, to add a keychain they
+brought from home. If a change makes that take longer, it is a regression.
 
-Next.js 16 App Router · React 19 · Tailwind 4 · TypeScript strict ·
-Supabase (Postgres + Auth + Storage). Runtime dependencies are `lucide-react`
-and `@supabase/*`, and that is all.
+Trilingual (Hebrew, English, Arabic), full RTL. **Hebrew is the default and the
+primary language** — it is what the stand is worked in.
+
+## Start of every session
+
+Read [`HANDOFF.md`](./HANDOFF.md) — current state, open items, and what needs
+the owner rather than us.
+
+## Tech stack
+
+Next 16 (App Router, Turbopack) · React 19 · Tailwind 4 · Supabase · Vercel.
+TypeScript strict. No component library beyond the one in `src/components/ios/`.
 
 ```bash
-npm install
-npm run dev          # http://localhost:3000
-npm run check        # lint + typecheck + test — run before you finish
-npm test             # 24 pricing tests, node:test, no framework
-npm run db:push      # supabase db push
-npm run seed         # loads the catalogue into Supabase
+npm run dev        # localhost:3000
+npm run check      # lint + typecheck + tests. Run before every commit.
+npm run build      # what Vercel runs
 ```
 
-The site runs with **no Supabase configuration at all** — see the fallback
-below — so `npm run dev` works on a clean clone. Provisioning: `docs/SETUP.md`.
+## Layout
 
-## The catalogue is three levels, and the middle one earns its place
+```
+src/app/(root)          landing "/" and "/shop"
+src/app/manager/        owner-only, gated by src/proxy.ts
+src/app/api/manager/    every write. Owner-checked, one route per entity.
+src/components/ios/     the design system. Reuse it; do not hand-roll UI.
+src/components/shop/    storefront
+src/components/manager/ manager screens
+src/lib/                domain model, pricing, i18n, auth, data access
+src/data/seed.json      the real catalogue, as a read-only fallback
+supabase/migrations/    schema, grants, RLS. 001–005 always ship together.
+legacy/                 the old static site, preserved. Do not edit or revive.
+docs/SETUP.md           the owner's one-time provisioning checklist
+PLAYBOOK.md             cross-project security and Israeli-law reference
+```
+
+## The catalogue is three levels
 
 ```
 category      "Keychains"
   subclass    "Clickers" · "Small" · "Big"
-    product   one physical thing, one photo, one base price
+    product   one thing, one photo, one base price
 ```
 
-The old static site was flat, and its "3 keychains for ₪25" deal hung off a
-single product row — so a customer taking three *different* keychains did not
-get the deal they were being shown. A subclass is the thing a mixed handful can
-fill. Do not collapse this level to simplify a screen; it is the reason the
-rebuild happened.
+The middle level exists for **one reason**: bundle deals are sold per subclass.
+"Any three small keychains for ₪25" means *any three*, mixed — which is wider
+than a product and narrower than a category. Removing that level would break
+the business rule, not just the schema.
 
-Categories and subclasses have `visible`; products have `available` (offered at
-all) and `stock` (`null` = not counted, the normal case). Hiding a category
-hides everything under it — enforced in RLS, not in a `.filter()` somebody can
-forget to write on the next query.
+## Pricing — read `src/lib/pricing.ts` before touching anything money-shaped
 
-## Pricing: `src/lib/pricing.ts` is the only place money is decided
+- **Agorot everywhere.** Integers, never floats. ₪25.50 is `2550`. Format once,
+  at the edge, with `formatAgorot`.
+- **The solver is exact, not greedy.** Applying the biggest bundle first and
+  charging the remainder at full price overcharges: with 2-for-₪18 and
+  3-for-₪25 over a ₪10 base, five items are cheapest as 3+2 = ₪43, but
+  biggest-first gives ₪45. A small dynamic program gets it right.
+- **Narrowest scope wins.** A product rule beats a subclass deal beats a
+  category deal. That is what lets one expensive keychain sit out of the
+  subclass bundle.
+- **`ladderFor` and `groupLadder` are not interchangeable.** `ladderFor` answers
+  "what can this one product be had for" and includes its private deals.
+  `groupLadder` answers "what deal do all of these share" and considers only
+  rules at the group's own scope. A heading built with the wrong one advertises
+  a price the till will not honour — that exact bug shipped once and is now
+  pinned by a test.
+- `src/lib/pricing.test.ts` is the only test suite, deliberately: this is the
+  one module where being wrong costs real money, and it is pure. It includes a
+  brute-force cross-check and an exhaustive sweep. **Keep it passing.**
 
-`priceCart(lines, productsById, rules)` is the single source of truth. It is a
-small exact dynamic program, not `Math.floor(qty / 3)`, because biggest-bundle-
-first overcharges: with "2 for ₪18" and "3 for ₪25" over a ₪10 base, five items
-are ₪43 as 3+2 and ₪45 the naive way. Charging ₪2 for our own arithmetic is not
-acceptable.
+## Security — the model, not a checklist
 
-Invariants, all asserted in `pricing.test.ts` — if you change this file, these
-must still hold:
+Full detail in [`docs/SECURITY.md`](./docs/SECURITY.md); the rules that bite:
 
-- Never dearer than every-item-at-base-price.
-- Never charges for a bundle that is not completely filled.
-- Narrowest live scope wins: a product rule beats a subclass deal beats a
-  category one. That is how the owner pulls one expensive item out of a deal.
-- The DP matches brute force on small carts.
+- **No client role holds a write grant on any table.** RLS scopes *rows*, not
+  *columns* — a table-level `UPDATE` on `products` would let a signed-in
+  visitor rewrite a price under a perfectly correct row policy. Every write
+  goes through `src/app/api/manager/*`.
+- **`src/proxy.ts` is a convenience boundary, not the security one.** It stops
+  a stranger seeing the editor; it does not stop anyone calling the API. Every
+  write route calls `requireOwner()` again. Curl does not navigate.
+- **Never spread a request body into a database write.** Narrow it field by
+  field in `src/lib/validate.ts`. Slugs, sort orders and storage keys are
+  generated server-side — a client never chooses one.
+- **Every `SECURITY DEFINER` function is revoked from `PUBLIC` explicitly.**
+  Postgres grants `EXECUTE` to `PUBLIC` on creation and every role inherits it,
+  so revoking from `anon` alone does nothing.
+- After any RLS or grant change, re-test with a real unauthenticated request.
+  "The migration succeeded" is not evidence.
 
-**Money is agorot — integers.** ₪25.50 is `2550`. No float ever touches a
-price. Render only through `formatAgorot()` from `src/lib/money.ts`, with
-`className="tabular"` so digits do not jitter.
+## Design system
 
-## The security boundary is an API route, never the client
+Ported from the 3D Prints manager: Apple's semantic colour roles, type scale,
+radii and spring curves. [`docs/DESIGN-SYSTEM.md`](./docs/DESIGN-SYSTEM.md).
 
-Two Supabase clients, and the difference is the whole model.
-`createClient()` (`src/lib/supabase/server.ts`) acts as the visitor under RLS
-and is safe anywhere on the server. `createServiceClient()` bypasses RLS and is
-only ever reached through `requireOwner()` in `src/lib/auth.ts`, which returns
-either the client or the refusal — you cannot get one without the other.
-
-**No client role holds a write grant on any table** (`migrations/002`). RLS
-scopes rows, not columns, so a table-level UPDATE on `products` would let any
-signed-in visitor rewrite a price under a perfectly correct row policy.
-
-Middleware gating `/manager/*` is a convenience, not the boundary — curl does
-not navigate. Every write route opens
-`checkOrigin() → readJson() → requireOwner()`, then validates **field by
-field** (never spread a body into a write; an invented property rides along)
-and closes with `audit()`. Details in `docs/SECURITY.md`.
-
-## Styling: tokens only
-
-Every colour, radius, type size and easing is a CSS variable in
-`src/app/globals.css`. No raw hex in a component, no arbitrary pixel values,
-spacing on the 4pt rhythm. If a token does not exist for what you need, add it
-to `globals.css` and `docs/DESIGN-SYSTEM.md` first, then use it.
-
-Reuse `src/components/ios/` (inventory and guidance in
-`docs/DESIGN-SYSTEM.md`). Hand-rolling a button or a list row is how an
-interface stops looking like one product. Lucide icons only, sized from
-`ICON_SIZE`. Never emoji: they render differently on every platform, cannot be
-tinted, and screen readers read their Unicode names aloud.
+- **Tokens only.** No raw hex, no arbitrary pixel sizes. Missing token? Add it
+  to `globals.css` and the doc first, then use it.
+- **Dark is the default look**, not a `prefers-color-scheme` fallback.
+- **44pt touch targets** (`min-h-11`), visible focus, real `<label>`s, errors
+  with `role="alert"`, colour never the only signal.
+- **Lucide icons only**, sized from `ICON_SIZE`. Never emoji.
+- Motion comes from the classes in `globals.css`. Do not invent animations.
+  `prefers-reduced-motion` is handled globally — do not fight it.
 
 ## RTL is not an afterthought
 
-Hebrew is the default, so RTL is the common case and LTR is the exception.
-
-- Logical properties only: `ps-/pe-/ms-/me-/start-/end-/text-start/text-end`.
-  Never `pl-/pr-/ml-/mr-/left-/right-`.
-- **Any expression mixing digits with a separator** — `3 / 5`, `1–5`, a price
-  beside a count — goes in `<span className="ltr-nums">`. The bidi algorithm
-  reorders `3 / 5` into `5 / 3`, which is not a cosmetic bug, it is a different
-  and wrong claim.
-- Physical transforms (`translateX`, chevron `scaleX`) are signed by
-  `var(--dir)`, set from `dir` on `<html>`.
-
-Every user-facing string comes from `useI18n().t`. Read the `Dict` interface in
-`src/lib/i18n.tsx` first — the key you need almost certainly exists. A genuinely
-new one goes into the interface **and** all three of `he`, `en`, `ar`, which is
-a type error until you do it; the old site drifted out of sync exactly this way.
-Product content is not in the dictionary — it is `localize(product.name, locale)`.
-
-## The read-only fallback
-
-With no Supabase env vars, or with Supabase down, `readCatalogue()` returns
-`src/data/seed.json` and sets `live: false`. That is the real catalogue, not a
-mock. The shop is opened at a market stand on a phone tether, and "showing this
-morning's prices" beats "the site is down". The manager reads the same flag and
-shows a read-only notice rather than pretending a save worked. Never remove
-this path, and never let a screen assume `live === true`.
+- **Logical properties everywhere**: `ps-`/`pe-`/`ms-`/`me-`/`start-`/`end-`/
+  `text-start`. Never `pl-`/`pr-`/`left-`/`text-left`.
+  The two deliberate exceptions are the pinned floating widgets — the settings
+  globe and the WhatsApp button — which stay in a fixed physical corner because
+  a control that changes corner when you change language is one you have to
+  hunt for. Both say so in a comment.
+- **Wrap numeric expressions in `.ltr-nums`.** `3 / 5` inside Hebrew renders as
+  `5 / 3` — not a cosmetic problem, a different and wrong claim. Same for
+  ranges, prices beside counts, and the bundle ladder.
+- Every visible string lives in `src/lib/i18n.tsx`, in **all three** languages.
+  A string added to one block and not the others is a type error, which is the
+  point. Product *content* lives in the database and is read with `localize()`.
 
 ## Conventions
 
-- **Next 16:** `params` and `searchParams` are Promises — await them.
-  `cookies()` is async. Hooks need `"use client"`.
-- **Derive state during render.** `useEffect` is for real external systems only:
-  listeners, scroll lock, an initial fetch. `exhaustive-deps` is an error here.
-- Client writes: `fetch(...)` then `router.refresh()` to re-read server data.
-- Motion comes only from the classes in `globals.css` (`.press`,
-  `.animate-rise-in`, `.stagger`, `.animate-sheet-in`…). Never invent one;
-  `prefers-reduced-motion` is handled globally.
-- Accessibility floor: 44pt targets (`min-h-11`), real `<label>`s, errors with
-  `role="alert"`, colour never the only signal, loading/empty/error states that
-  actually exist. Never add `outline: none`.
-- Comments explain **why**. The foundation files are the house style.
+- **Derive state during render.** `useEffect` is for real external systems only
+  — listeners, scroll locking, an initial fetch. A `useEffect` that syncs props
+  into state is a bug waiting to happen; remount with a `key` instead.
+- Server Components read data; Client Components handle interaction. A function
+  (a Lucide icon included) cannot be passed from one to the other.
+- `src/lib/catalog.ts` is `server-only`. Anything a client component needs —
+  `imageUrl` — lives in `src/lib/images.ts`.
+- Comments explain **why**, not what. The reasoning behind a rule is the part
+  that stops someone undoing it in six months.
 
-## Where things live
+## Verifying changes
 
-`src/lib/` domain, pricing, money, i18n, auth, catalogue reads ·
-`src/components/ios/` the component library · `src/app/` routes, with
-`api/manager/*` the only write paths · `supabase/migrations/` schema, grants,
-RLS, storage, audit — numbered and additive · `src/data/seed.json` the offline
-catalogue, built by `scripts/build-seed.mjs` · `legacy/` the old static site,
-reference only and excluded from lint and tsc · `docs/` SETUP, ARCHITECTURE,
-SECURITY, DESIGN-SYSTEM.
+There is no CI. `npm run check` is the gate, and it is not sufficient on its
+own — **run the app**. Every defect fixed in the rebuild commit was found by
+building and exercising it, not by reading it: a nested `<button>` that broke
+hydration, a server-only import in a client bundle, a group heading advertising
+a price that did not exist.
 
-## Verifying, and finishing
+Check at 390px and 1280px, in Hebrew and English, dark and light. Exercise the
+language switch, the cart, the product sheet, and the manager's photo upload.
 
-`npm run check` must pass. Then actually look at it: desktop (~1280px) and
-phone (~390px), Hebrew and English, dark and light. Exercise the language
-switch and watch the layout mirror, a cart total that crosses a bundle rung,
-the manager's edit sheet, and the generated Bit / WhatsApp links.
+## Git
 
-Commit to a branch, then fast-forward `main` and push so the deployed site
-updates. No PRs unless asked. Update `HANDOFF.md` at the end of a session.
+Work on a branch, then fast-forward `main` and push — Vercel deploys `main`.
+Do not open PRs unless asked.
+
+At the end of a session, update `HANDOFF.md`: tick off what landed, add a dated
+entry, and flag anything still open or needing the owner.

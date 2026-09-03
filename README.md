@@ -1,76 +1,52 @@
 # Coffee Truck · 3D Prints
 
-A small storefront and its catalogue manager, for a coffee truck in Israel that
-also sells 3D-printed things off a table beside the counter.
+A storefront and catalogue manager for a coffee-truck side business selling
+3D-printed items. Customers scan a QR code at the truck, browse, build a cart,
+see a total, and pay with **Bit** at the counter.
 
-A customer scans the QR code, browses in Hebrew, English or Arabic, builds a
-cart, and sees a total with the bundle deals already worked out. They pay at the
-counter with **Bit**. There is no online checkout, no shipping, and no customer
-accounts — the site's job is to show what is on the table and produce a number.
+Trilingual — Hebrew, English, Arabic — with full RTL. Hebrew is the default.
 
-The owner opens `/manager` on a phone, signs in with Google, and edits the
-catalogue: categories, subclasses, products, photos, deals, and the shop's own
-settings. Nobody else can reach it.
+Next 16 · React 19 · Tailwind 4 · Supabase · Vercel.
 
-## Stack
-
-Next.js 16 (App Router) · React 19 · Tailwind 4 · TypeScript (strict) ·
-Supabase for Postgres, Auth and Storage. The only runtime dependencies are
-`lucide-react` and the two `@supabase/*` packages.
-
-## Running it
+## Run it
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
+npm run dev
 ```
 
-That works on a clean clone with no configuration at all. Without Supabase env
-vars the site serves the catalogue from `src/data/seed.json`, read-only, and
-says so — see [the read-only fallback](docs/ARCHITECTURE.md#the-read-only-fallback).
+<http://localhost:3000>. It works with no configuration: the catalogue falls
+back to a committed snapshot and the manager shows a read-only banner.
 
-To connect it to a real database, follow **[docs/SETUP.md](docs/SETUP.md)** end
-to end. It is written as a numbered checklist for a phone.
+To go live — Supabase, Google sign-in, Vercel — follow
+**[`docs/SETUP.md`](docs/SETUP.md)**.
 
-| Command             | What it does                                     |
-| ------------------- | ------------------------------------------------ |
-| `npm run dev`       | Development server.                              |
-| `npm run build`     | Production build.                                |
-| `npm start`         | Serve the production build.                      |
-| `npm run lint`      | ESLint (`next/core-web-vitals` + `next/typescript`). |
-| `npm run typecheck` | `tsc --noEmit`.                                  |
-| `npm test`          | The pricing tests — 24 of them, `node:test`.     |
-| `npm run check`     | Lint, typecheck and test together.               |
-| `npm run db:push`   | `supabase db push` — applies `supabase/migrations/`. |
-| `npm run seed`      | Loads the catalogue into Supabase.               |
+## Checks
 
-## What is worth knowing before changing anything
+```bash
+npm run check     # lint + typecheck + tests
+npm run build     # what Vercel runs
+```
 
-- **The catalogue is three levels**: category → subclass → product. The middle
-  level exists because bundle deals are sold across a subclass ("any three small
-  keychains for ₪25"), which is wider than one product and narrower than a
-  category.
-- **All money is agorot**, stored and computed as integers. `src/lib/pricing.ts`
-  is the only place a price is decided, and it solves the cheapest combination
-  of bundles exactly rather than applying the biggest one repeatedly — the naive
-  version overcharges.
-- **No client role can write to any table.** Every catalogue change goes through
-  an owner-checked API route under `/api/manager`. See
-  [docs/SECURITY.md](docs/SECURITY.md).
-- **Hebrew is the default and RTL is the common case.** Logical CSS properties
-  everywhere, and any digits-plus-separator expression wrapped so the bidi
-  algorithm cannot reorder it into a different claim.
+## Where things are
 
-## Documentation
+| | |
+|---|---|
+| [`CLAUDE.md`](CLAUDE.md) | how to work in this repo — read first |
+| [`HANDOFF.md`](HANDOFF.md) | current state and open items |
+| [`docs/SETUP.md`](docs/SETUP.md) | one-time provisioning |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | data model and the pricing engine |
+| [`docs/SECURITY.md`](docs/SECURITY.md) | the access model |
+| [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) | tokens, components, RTL rules |
+| [`PLAYBOOK.md`](PLAYBOOK.md) | cross-project security and Israeli-law reference |
+| `legacy/` | the previous static site, preserved |
 
-| File                                             | For                                        |
-| ------------------------------------------------ | ------------------------------------------ |
-| [docs/SETUP.md](docs/SETUP.md)                   | Getting it live. The owner's checklist.    |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)     | Request flow, data model, pricing contract.|
-| [docs/SECURITY.md](docs/SECURITY.md)             | The access model and the pre-deploy check. |
-| [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md)   | Tokens, components, motion, RTL, a11y.     |
-| [CLAUDE.md](CLAUDE.md)                           | House rules for working in this repo.      |
-| [PLAYBOOK.md](PLAYBOOK.md)                       | Cross-project security and Israeli law.    |
+## The one thing worth knowing
 
-`legacy/` holds the static site this replaced. It is kept for reference and is
-excluded from linting and type-checking.
+The catalogue is **category → subclass → product**, and the middle level is the
+point. Bundle deals attach to a scope, and a subclass deal is filled by any mix
+of products inside it — "any three small keychains for ₪25" means *any three*.
+
+The pricing engine solves that exactly rather than greedily, because
+biggest-bundle-first overcharges. See
+[`src/lib/pricing.ts`](src/lib/pricing.ts); it is the one module with tests.

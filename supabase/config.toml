@@ -1,0 +1,41 @@
+# Supabase CLI configuration.
+#
+# Only what `supabase link` and `supabase db push` actually need is set here.
+# Everything else is left at the CLI's defaults on purpose: this project has no
+# local Supabase stack in its workflow — migrations are written here and pushed
+# straight to the hosted project — so pinning local ports and studio settings
+# would be configuration nobody reads and nobody maintains.
+#
+# Full reference: https://supabase.com/docs/guides/local-development/cli/config
+
+project_id = "coffee-truck-shop"
+
+[api]
+enabled = true
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+# Bounds an accidental or hostile request that asks for everything. The whole
+# catalogue is a few dozen rows, so this is far above any real read.
+max_rows = 1000
+
+# Deliberately NOT set to true. When unset, a table created in `public` is not
+# auto-exposed to anon/authenticated without an explicit GRANT — which is the
+# behaviour migration 002 depends on. Turning the legacy auto-expose back on
+# would hand every future table to the client roles before anyone thought
+# about it. See PLAYBOOK.md §1.5.
+# auto_expose_new_tables = true
+
+[db]
+# The version the hosted project runs. `db push` compares against this.
+major_version = 17
+
+[auth]
+enabled = true
+# Google is the only provider. Set these in the Supabase dashboard, not here —
+# the client secret must never be committed. See docs/SETUP.md §2.
+enable_signup = true
+
+[storage]
+enabled = true
+# Mirrors the per-bucket limit set in migration 004. A phone photo is 2–5 MB.
+file_size_limit = "8MiB"
