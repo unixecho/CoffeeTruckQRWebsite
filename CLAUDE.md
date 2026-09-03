@@ -4,106 +4,200 @@ Guidance for working in this repository.
 
 ## What this is
 
-A single-page storefront for a coffee-truck side business that sells 3D-printed
-items. Customers browse products, build a cart, see a total, and pay manually via
-**Bit** (an Israeli P2P payment app) at the counter. There is no backend and no
-real checkout — the site's job is to present products and produce an order
-summary plus a payment hand-off.
+A storefront and catalogue manager for a coffee-truck side business selling
+3D-printed items. Customers scan a QR code at the truck, browse, build a cart,
+see a total, and pay **cash or Bit at the counter**, four feet away. The site's
+job is to present the catalogue, price it correctly, and hand off to a person.
 
-The site is trilingual (Hebrew, English, Arabic) with full RTL/LTR support.
-Hebrew is the default and primary language.
+**This shop does not take orders, and that is a decision rather than a gap.**
+Ordering ahead belongs to the standalone 3D Prints store; here the customer is
+already standing at the till, and a queue of orders for a stand that has no
+queue is worse than what it replaces.
+
+The ordering and payment machinery is nevertheless **built, tested, and shipped
+switched off** — `checkout_enabled` and `online_payments_enabled` both default
+to false, so the storefront behaves exactly as it did. It exists so that the
+day either store wants it, it is a switch rather than a project, and so that
+integrating **Grow** once the עוסק פטור registration comes through is five
+environment variables rather than a rewrite. Read
+[`docs/PAYMENTS.md`](./docs/PAYMENTS.md) before touching any of it.
+
+The **manager** is the other half and the one under real pressure: the owner
+uses it on a phone, one-handed, standing at the truck, to add a keychain they
+brought from home. If a change makes that take longer, it is a regression.
+
+Trilingual (Hebrew, English, Arabic), full RTL. **Hebrew is the default and the
+primary language** — it is what the stand is worked in.
+
+## Start of every session
+
+Read [`HANDOFF.md`](./HANDOFF.md) — current state, open items, and what needs
+the owner rather than us.
 
 ## Tech stack
 
-- **Vanilla HTML/CSS/JS.** No framework, no bundler, no build step.
-- Product data is static JSON (`data/products.json`), loaded at runtime via
-  `fetch()`.
-- `serve` (a static file server) is the only dependency, used for local preview.
-- ESLint config exists (`.eslintrc.json`, `eslint:recommended`).
-
-## File map
-
-| File                  | Responsibility                                                       |
-| --------------------- | ------------------------------------------------------------------- |
-| `index.html`          | Markup for all views (landing, store, cart drawer, modal, widgets). |
-| `style.css`           | All styling, animations, responsive rules, RTL/LTR handling.        |
-| `app.js`              | All behavior: i18n, rendering, cart, modal, payment/contact links.  |
-| `data/products.json`  | Product catalog (the only "content" file the owner edits often).    |
-| `assets/`             | Product images (`.png`/`.jpg`).                                     |
-| `assets/fonts/`       | Self-hosted Rubik woff2 subsets (Hebrew/Latin/Arabic).              |
-
-## How to run locally
-
-A static server is required — opening `index.html` via `file://` breaks because
-the catalog is loaded with `fetch()`.
+Next 16 (App Router, Turbopack) · React 19 · Tailwind 4 · Supabase · Vercel.
+TypeScript strict. No component library beyond the one in `src/components/ios/`.
 
 ```bash
-npm install
-npm start          # runs `serve`
-# or: python3 -m http.server 8000
+npm run dev        # localhost:3000
+npm run check      # lint + typecheck + tests. Run before every commit.
+npm run build      # what Vercel runs
 ```
 
-## Architecture notes
+## Layout
 
-- **Two views, one page.** `#landingView` and `#storeView` are toggled by adding
-  or removing the `hidden` class; there is no router.
-- **i18n** lives in the `i18n` object at the top of `app.js`, keyed by language
-  (`he`/`en`/`ar`). `t(key)` reads from the active language. `setLanguage(lang)`
-  flips `document.dir` (RTL for `he`/`ar`), persists to `localStorage`
-  (`siteLanguage`), and re-renders everything. Visible strings must be added to
-  **all three** language blocks.
-- **Localized product fields.** `name`, `description`, and `tags` in
-  `products.json` are objects keyed by language. Use `getLocalizedValue()` /
-  `getLocalizedTags()` to read them with fallbacks.
-- **Pricing tiers.** Products may have a `pricingTier` array (bundle pricing,
-  e.g. 3 for ₪25). `getCartProducts()` applies the largest bundles first, then
-  charges the remainder at base `price`. Don't assume `quantity * price`.
-- **Cart** is an in-memory `{ productId: quantity }` map (not persisted).
-- **External hand-offs** are plain links/`window.open`, configured by constants
-  at the top of `app.js`:
-  - `BIT_PAYMENT_LINK` — the Bit payment page (⚠️ currently a placeholder,
-    marked `// replace later`).
-  - `WHATSAPP_PHONE` / `WHATSAPP_MESSAGE` — the floating contact widget and the
-    landing-page suggestions button (prefilled `wa.me` deep links).
+```
+src/app/(root)          landing "/" and "/shop"
+src/app/checkout/       the order flow, and the order screen by token
+src/app/manager/        owner-only, gated by src/proxy.ts
+src/app/api/manager/    every owner write. Owner-checked, one route per entity.
+src/app/api/checkout/   the ONE public write path. Different rails — PLAYBOOK §4.
+src/app/api/payments/   provider callbacks. Believes nothing; reads back.
+src/components/ios/     the design system. Reuse it; do not hand-roll UI.
+src/components/shop/    storefront
+src/components/checkout/ the checkout and order screens
+src/components/manager/ manager screens
+src/lib/                domain model, pricing, i18n, auth, data access
+src/lib/payments/       the provider port, the state machine, the config
+src/lib/orders.ts       the only module that writes an order or a payment event
+src/data/seed.json      the real catalogue, as a read-only fallback
+supabase/migrations/    schema, grants, RLS. 001–006 always ship together.
+legacy/                 the old static site, preserved. Do not edit or revive.
+docs/SETUP.md           the owner's one-time provisioning checklist
+docs/PAYMENTS.md        the payment architecture, and what Grow still needs
+PLAYBOOK.md             cross-project security and Israeli-law reference
+```
 
-## Typography
+## The catalogue is three levels
 
-- One font for the whole site: **Rubik**, self-hosted as variable woff2 subsets
-  in `assets/fonts/` (Hebrew, Arabic, Latin, Latin-ext). It covers all three
-  languages so type is unified everywhere; no external CDN at runtime.
-- `@font-face` blocks (with per-subset `unicode-range`) live at the top of
-  `style.css`; the body uses `font-family: "Rubik", system-ui, …`.
-  Hebrew + Latin subsets are `<link rel="preload">`ed in `index.html`.
-- Rubik's variable weight axis is **300–900**. Avoid `font-weight` above 900
-  (it clamps); don't reintroduce a second typeface.
+```
+category      "Keychains"
+  subclass    "Clickers" · "Small" · "Big"
+    product   one thing, one photo, one base price
+```
+
+The middle level exists for **one reason**: bundle deals are sold per subclass.
+"Any three small keychains for ₪25" means *any three*, mixed — which is wider
+than a product and narrower than a category. Removing that level would break
+the business rule, not just the schema.
+
+## Pricing — read `src/lib/pricing.ts` before touching anything money-shaped
+
+- **Agorot everywhere.** Integers, never floats. ₪25.50 is `2550`. Format once,
+  at the edge, with `formatAgorot`.
+- **The solver is exact, not greedy.** Applying the biggest bundle first and
+  charging the remainder at full price overcharges: with 2-for-₪18 and
+  3-for-₪25 over a ₪10 base, five items are cheapest as 3+2 = ₪43, but
+  biggest-first gives ₪45. A small dynamic program gets it right.
+- **Narrowest scope wins.** A product rule beats a subclass deal beats a
+  category deal. That is what lets one expensive keychain sit out of the
+  subclass bundle.
+- **`ladderFor` and `groupLadder` are not interchangeable.** `ladderFor` answers
+  "what can this one product be had for" and includes its private deals.
+  `groupLadder` answers "what deal do all of these share" and considers only
+  rules at the group's own scope. A heading built with the wrong one advertises
+  a price the till will not honour — that exact bug shipped once and is now
+  pinned by a test.
+- `pricing.test.ts` is one of six suites now, and the rule for what gets tested
+  is unchanged: **pure, and being wrong costs real money or opens a hole.**
+  The others are `payments/status.test.ts` (the order state machine, swept
+  exhaustively), `payments/validate.test.ts` (the exact key set the public
+  checkout parser produces), `payments/url.test.ts` (what may become an
+  `<iframe src>`), `payments/log.test.ts` (the card-data redactor) and
+  `payments/providers/grow.test.ts` (the adapter's flow, against a stubbed
+  transport). **Keep them passing.**
+- Tests run through `scripts/test-resolver.mjs`, which teaches `node --test`
+  the extensionless imports the rest of the codebase writes, and through
+  `--conditions=react-server`, which makes `server-only` a no-op instead of a
+  throw. Both live with the test runner rather than as conventions leaking
+  into `src/` — see the comment in that file.
+
+## Security — the model, not a checklist
+
+Full detail in [`docs/SECURITY.md`](./docs/SECURITY.md); the rules that bite:
+
+- **No client role holds a write grant on any table.** RLS scopes *rows*, not
+  *columns* — a table-level `UPDATE` on `products` would let a signed-in
+  visitor rewrite a price under a perfectly correct row policy. Every write
+  goes through `src/app/api/manager/*`.
+- **`src/proxy.ts` is a convenience boundary, not the security one.** It stops
+  a stranger seeing the editor; it does not stop anyone calling the API. Every
+  write route calls `requireOwner()` again. Curl does not navigate.
+- **Never spread a request body into a database write.** Narrow it field by
+  field in `src/lib/validate.ts`. Slugs, sort orders and storage keys are
+  generated server-side — a client never chooses one.
+- **Every `SECURITY DEFINER` function is revoked from `PUBLIC` explicitly.**
+  Postgres grants `EXECUTE` to `PUBLIC` on creation and every role inherits it,
+  so revoking from `anon` alone does nothing.
+- After any RLS or grant change, re-test with a real unauthenticated request.
+  "The migration succeeded" is not evidence.
+- **`/api/checkout` is the one endpoint a stranger can reach with no session**,
+  so it uses `src/lib/publicRoute.ts` rather than `route.ts` — PLAYBOOK §4's
+  rail stack, deliberately a separate function so the manager's assumptions
+  cannot leak onto it. `orders` grants **nothing** to any client role, not even
+  `SELECT`; it holds a name and a phone number.
+- **Nothing believes a browser about money.** Not a redirect, not a
+  `postMessage`, not a webhook body — each only prompts a server-to-server read
+  of the transaction. An amount that does not reconcile exactly becomes
+  `flagged`, never `paid`, in either direction.
+
+## Design system
+
+Ported from the 3D Prints manager: Apple's semantic colour roles, type scale,
+radii and spring curves. [`docs/DESIGN-SYSTEM.md`](./docs/DESIGN-SYSTEM.md).
+
+- **Tokens only.** No raw hex, no arbitrary pixel sizes. Missing token? Add it
+  to `globals.css` and the doc first, then use it.
+- **Dark is the default look**, not a `prefers-color-scheme` fallback.
+- **44pt touch targets** (`min-h-11`), visible focus, real `<label>`s, errors
+  with `role="alert"`, colour never the only signal.
+- **Lucide icons only**, sized from `ICON_SIZE`. Never emoji.
+- Motion comes from the classes in `globals.css`. Do not invent animations.
+  `prefers-reduced-motion` is handled globally — do not fight it.
+
+## RTL is not an afterthought
+
+- **Logical properties everywhere**: `ps-`/`pe-`/`ms-`/`me-`/`start-`/`end-`/
+  `text-start`. Never `pl-`/`pr-`/`left-`/`text-left`.
+  The two deliberate exceptions are the pinned floating widgets — the settings
+  globe and the WhatsApp button — which stay in a fixed physical corner because
+  a control that changes corner when you change language is one you have to
+  hunt for. Both say so in a comment.
+- **Wrap numeric expressions in `.ltr-nums`.** `3 / 5` inside Hebrew renders as
+  `5 / 3` — not a cosmetic problem, a different and wrong claim. Same for
+  ranges, prices beside counts, and the bundle ladder.
+- Every visible string lives in `src/lib/i18n.tsx`, in **all three** languages.
+  A string added to one block and not the others is a type error, which is the
+  point. Product *content* lives in the database and is read with `localize()`.
 
 ## Conventions
 
-- Keep it dependency-free and build-free. Prefer vanilla solutions.
-- Any new user-facing string → add it to `he`, `en`, and `ar` in `i18n`.
-- Test both directions: RTL (Hebrew/Arabic) and LTR (English) can break layout
-  differently.
-- Match the existing motion vocabulary: easing
-  `cubic-bezier(0.22, 1, 0.36, 1)`, and respect
-  `@media (prefers-reduced-motion: reduce)` (already handled globally — don't
-  reintroduce unconditional animation).
-- Fixed/floating UI (language globe top-left, WhatsApp widget bottom-right) must
-  stay pinned in the same corner regardless of RTL/LTR.
-
-## Git workflow
-
-- Active development branch: **`claude/ui-polish-825cax`**.
-- Commit to the branch, push it, then fast-forward `main` and push `main` so the
-  deployed site updates. Do not create PRs unless explicitly asked.
+- **Derive state during render.** `useEffect` is for real external systems only
+  — listeners, scroll locking, an initial fetch. A `useEffect` that syncs props
+  into state is a bug waiting to happen; remount with a `key` instead.
+- Server Components read data; Client Components handle interaction. A function
+  (a Lucide icon included) cannot be passed from one to the other.
+- `src/lib/catalog.ts` is `server-only`. Anything a client component needs —
+  `imageUrl` — lives in `src/lib/images.ts`.
+- Comments explain **why**, not what. The reasoning behind a rule is the part
+  that stops someone undoing it in six months.
 
 ## Verifying changes
 
-There are no automated tests. Verify visually with a headless browser
-(Playwright is available in the dev environment) at both desktop (~1280px) and
-mobile (~390px) widths, exercising: language switch (incl. RTL↔LTR), add-to-cart
-animation, cart drawer, product lightbox, and the external links' generated URLs.
+There is no CI. `npm run check` is the gate, and it is not sufficient on its
+own — **run the app**. Every defect fixed in the rebuild commit was found by
+building and exercising it, not by reading it: a nested `<button>` that broke
+hydration, a server-only import in a client bundle, a group heading advertising
+a price that did not exist.
 
-## Session handoffs
+Check at 390px and 1280px, in Hebrew and English, dark and light. Exercise the
+language switch, the cart, the product sheet, and the manager's photo upload.
 
-At the end of a working session, update `HANDOFF.md` — check off completed
-items, log a short summary, and note anything left open or needing the owner.
+## Git
+
+Work on a branch, then fast-forward `main` and push — Vercel deploys `main`.
+Do not open PRs unless asked.
+
+At the end of a session, update `HANDOFF.md`: tick off what landed, add a dated
+entry, and flag anything still open or needing the owner.

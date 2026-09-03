@@ -1,0 +1,618 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens
+
+   Ported from the 3D Prints manager's iOS design system: Apple's semantic
+   colour roles, type scale, radii, and spring curves. See docs/DESIGN-SYSTEM.md.
+
+   The rule that matters most: never write a raw hex value or an arbitrary
+   pixel size in a component. Use a token. If one does not exist for what you
+   need, add it to the doc and to this file first, then use it.
+
+   Two deliberate departures from the source system, both because this site is
+   trilingual where that one is not:
+
+   1. **Rubik, not SF Pro / Inter.** One variable face covering Hebrew, Arabic
+      and Latin, self-hosted. A system stack renders the three scripts in three
+      different fonts and faux-bolds the weights Hebrew does not ship, which
+      looks exactly as broken as it sounds.
+   2. **Logical properties throughout.** `padding-inline`, `text-align: start`,
+      `margin-inline-start` — never `left`/`right` — so the same rules lay out
+      correctly in both directions. The few genuinely physical things (the
+      segmented control's sliding pill) are called out where they appear.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Rubik — self-hosted variable subsets. Weight axis is 300–900; anything
+   above 900 clamps, so do not ask for it.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Rubik";
+  src: url("/fonts/rubik-hebrew.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: url("/fonts/rubik-arabic.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+08A0-08FF, U+200C-2010,
+    U+20E1, U+25CC, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: url("/fonts/rubik-latin.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: url("/fonts/rubik-latin-ext.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ==========================================================================
+   Theme
+
+   Dark is the default look, not a system-preference fallback — the stand is
+   worked in the evening and the phone that runs the manager is usually in a
+   dark room. `data-theme` is stamped on <html> by ThemeProvider, synchronously
+   via the inline script in the root layout, so a returning visitor's choice
+   never flashes the default first. Explicit light is the only way out.
+   ========================================================================== */
+
+:root {
+  /* --- System colours (dark) — Apple's brightened dark variants -------- */
+  --ios-blue: #0a84ff;
+  --ios-green: #30d158;
+  --ios-indigo: #5e5ce6;
+  --ios-orange: #ff9f0a;
+  --ios-pink: #ff375f;
+  --ios-purple: #bf5af2;
+  --ios-red: #ff453a;
+  --ios-teal: #40c8e0;
+  --ios-yellow: #ffd60a;
+
+  /* --- Greys (dark) — the scale inverts -------------------------------- */
+  --ios-gray: #8e8e93;
+  --ios-gray-2: #636366;
+  --ios-gray-3: #48484a;
+  --ios-gray-4: #3a3a3c;
+  --ios-gray-5: #2c2c2e;
+  --ios-gray-6: #1c1c1e;
+
+  /* --- Backgrounds (dark) ---------------------------------------------- */
+  --bg-primary: #000000;
+  --bg-secondary: #1c1c1e;
+  --bg-tertiary: #2c2c2e;
+  --bg-grouped: #000000;
+  --bg-grouped-secondary: #1c1c1e;
+  --bg-grouped-tertiary: #2c2c2e;
+
+  /* --- Labels (dark) ---------------------------------------------------- */
+  --label-primary: #ffffff;
+  --label-secondary: rgb(235 235 245 / 0.6);
+  --label-tertiary: rgb(235 235 245 / 0.3);
+  --label-quaternary: rgb(235 235 245 / 0.18);
+
+  /* --- Fills (dark) ----------------------------------------------------- */
+  --fill-primary: rgb(120 120 128 / 0.36);
+  --fill-secondary: rgb(120 120 128 / 0.32);
+  --fill-tertiary: rgb(118 118 128 / 0.24);
+  --fill-quaternary: rgb(118 118 128 / 0.18);
+
+  /* --- Separators (dark) ------------------------------------------------ */
+  --separator: rgb(84 84 88 / 0.6);
+  --separator-opaque: #38383a;
+
+  /* --- Materials (dark) — genuinely translucent, paired with the blur and
+     saturate in Sheet/ActionSheet/Toast. That combination is what makes a
+     sheet read as glass over the page rather than a solid card that happens
+     to blur what is an inch behind it. -------------------------------- */
+  --material-bar: rgb(30 30 30 / 0.72);
+  --material-sheet: rgb(40 40 46 / 0.68);
+  --glass-border: rgb(255 255 255 / 0.1);
+  --scrim: rgb(0 0 0 / 0.5);
+
+  /* --- Elevation (dark leans on contrast, not shadow) ------------------- */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-raised: 0 4px 12px rgb(0 0 0 / 0.4);
+  --shadow-sheet: 0 -1px 24px rgb(0 0 0 / 0.5);
+  --shadow-hud: 0 8px 32px rgb(0 0 0 / 0.5);
+
+  /* --- Ambient wash. Warmer than the source system's blue/purple: this is
+     a coffee stand, and the amber reads as the truck's lamp rather than as
+     a piece of software. Brighter tints here because a wash this subtle
+     vanishes entirely on black. --------------------------------------- */
+  --wash-1: rgb(255 159 10 / 0.14);
+  --wash-2: rgb(191 90 242 / 0.10);
+  --wash-3: rgb(10 132 255 / 0.08);
+}
+
+:root[data-theme="light"] {
+  /* --- System colours (light) ------------------------------------------- */
+  --ios-blue: #007aff;
+  --ios-green: #34c759;
+  --ios-indigo: #5856d6;
+  --ios-orange: #ff9500;
+  --ios-pink: #ff2d55;
+  --ios-purple: #af52de;
+  --ios-red: #ff3b30;
+  --ios-teal: #30b0c7;
+  --ios-yellow: #ffcc00;
+
+  /* --- Greys (light) ----------------------------------------------------- */
+  --ios-gray: #8e8e93;
+  --ios-gray-2: #aeaeb2;
+  --ios-gray-3: #c7c7cc;
+  --ios-gray-4: #d1d1d6;
+  --ios-gray-5: #e5e5ea;
+  --ios-gray-6: #f2f2f7;
+
+  /* --- Backgrounds (light) ----------------------------------------------- */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f2f2f7;
+  --bg-tertiary: #ffffff;
+  --bg-grouped: #f2f2f7;
+  --bg-grouped-secondary: #ffffff;
+  --bg-grouped-tertiary: #f2f2f7;
+
+  /* --- Labels (light) ---------------------------------------------------- */
+  --label-primary: #000000;
+  --label-secondary: rgb(60 60 67 / 0.6);
+  --label-tertiary: rgb(60 60 67 / 0.3);
+  --label-quaternary: rgb(60 60 67 / 0.18);
+
+  /* --- Fills (light) ----------------------------------------------------- */
+  --fill-primary: rgb(120 120 128 / 0.2);
+  --fill-secondary: rgb(120 120 128 / 0.16);
+  --fill-tertiary: rgb(118 118 128 / 0.12);
+  --fill-quaternary: rgb(116 116 128 / 0.08);
+
+  /* --- Separators (light) ------------------------------------------------ */
+  --separator: rgb(60 60 67 / 0.29);
+  --separator-opaque: #c6c6c8;
+
+  /* --- Materials (light) -------------------------------------------------- */
+  --material-bar: rgb(249 249 249 / 0.72);
+  --material-sheet: rgb(255 255 255 / 0.68);
+  --glass-border: rgb(255 255 255 / 0.5);
+  --scrim: rgb(0 0 0 / 0.4);
+
+  /* --- Elevation ---------------------------------------------------------- */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.06);
+  --shadow-raised: 0 4px 12px rgb(0 0 0 / 0.1), 0 1px 3px rgb(0 0 0 / 0.06);
+  --shadow-sheet: 0 -1px 24px rgb(0 0 0 / 0.16);
+  --shadow-hud: 0 8px 32px rgb(0 0 0 / 0.18);
+
+  /* --- Ambient wash -------------------------------------------------------- */
+  --wash-1: rgb(255 149 0 / 0.08);
+  --wash-2: rgb(175 82 222 / 0.05);
+  --wash-3: rgb(0 122 255 / 0.04);
+}
+
+@theme inline {
+  /* Semantic colours — always prefer these over raw hex in components. */
+  --color-blue: var(--ios-blue);
+  --color-green: var(--ios-green);
+  --color-indigo: var(--ios-indigo);
+  --color-orange: var(--ios-orange);
+  --color-pink: var(--ios-pink);
+  --color-purple: var(--ios-purple);
+  --color-red: var(--ios-red);
+  --color-teal: var(--ios-teal);
+  --color-yellow: var(--ios-yellow);
+
+  --color-gray-1: var(--ios-gray);
+  --color-gray-2: var(--ios-gray-2);
+  --color-gray-3: var(--ios-gray-3);
+  --color-gray-4: var(--ios-gray-4);
+  --color-gray-5: var(--ios-gray-5);
+  --color-gray-6: var(--ios-gray-6);
+
+  --color-bg: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-grouped: var(--bg-grouped);
+  --color-grouped-secondary: var(--bg-grouped-secondary);
+  --color-grouped-tertiary: var(--bg-grouped-tertiary);
+
+  --color-label: var(--label-primary);
+  --color-label-secondary: var(--label-secondary);
+  --color-label-tertiary: var(--label-tertiary);
+  --color-label-quaternary: var(--label-quaternary);
+
+  --color-fill: var(--fill-primary);
+  --color-fill-secondary: var(--fill-secondary);
+  --color-fill-tertiary: var(--fill-tertiary);
+  --color-fill-quaternary: var(--fill-quaternary);
+
+  --color-separator: var(--separator);
+  --color-separator-opaque: var(--separator-opaque);
+
+  /* Type scale — iOS Dynamic Type at the default size.
+     17px body is deliberate: anything under 16px in a text input makes iOS
+     Safari auto-zoom on focus, which yanks the layout around mid-form. */
+  --text-large-title: 2.125rem; /* 34px */
+  --text-large-title--line-height: 2.5625rem;
+  --text-large-title--font-weight: 700;
+
+  --text-title-1: 1.75rem; /* 28px */
+  --text-title-1--line-height: 2.125rem;
+  --text-title-1--font-weight: 700;
+
+  --text-title-2: 1.375rem; /* 22px */
+  --text-title-2--line-height: 1.75rem;
+  --text-title-2--font-weight: 700;
+
+  --text-title-3: 1.25rem; /* 20px */
+  --text-title-3--line-height: 1.5625rem;
+  --text-title-3--font-weight: 600;
+
+  --text-headline: 1.0625rem; /* 17px */
+  --text-headline--line-height: 1.375rem;
+  --text-headline--font-weight: 600;
+
+  --text-body: 1.0625rem; /* 17px — default reading size */
+  --text-body--line-height: 1.375rem;
+
+  --text-callout: 1rem; /* 16px */
+  --text-callout--line-height: 1.3125rem;
+
+  --text-subheadline: 0.9375rem; /* 15px */
+  --text-subheadline--line-height: 1.25rem;
+
+  --text-footnote: 0.8125rem; /* 13px */
+  --text-footnote--line-height: 1.125rem;
+
+  --text-caption-1: 0.75rem; /* 12px */
+  --text-caption-1--line-height: 1rem;
+
+  --text-caption-2: 0.6875rem; /* 11px */
+  --text-caption-2--line-height: 0.8125rem;
+
+  /* Corner radii — iOS uses continuous curvature; these approximate it. */
+  --radius-control: 0.5rem; /* 8px  — chips, small buttons, search field */
+  --radius-inset: 0.625rem; /* 10px — inset grouped list containers */
+  --radius-button: 0.75rem; /* 12px — standard buttons, text fields */
+  --radius-card: 0.875rem; /* 14px — cards, thumbnails */
+  --radius-sheet: 1.25rem; /* 20px — modal sheets, HUDs */
+
+  /* Motion — the spring-like curve iOS uses for sheet presentation. */
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-ios-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-ios-out: cubic-bezier(0, 0, 0.2, 1);
+
+  --font-sans: "Rubik", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/* The base colour lives on <html> so the ambient wash can paint above it and
+   still sit behind every piece of content. */
+html {
+  background: var(--bg-grouped);
+  -webkit-text-size-adjust: 100%;
+  /* Stops the rubber-band scroll revealing the page behind a sheet. */
+  overscroll-behavior-y: none;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(55rem 38rem at 12% -8%, var(--wash-1), transparent 68%),
+    radial-gradient(48rem 34rem at 92% 2%, var(--wash-2), transparent 66%),
+    radial-gradient(42rem 30rem at 50% 106%, var(--wash-3), transparent 70%);
+}
+
+body {
+  background: transparent;
+  color: var(--label-primary);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.375rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Removes the 300ms tap delay without disabling pinch-zoom. */
+  touch-action: manipulation;
+}
+
+/* Prices, counts and timers must not shift as digits change. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/*
+  Numbers and ranges inside RTL text.
+
+  "3 / 5" or "1–5" written inside a Hebrew or Arabic block gets reordered by
+  the bidi algorithm and comes out as "5 / 3" — which is not a cosmetic
+  problem, it is a different and wrong claim. Any expression combining digits
+  with a separator gets wrapped in this. Placement still mirrors correctly
+  because the containing row keeps `text-align: start`.
+
+  ⚠ ONLY for strings with no letters in them.
+
+  This sets `direction: ltr`, which applies to everything inside it — words
+  included. Wrap a translated string and the words are forced into LTR order
+  too. "5 ב־₪35" (5 for ₪35) then renders with the "5" on the left and reads
+  backwards in Hebrew, which is exactly the bug this class exists to prevent,
+  reintroduced from the other side.
+
+  Right:  ₪35 · 3 · ₪25 · 1 · ₪10 / 3 · ₪25 · ×4
+  Wrong:  5 ב־₪35 · נשארו 3 · ₪10 · ליחידה
+
+  For a mixed string, leave it alone — bidi already renders "₪35" as its own
+  LTR run inside an RTL line. If one number in it genuinely needs protecting,
+  wrap just that number, not the sentence around it.
+*/
+.ltr-nums {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}
+
+/* iOS never shows a text caret on non-editable UI. */
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/*
+  Global visible-focus fallback.
+
+  Codebases accumulate `outline: none` on custom controls over time with no
+  replacement, and a keyboard user is then left with no way to see where they
+  are (WCAG 2.4.7). Inline styles beat a plain rule for the same property, so
+  fixing this file by file does not scale. One global rule with `!important`
+  is the rare legitimate use of it: `outline` never affects layout, and
+  `:focus-visible` only fires for keyboard focus, never a mouse tap.
+  See PLAYBOOK.md §2.4.
+*/
+:focus-visible {
+  outline: 2px solid var(--ios-blue) !important;
+  outline-offset: 2px !important;
+  border-radius: 0.25rem;
+}
+
+/* Inputs inherit the system font; 17px avoids iOS Safari's auto-zoom. */
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--label-tertiary);
+}
+
+/* Native-feeling momentum scroll inside scroll regions. */
+.scroll-region {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroll-region::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==========================================================================
+   Motion primitives
+
+   Motion must mean something. Forward navigation slides in from the leading
+   edge, backward from the trailing one, sheets rise from the edge they will
+   return to. Decorative animation is banned.
+   ========================================================================== */
+
+@keyframes ios-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes ios-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ios-hud-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/*
+  Push and pop use a *logical* offset so the direction of travel follows the
+  reading direction. In Hebrew and Arabic, forward navigation must arrive from
+  the left, not the right — a stack that always slides the same physical way
+  reads as backwards in half the languages this site ships in.
+*/
+@keyframes ios-push-in {
+  from {
+    opacity: 0;
+    transform: translateX(calc(1.25rem * var(--dir, 1)));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ios-pop-in {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1.25rem * var(--dir, 1)));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Content that arrives in place rather than from a direction. */
+@keyframes ios-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Confirmation. Overshoots past 1 and settles, the way a UIKit spring does. */
+@keyframes ios-pop-check {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ios-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* `--dir` flips the physical sign of the push/pop offsets in RTL. Set once
+   here rather than at every call site. */
+[dir="rtl"] {
+  --dir: -1;
+}
+
+[dir="ltr"] {
+  --dir: 1;
+}
+
+.animate-sheet-in {
+  animation: ios-sheet-in 0.35s var(--ease-ios) both;
+}
+
+.animate-fade-in {
+  animation: ios-fade-in 0.25s var(--ease-ios-out) both;
+}
+
+.animate-hud-in {
+  animation: ios-hud-in 0.28s var(--ease-ios) both;
+}
+
+.animate-push-in {
+  animation: ios-push-in 0.32s var(--ease-ios) both;
+}
+
+.animate-pop-in {
+  animation: ios-pop-in 0.32s var(--ease-ios) both;
+}
+
+.animate-rise-in {
+  animation: ios-rise-in 0.4s var(--ease-ios) both;
+}
+
+.animate-pop-check {
+  animation: ios-pop-check 0.5s var(--ease-ios) both;
+}
+
+/* Staggered list entrance — 30ms per row. */
+.stagger > * {
+  animation: ios-push-in 0.3s var(--ease-ios) both;
+  animation-delay: calc(var(--i, 0) * 30ms);
+}
+
+/* Grids read better rising into place than sliding, because a panel that is
+   itself sliding plus rows that slide reads as jitter. Never stagger twice in
+   one transition. */
+.stagger-rise > * {
+  animation: ios-rise-in 0.38s var(--ease-ios) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+/* Press feedback: transform and colour only, never layout properties. */
+.press {
+  transition:
+    transform 0.14s var(--ease-ios),
+    opacity 0.14s var(--ease-ios),
+    background-color 0.14s var(--ease-ios);
+}
+
+.press:active {
+  transform: scale(0.97);
+}
+
+.press-row:active {
+  background-color: var(--fill-quaternary);
+}
+
+/* ==========================================================================
+   Accessibility — honour the system's reduced-motion setting.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .press:active {
+    transform: none;
+  }
+}

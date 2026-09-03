@@ -1,0 +1,508 @@
+{
+  "categories": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "slug": "keychains",
+      "name": {
+        "he": "מחזיקי מפתחות",
+        "en": "Keychains",
+        "ar": "ميداليات مفاتيح"
+      },
+      "icon": "KeyRound",
+      "tint": "orange",
+      "sortOrder": 0,
+      "visible": true
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "slug": "figures",
+      "name": {
+        "he": "דמויות ופסלונים",
+        "en": "Figures",
+        "ar": "مجسمات"
+      },
+      "icon": "Sparkles",
+      "tint": "purple",
+      "sortOrder": 1,
+      "visible": true
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "slug": "custom-prints",
+      "name": {
+        "he": "הדפסות בהתאמה אישית",
+        "en": "Custom Prints",
+        "ar": "طباعة حسب الطلب"
+      },
+      "icon": "Wrench",
+      "tint": "blue",
+      "sortOrder": 2,
+      "visible": true
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000004",
+      "slug": "magnets",
+      "name": {
+        "he": "מגנטים",
+        "en": "Magnets",
+        "ar": "مغناطيسات"
+      },
+      "icon": "Magnet",
+      "tint": "green",
+      "sortOrder": 3,
+      "visible": true
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000005",
+      "slug": "home-decor",
+      "name": {
+        "he": "דקורציה לבית",
+        "en": "Home Decor",
+        "ar": "ديكور منزلي"
+      },
+      "icon": "Lamp",
+      "tint": "teal",
+      "sortOrder": 4,
+      "visible": true
+    }
+  ],
+  "subclasses": [
+    {
+      "id": "00000000-0000-4000-8000-000000000006",
+      "categoryId": "00000000-0000-4000-8000-000000000001",
+      "slug": "clickers",
+      "name": {
+        "he": "קליקרים",
+        "en": "Clicker keychains",
+        "ar": "ميداليات نقّارة"
+      },
+      "sortOrder": 0,
+      "visible": true
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000007",
+      "categoryId": "00000000-0000-4000-8000-000000000001",
+      "slug": "small",
+      "name": {
+        "he": "קטנים",
+        "en": "Small keychains",
+        "ar": "ميداليات صغيرة"
+      },
+      "sortOrder": 1,
+      "visible": true
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000008",
+      "categoryId": "00000000-0000-4000-8000-000000000001",
+      "slug": "big",
+      "name": {
+        "he": "גדולים",
+        "en": "Big keychains",
+        "ar": "ميداليات كبيرة"
+      },
+      "sortOrder": 2,
+      "visible": true
+    }
+  ],
+  "products": [
+    {
+      "id": "00000000-0000-4000-8000-000000000009",
+      "categoryId": "00000000-0000-4000-8000-000000000002",
+      "subclassId": null,
+      "slug": "articulated-dragon",
+      "name": {
+        "he": "דרקון מפרקי גמיש",
+        "en": "Articulated Dragon",
+        "ar": "تنين مفصلي مرن"
+      },
+      "description": {
+        "he": "דרקון קריסטל מפרקי מרשים וגמיש בתנועה מלאה, מודפס בצבעים מרהיבים.",
+        "en": "Stunning and fully flexible crystal dragon with fluid movement.",
+        "ar": "تنين كريستالي مفصلي رائع וمرن بحركة كاملة."
+      },
+      "priceAgorot": 3500,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000010",
+          "path": "/products/articulated-dragon.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 0,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000012",
+      "categoryId": "00000000-0000-4000-8000-000000000003",
+      "subclassId": null,
+      "slug": "dancing-ballerina",
+      "name": {
+        "he": "בלרינה רוקדת (מדף + מעמד מסתובב)",
+        "en": "Dancing Ballerina (Spinable + Stand)",
+        "ar": "باليرينا راقصة (مع قاعدة متحركة)"
+      },
+      "description": {
+        "he": "פסלון בלרינה אלגנטי הכולל מעמד תצוגה ייחודי ומנגנון סיבוב מכני.",
+        "en": "Elegant ballerina figure featuring a custom display stand and mechanical spinning mechanism.",
+        "ar": "مجسم باليرينا أنيق يتضمن قاعدة عرض مخصصة وآلية دوران ميكانيكية."
+      },
+      "priceAgorot": 3500,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000013",
+          "path": "/products/custom-sign.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 1,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000014",
+      "categoryId": "00000000-0000-4000-8000-000000000003",
+      "subclassId": null,
+      "slug": "articulated-prank-coffee-mug",
+      "name": {
+        "he": "ספל קפה נשפך (אשליית תלת־ממד)",
+        "en": "Articulated Prank Coffee Mug",
+        "ar": "كوب القهوة المنسكب الخادع"
+      },
+      "description": {
+        "he": "אשליה אופטית משעשעת של ספל קפה נשפך באוויר. מעמד עיצובי מושלם לשולחן העבודה.",
+        "en": "A hilarious optical illusion spilling coffee cup stand, perfect for desk and coffee corners.",
+        "ar": "خداع بصري ممتع لكوب قهوة منسكب، مجسم مثالي للمكتب وركن القهوة."
+      },
+      "priceAgorot": 3500,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000015",
+          "path": "/products/prank-coffee-mug.jpg",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 2,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000016",
+      "categoryId": "00000000-0000-4000-8000-000000000002",
+      "subclassId": null,
+      "slug": "geometric-fidget-big",
+      "name": {
+        "he": "פידג'ט גיאומטרי גדול",
+        "en": "Large geometric fidget",
+        "ar": "سبينר مفصلي كبير"
+      },
+      "description": {
+        "he": "פידג'ט רחב, מפרקי וגמיש, המספק תחושה טקטילית נהדרת להפגת מתחים.",
+        "en": "Large-scale articulated spinner offering an incredible tactile experience.",
+        "ar": "سبينר مفصلي كبير يوفر تجربة حسية رائعة لتخفيف التوتر."
+      },
+      "priceAgorot": 3500,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000017",
+          "path": "/products/geometric-fidget.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 3,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000018",
+      "categoryId": "00000000-0000-4000-8000-000000000002",
+      "subclassId": null,
+      "slug": "ice-quartz-sculpture",
+      "name": {
+        "he": "פסל קריסטל Ice Quartz",
+        "en": "Ice Quartz Sculpture",
+        "ar": "منحوتة كريستال آيس كوارتز"
+      },
+      "description": {
+        "he": "פסלון גיאומטרי מרהיב במרקם המדמה גבישי קוורץ שקופים וייחודיים.",
+        "en": "Stunning geometric low-poly sculpture with beautiful crystal-like reflections.",
+        "ar": "منحوتة هندسية رائعة تعكس مظهر بلورات الكوارتز الجميلة."
+      },
+      "priceAgorot": 2000,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000019",
+          "path": "/products/ice-quartz.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 4,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000021",
+      "categoryId": "00000000-0000-4000-8000-000000000002",
+      "subclassId": null,
+      "slug": "fidget-spinner",
+      "name": {
+        "he": "ספינר פידג'ט קלאסי",
+        "en": "Classic Fidget Spinner",
+        "ar": "سبينר كلاسيكي"
+      },
+      "description": {
+        "he": "ספינר שולחני איכותי עם סיבוב חלק וממושך. מעולה לריכוז ומיקוד.",
+        "en": "High-speed desktop spinner with smooth, satisfying rotations for focus.",
+        "ar": "سبينר مكتبي عالي السرعة مع دوران سلس وممتع للتركيز."
+      },
+      "priceAgorot": 1500,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000022",
+          "path": "/products/hex-spinner.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 5,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000024",
+      "categoryId": "00000000-0000-4000-8000-000000000002",
+      "subclassId": null,
+      "slug": "fidget-towers",
+      "name": {
+        "he": "פידג'ט גיאומטרי",
+        "en": "Geometric Fidget",
+        "ar": "أبراج فيجيت تلسكوبية"
+      },
+      "description": {
+        "he": "מגדל פופ-אפ טלסקופי נפתח ונסגר בצליל קליק ממכר, מושלם לשולחן העבודה.",
+        "en": "Collapsible, cascading telescopic towers that snap open and closed beautifully.",
+        "ar": "أبراج تلسكوبية قابلة للطي تفتح وتغلق بصوت نقرة ممتع."
+      },
+      "priceAgorot": 3000,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000025",
+          "path": "/products/fidget-tower.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 6,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000027",
+      "categoryId": "00000000-0000-4000-8000-000000000001",
+      "subclassId": "00000000-0000-4000-8000-000000000007",
+      "slug": "keychains-and-clickers",
+      "name": {
+        "he": "מחזיקי מפתחות וקליקרים",
+        "en": "Keychains and Clickers",
+        "ar": "ميداليات ونقارات פידג'ט"
+      },
+      "description": {
+        "he": "מבחר קליקרים ומחזיקי מפתחות במבצע: 1 ב-₪10 / 3 ב-₪25 / 5 ב-₪35!",
+        "en": "Assorted keychains and clicker toys. Deal: 1 for ₪10 / 3 for ₪25 / 5 for ₪35!",
+        "ar": "تشكيلة ميداليات ونقارات متنوعة. العرض: 1 بـ ₪10 / 3 بـ ₪25 / 5 بـ ₪35!"
+      },
+      "priceAgorot": 1000,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000028",
+          "path": "/products/keychain-star.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 7,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000031",
+      "categoryId": "00000000-0000-4000-8000-000000000002",
+      "subclassId": null,
+      "slug": "spiral-fidget",
+      "name": {
+        "he": "פידג'ט ספירלה",
+        "en": "Small Spiral Fidget",
+        "ar": "العربية"
+      },
+      "description": {
+        "he": "צעצוע פידג'ט ממכר ומספק בטירוף! זורם בצורה חלקה ואינסופית, מושלם להפגת מתחים, לריכוז או סתם למשחק על הדרך לצד הקפה.",
+        "en": "Insanely addictive and satisfying! Features a smooth, endless cascading motion that is perfect for stress relief, deep focus, or just a quick distraction while waiting for your coffee.",
+        "ar": "اسم المنتج: فيدجيت اللولب اللامتناهي\nالوصف: لعبة فيدجيت ممتعة ومريحة للغاية! تتحرك بانسيابية ونعومة لا نهاية لها، مثالية لتخفيف التوتر، زيادة التركيز، או للتسلية مع كوب قهوتك."
+      },
+      "priceAgorot": 1500,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000032",
+          "path": "/products/spiral-fidget.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 8,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000033",
+      "categoryId": "00000000-0000-4000-8000-000000000003",
+      "subclassId": null,
+      "slug": "fifa-cup-large",
+      "name": {
+        "he": "פסל אליפות העולם בכדורגל - גדול",
+        "en": "Large world cup sculpture",
+        "ar": "تمثال كأس العالم فيفا الكبير"
+      },
+      "description": {
+        "he": "פסל אליפות העולם בכדורגל - פיפא - גדול",
+        "en": "A large Fifa world cup sculpture.",
+        "ar": "مجسم ذهبي ضخم يجسد كأس العالم فيفا، يتميز بتصميمه اللولبي الذي يحمل الكرة الأرضية، ويُعرض في الفعاليات الكبرى ليتنافس المشجعون على التقاط الصور معه."
+      },
+      "priceAgorot": 7000,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000034",
+          "path": "/products/fifa-cup-large.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 9,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000035",
+      "categoryId": "00000000-0000-4000-8000-000000000003",
+      "subclassId": null,
+      "slug": "monster-cup-bundle",
+      "name": {
+        "he": "מארז מחזיק פחיות מונסטר",
+        "en": "Monster Koozie Pack",
+        "ar": "مجموعة حامل علب مونستر"
+      },
+      "description": {
+        "he": "המארז האולטימטיבי למשקה האנרגיה מונסטר – עכשיו עם כיסוי לפחית ופותחן מובנה!",
+        "en": "The ultimate Monster energy drink Koozie pack now with a can cover and opener!",
+        "ar": "المجموعة الأقوى لمشروب الطاقة مونستر – هسّا مع غطاء للعلبة وفتاحة!"
+      },
+      "priceAgorot": 6000,
+      "available": true,
+      "stock": null,
+      "images": [
+        {
+          "id": "00000000-0000-4000-8000-000000000036",
+          "path": "/products/monster-bundle.png",
+          "sortOrder": 0
+        }
+      ],
+      "sortOrder": 10,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    }
+  ],
+  "rules": [
+    {
+      "id": "00000000-0000-4000-8000-000000000011",
+      "scope": "product",
+      "scopeId": "00000000-0000-4000-8000-000000000009",
+      "minQty": 2,
+      "priceAgorot": 5000,
+      "active": true,
+      "startsAt": null,
+      "endsAt": null,
+      "label": null,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000020",
+      "scope": "product",
+      "scopeId": "00000000-0000-4000-8000-000000000018",
+      "minQty": 2,
+      "priceAgorot": 3000,
+      "active": true,
+      "startsAt": null,
+      "endsAt": null,
+      "label": null,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000023",
+      "scope": "product",
+      "scopeId": "00000000-0000-4000-8000-000000000021",
+      "minQty": 3,
+      "priceAgorot": 3000,
+      "active": true,
+      "startsAt": null,
+      "endsAt": null,
+      "label": null,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000026",
+      "scope": "product",
+      "scopeId": "00000000-0000-4000-8000-000000000024",
+      "minQty": 2,
+      "priceAgorot": 4500,
+      "active": true,
+      "startsAt": null,
+      "endsAt": null,
+      "label": null,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000029",
+      "scope": "subclass",
+      "scopeId": "00000000-0000-4000-8000-000000000007",
+      "minQty": 3,
+      "priceAgorot": 2500,
+      "active": true,
+      "startsAt": null,
+      "endsAt": null,
+      "label": null,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000030",
+      "scope": "subclass",
+      "scopeId": "00000000-0000-4000-8000-000000000007",
+      "minQty": 5,
+      "priceAgorot": 3500,
+      "active": true,
+      "startsAt": null,
+      "endsAt": null,
+      "label": null,
+      "createdAt": "2026-09-03T00:00:00.000Z",
+      "updatedAt": "2026-09-03T00:00:00.000Z"
+    }
+  ]
+}

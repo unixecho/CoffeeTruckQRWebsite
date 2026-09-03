@@ -1,5 +1,33 @@
-node_modules
+node_modules/
+.next/
+out/
+build/
+.DS_Store
+*.pem
+
+# env
+.env
+.env*.local
+
+# vercel / typescript
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# supabase local
+supabase/.temp/
+supabase/.branches/
 
 # Python bytecode cache (from the ui-ux-pro-max skill scripts)
 __pycache__/
 *.pyc
+
+# Machine-local MCP server wiring — must never be committed, and must never
+# be auto-generated: a wrong project_ref here points tooling at somebody
+# else's database. See HANDOFF.md, 2026-09-03.
+.mcp.json
+
+# A local reconstitution of the original site's images and fonts, so
+# legacy/index.html renders without committing 12 MB the repo already tracks
+# once under public/. See legacy/README.md.
+legacy/assets/

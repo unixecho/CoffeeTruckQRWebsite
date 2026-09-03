@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="3D print stand">
+  <!--
+    The mark is a printed layer stack seen at a slight angle: three stacked
+    lozenges, the top one lit. It reads at 16px as a small solid shape rather
+    than a picture that dissolves, which is the only thing a favicon has to do.
+
+    Colours are literal here rather than tokens on purpose — an SVG served as
+    a favicon is fetched by the browser chrome, outside the page, where no CSS
+    custom property exists. The amber matches --ios-orange's dark value.
+  -->
+  <rect width="64" height="64" rx="14" fill="#1c1c1e"/>
+  <g fill="none" stroke-linejoin="round" stroke-linecap="round" stroke-width="3">
+    <path d="M32 12 50 22 32 32 14 22Z" fill="#ff9f0a" stroke="#ff9f0a"/>
+    <path d="M32 27 50 37 32 47 14 37Z" fill="#ff9f0a" fill-opacity=".45" stroke="#ff9f0a" stroke-opacity=".8"/>
+    <path d="M32 41 50 51 32 61 14 51Z" fill="#ff9f0a" fill-opacity=".18" stroke="#ff9f0a" stroke-opacity=".5"/>
+  </g>
+</svg>

@@ -1,22 +1,37 @@
 {
-  "name": "html-css",
+  "name": "mobile-3dprint-shop",
   "version": "1.0.0",
-  "description": "A template for HTML and CSS",
-  "main": "index.html",
+  "private": true,
+  "description": "Mobile 3D Print Shop — storefront and catalogue manager for the coffee-truck stand",
   "scripts": {
-    "start": "serve"
-  },
-  "keywords": [
-    "html",
-    "css"
-  ],
-  "author": "Ives van Hoorne",
-  "license": "MIT",
-  "devDependencies": {
-    "serve": "11.2.0"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --experimental-strip-types --conditions=react-server --import ./scripts/test-resolver.mjs src/lib/**/*.test.ts",
+    "seed": "node --experimental-strip-types scripts/seed.ts",
+    "db:push": "supabase db push",
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "security": "node scripts/security-sweep.mjs"
   },
   "dependencies": {
-    "framer-motion": "^12.40.0",
-    "motion": "^12.40.0"
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.58.0",
+    "lucide-react": "^0.544.0",
+    "next": "16.2.12",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.12",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
