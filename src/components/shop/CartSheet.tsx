@@ -34,6 +34,11 @@ export function CartSheet() {
 
   const empty = lines.length === 0;
 
+  /* Both have to be true. `checkoutEnabled` is the owner's switch over
+     ordering; `open` closes the whole storefront, and a shop that is shut
+     must not still be taking orders for tomorrow. */
+  const ordering = Boolean(settings?.checkoutEnabled && settings.open);
+
   /** Plain text, for pasting into Bit alongside the payment. */
   function orderNote(): string {
     const rows = lines.map((line) => {
@@ -74,7 +79,24 @@ export function CartSheet() {
       footer={
         empty ? undefined : (
           <div className="flex flex-col gap-2">
-            {settings?.bitPaymentLink ? (
+            {/* Ordering replaces the Bit link as the primary action rather
+                than sitting beside it. Two payment affordances in one footer
+                is a choice the customer has to make before they have been
+                told what the difference is — and the order screen offers the
+                Bit link anyway, in the one place it is unambiguous. */}
+            {ordering ? (
+              <>
+                <LinkButton href="/checkout" variant="filled" size="lg" fullWidth>
+                  {t.cart.placeOrder}
+                </LinkButton>
+                <p
+                  className="text-caption-1 px-1 text-center"
+                  style={{ color: "var(--label-tertiary)" }}
+                >
+                  {t.cart.orderInstead}
+                </p>
+              </>
+            ) : settings?.bitPaymentLink ? (
               <a
                 href={settings.bitPaymentLink}
                 target="_blank"
@@ -109,7 +131,7 @@ export function CartSheet() {
               {t.cart.copyOrderNote}
             </Button>
 
-            {settings?.bitPaymentLink && (
+            {!ordering && settings?.bitPaymentLink && (
               <p
                 className="text-caption-1 px-1 text-center"
                 style={{ color: "var(--label-tertiary)" }}

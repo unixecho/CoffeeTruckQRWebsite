@@ -2,6 +2,7 @@ import { SettingsView } from "@/components/manager/SettingsView";
 import { getOwner } from "@/lib/auth";
 import { readCatalogueAsOwner } from "@/lib/catalog";
 import { createServiceClient, isSupabaseConfigured } from "@/lib/supabase/server";
+import { cardProvider } from "@/lib/payments/provider";
 
 interface Invite {
   email: string;
@@ -48,6 +49,7 @@ export default async function ManagerSettingsPage() {
       live={catalogue.live}
       ownerEmail={owner?.email ?? null}
       invites={invites}
+      cardProviderConfigured={cardProvider().id !== "manual" && cardProvider().isConfigured()}
     />
   );
 }

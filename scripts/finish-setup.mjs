@@ -307,6 +307,35 @@ try {
   warn("could not test the anonymous write path");
 }
 
+/* An anonymous READ of orders must fail too, which is a stronger claim than
+   the one above and worth testing separately. Every other table in this schema
+   grants `anon` SELECT; `orders` grants nothing at all, because it holds a
+   customer's name and phone number. A default-privileges slip on a future
+   migration would show up here and nowhere else. Migration 007. */
+try {
+  const response = await fetch(`${url}/rest/v1/orders?select=id&limit=1`, {
+    headers: { apikey: anonKey, Authorization: `Bearer ${anonKey}` },
+  });
+
+  if (response.ok) {
+    console.error(
+      "\n✖ SECURITY: orders are readable anonymously.\n" +
+        "  That table holds customer names and phone numbers and must grant\n" +
+        "  nothing to any client role. Run scripts/audit-security.sql §2 and\n" +
+        "  fix before going further. Do not deploy."
+    );
+    process.exit(1);
+  }
+
+  if (response.status === 404) {
+    warn("orders table not found — migration 007 has not been applied yet");
+  } else {
+    ok(`orders are not readable anonymously (${response.status}) — as they must not be`);
+  }
+} catch {
+  warn("could not test anonymous access to orders");
+}
+
 console.log(`
 Done. What is left, and only you can do it:
 

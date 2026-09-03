@@ -61,6 +61,12 @@ order by public_exec desc, anon_exec desc, p.proname;
 -- EXPECTED: select true only on categories, subclasses, products,
 --   product_images, pricing_rules, app_settings, and owners (authenticated
 --   only). Everything else false everywhere. No views exist.
+--
+-- ALSO BAD, and worth checking by name: any true at all — including
+--   anon_select and auth_select — on orders, order_items or payment_events.
+--   Those three hold customer names and phone numbers, so no client role gets
+--   a read grant either; the customer's own device reads its order through an
+--   API route holding a bearer token. Migration 007.
 -- ---------------------------------------------------------------------------
 
 select
@@ -116,9 +122,10 @@ order by svc_insert, t.table_name;
 --   realistic failure is somebody adding a policy while debugging, which then
 --   opens nothing extra only because the grant is also missing.
 --
--- NOTE: `policy_count = 0` is CORRECT for owner_invites, rate_limits and
---   audit_log. Those are service-role-only: RLS on with no policies means no
---   client can read a single row, which is the intent.
+-- NOTE: `policy_count = 0` is CORRECT for owner_invites, rate_limits,
+--   audit_log, orders, order_items and payment_events. Those are
+--   service-role-only: RLS on with no policies means no client can read a
+--   single row, which is the intent.
 -- ---------------------------------------------------------------------------
 
 select
@@ -168,10 +175,14 @@ order by cmd, policyname;
 -- ---------------------------------------------------------------------------
 -- 6. Retention is actually scheduled.
 --
--- BAD: no row. `rate_limits` and `audit_log` both accumulate automatically and
---   would otherwise grow forever. If pg_cron was unavailable when 005 ran, the
---   migration logged a notice and carried on — in that case schedule
---   `cleanup_expired_rows()` another way, or call it by hand periodically.
+-- BAD: no row. `rate_limits`, `audit_log` and `orders` all accumulate
+--   automatically and would otherwise grow forever. If pg_cron was unavailable
+--   when 005 ran, the migration logged a notice and carried on — in that case
+--   schedule `cleanup_expired_rows()` another way, or call it by hand.
+--
+--   Migration 007 redefines `cleanup_expired_rows()` to call
+--   `expire_and_age_orders()` as well, so the job name and schedule are
+--   unchanged and this query still answers the whole question.
 -- ---------------------------------------------------------------------------
 
 select jobname, schedule, command, active
@@ -188,3 +199,41 @@ where jobname = 'coffee-truck-cleanup';
 
 select email, role, created_at from public.owners        order by created_at;
 select email, role, created_at from public.owner_invites order by created_at;
+
+
+-- ---------------------------------------------------------------------------
+-- 8. Orders that need a human.
+--
+-- BAD: any row. `flagged` means a payment arrived whose amount does not match
+--   what the order was priced at — in either direction. Nothing is handed over
+--   against one of these without somebody looking at the payment first.
+--
+--   An occasional row here is not necessarily an attack; the likelier causes
+--   are a provider rounding difference or a deal edited between the quote and
+--   the payment. Either way it is a question, not a total.
+-- ---------------------------------------------------------------------------
+
+select id, order_number, payment_method, total_agorot, paid_agorot, created_at
+from public.orders
+where payment_status = 'flagged'
+order by created_at desc;
+
+
+-- ---------------------------------------------------------------------------
+-- 9. Callbacks that matched no order.
+--
+-- Rows with `order_id is null` are provider callbacks whose payment reference
+-- matched nothing we stored. A handful is normal — a callback can overtake our
+-- own write of the reference by milliseconds, and the provider retries.
+--
+-- BAD: a steady stream, or any with `signature_valid = false` arriving from
+--   somewhere unexpected. That is somebody probing a public endpoint, and the
+--   route already refuses to act on them — this is how you find out it is
+--   happening.
+-- ---------------------------------------------------------------------------
+
+select provider, reason, signature_valid, count(*) as n, max(received_at) as last_seen
+from public.payment_events
+where order_id is null
+group by provider, reason, signature_valid
+order by n desc;

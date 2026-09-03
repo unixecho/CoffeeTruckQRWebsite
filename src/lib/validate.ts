@@ -3,6 +3,7 @@ import "server-only";
 import { NextResponse } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+import { asRecord, fail, has, multiLine, oneLine, parseUuid, type FieldError, type Parsed } from "./parse";
 import { isIconName, isTintName } from "./categoryIcons";
 import { PRICING_SCOPES, type OwnerRole, type PricingScope } from "./types";
 
@@ -58,65 +59,24 @@ const SLUG_BASE_MAX = 48;
 const MAX_REORDER_IDS = 200;
 
 /* --------------------------------------------------------------------------
-   Result type
-   -------------------------------------------------------------------------- */
-
-export interface FieldError {
-  /** The client-facing field name, so the manager can focus the input. */
-  field: string;
-  /** Developer-facing English. The manager renders a translated string keyed
-      off the error code, never this. */
-  message: string;
-}
-
-export type Parsed<T> = { ok: true; value: T } | { ok: false; error: FieldError };
-
-function fail(field: string, message: string): { ok: false; error: FieldError } {
-  return { ok: false, error: { field, message } };
-}
-
-/* --------------------------------------------------------------------------
    Primitive readers
+
+   The result shape and the two text sanitisers live in ./parse, which
+   carries no server-only marker so it can be unit-tested and so the public
+   checkout parser shares them rather than owning a second copy of a
+   security control. Re-exported here, so every call site importing them
+   from this module is unchanged.
    -------------------------------------------------------------------------- */
 
-function asRecord(input: unknown): Record<string, unknown> | null {
-  if (typeof input !== "object" || input === null || Array.isArray(input)) return null;
-  return input as Record<string, unknown>;
-}
-
-/** Own properties only — a PATCH distinguishes "absent" from "set to null". */
-function has(body: Record<string, unknown>, key: string): boolean {
-  return Object.prototype.hasOwnProperty.call(body, key);
-}
-
-/**
- * A single line of human text.
- *
- * Control characters are collapsed rather than rejected: they arrive from
- * phone keyboards and paste buffers far more often than from an attacker, and
- * silently cleaning them is kinder than refusing a product name. Note that
- * bidi *overrides* (U+202A-U+202E, U+2066-U+2069) are stripped too — a name
- * carrying one reorders every price and count rendered beside it.
- */
-const BIDI_OVERRIDES = /[\u202a-\u202e\u2066-\u2069]/g;
-
-function oneLine(raw: string): string {
-  return raw
-    .replace(BIDI_OVERRIDES, "")
-    .replace(/[\x00-\x1f\x7f-\u009f]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-/** A description. Keeps newlines and tabs; drops everything else in C0/C1. */
-function multiLine(raw: string): string {
-  return raw
-    .replace(/\r\n?/g, "\n")
-    .replace(BIDI_OVERRIDES, "")
-    .replace(/[\x00-\x08\x0b-\x1f\x7f-\u009f]/g, "")
-    .replace(/\n{4,}/g, "\n\n\n")
-    .trim();
-}
+export {
+  asRecord,
+  fail,
+  multiLine,
+  oneLine,
+  parseUuid,
+  type FieldError,
+  type Parsed,
+} from "./parse";
 
 function parseBoolean(input: unknown, field: string, fallback: boolean): Parsed<boolean> {
   if (input === undefined) return { ok: true, value: fallback };
@@ -149,15 +109,6 @@ function parseInteger(
  */
 function parseAgorot(input: unknown, field: string): Parsed<number> {
   return parseInteger(input, field, 0, MAX_AGOROT);
-}
-
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-function parseUuid(input: unknown, field: string): Parsed<string> {
-  if (typeof input !== "string" || !UUID_RE.test(input.trim())) {
-    return fail(field, "Expected an id.");
-  }
-  return { ok: true, value: input.trim().toLowerCase() };
 }
 
 /** An ISO timestamp, or null for "no bound". */
@@ -840,6 +791,21 @@ export function parseSettingsPatch(input: unknown): Parsed<SettingWrite[]> {
     const phone = parseWhatsappPhone(body.whatsappPhone);
     if (!phone.ok) return phone;
     writes.push({ key: "whatsapp_phone", value: phone.value });
+  }
+
+  /* Two switches over the checkout. Booleans and nothing else — the parser
+     refuses a string, so a client sending "false" (which is truthy) surfaces
+     as a 400 rather than as ordering being switched on by accident. */
+  if (has(body, "checkoutEnabled")) {
+    const enabled = parseBoolean(body.checkoutEnabled, "checkoutEnabled", false);
+    if (!enabled.ok) return enabled;
+    writes.push({ key: "checkout_enabled", value: enabled.value });
+  }
+
+  if (has(body, "onlinePaymentsEnabled")) {
+    const enabled = parseBoolean(body.onlinePaymentsEnabled, "onlinePaymentsEnabled", false);
+    if (!enabled.ok) return enabled;
+    writes.push({ key: "online_payments_enabled", value: enabled.value });
   }
 
   if (has(body, "announcement")) {

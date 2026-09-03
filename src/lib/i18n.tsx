@@ -207,6 +207,123 @@ export interface Dict {
     orderNoteHeading: string;
     clear: string;
     bundleApplied: (times: number, minQty: number) => string;
+    /** The primary action once ordering is switched on. */
+    placeOrder: string;
+    orderInstead: string;
+  };
+
+  /**
+   * The checkout and the order screen.
+   *
+   * Kept as its own block rather than folded into `cart`, because the cart is
+   * a sheet the customer opens and closes while browsing and this is a flow
+   * they commit to. Mixing them would mean every checkout string travelling
+   * into a component that only ever wanted a total.
+   */
+  checkout: {
+    title: string;
+    steps: { review: string; details: string; payment: string };
+    stepAria: (index: number, total: number) => string;
+    back: string;
+    continue: string;
+    placeOrder: string;
+    placing: string;
+
+    emptyTitle: string;
+    emptyMessage: string;
+    disabledTitle: string;
+    disabledMessage: string;
+
+    detailsIntro: string;
+    name: string;
+    namePlaceholder: string;
+    optional: string;
+    phone: string;
+    phonePlaceholder: string;
+    phoneHelper: string;
+    phoneInvalid: string;
+    note: string;
+    notePlaceholder: string;
+    /**
+     * Label on the hidden anti-spam field.
+     *
+     * Never read by a person, but it is a real `<label>` all the same: a
+     * screen reader that does reach the input must not find an unlabelled
+     * box. The field is skipped by keyboard and explained in place.
+     */
+    honeypotLabel: string;
+
+    method: string;
+    methodCounter: string;
+    methodCounterHelper: string;
+    methodCard: string;
+    methodCardHelper: string;
+    methodCardUnavailable: string;
+
+    summary: string;
+    itemCount: (n: number) => string;
+
+    orderTitle: string;
+    orderNumber: string;
+    showAtCounter: string;
+    payAtCounter: string;
+    payAtCounterHelper: string;
+    payByCard: string;
+    payingTitle: string;
+    payingHelper: string;
+    paymentWindow: string;
+    expiresIn: (minutes: number) => string;
+    expiredTitle: string;
+    expiredMessage: string;
+    paidTitle: string;
+    paidMessage: string;
+    collectedTitle: string;
+    collectedMessage: string;
+    cancelledTitle: string;
+    cancelledMessage: string;
+    flaggedTitle: string;
+    flaggedMessage: string;
+    awaitingTitle: string;
+    awaitingMessage: string;
+
+    cancelOrder: string;
+    cancelConfirmTitle: string;
+    cancelConfirmBody: string;
+    keepOrder: string;
+
+    privacyTitle: string;
+    privacyBody: string;
+    forget: string;
+    forgetDone: string;
+    forgetConfirmTitle: string;
+    forgetConfirmBody: string;
+
+    retry: string;
+    backToShop: string;
+    copySummary: string;
+    viewOrder: string;
+
+    /**
+     * Keyed off the server's error **codes**, never its messages.
+     *
+     * A validator that returns English prose renders Hebrew text to an Arabic
+     * reader, and it is an easy bug to ship because the validator is usually
+     * written next to a single-language screen. Unknown codes fall back to
+     * `generic`, so adding a reason server-side can never render blank.
+     * PLAYBOOK §4.4.
+     */
+    errors: {
+      generic: string;
+      offline: string;
+      rateLimited: string;
+      unavailable: string;
+      expired: string;
+      alreadyPaid: string;
+      providerDown: string;
+      cartEmpty: string;
+      notFound: string;
+      disabled: string;
+    };
   };
 
   manager: {
@@ -219,7 +336,7 @@ export interface Dict {
     noAccessTitle: string;
     noAccessMessage: string;
 
-    tabs: { catalogue: string; deals: string; settings: string };
+    tabs: { catalogue: string; orders: string; deals: string; settings: string };
 
     categories: string;
     subclasses: string;
@@ -275,6 +392,40 @@ export interface Dict {
       hint: string;
     };
 
+    orders: {
+      title: string;
+      subtitle: string;
+      openOnly: string;
+      all: string;
+      none: string;
+      noneMessage: string;
+      collect: string;
+      collectAria: (number: string) => string;
+      cancel: string;
+      cancelAria: (number: string) => string;
+      confirmCancelTitle: (number: string) => string;
+      confirmCancelBody: string;
+      customer: string;
+      noCustomer: string;
+      note: string;
+      copy: string;
+      copied: string;
+      paidLabel: string;
+      unpaidLabel: string;
+      pendingLabel: string;
+      flaggedLabel: string;
+      flaggedHelper: string;
+      methodCounter: string;
+      methodCard: string;
+      statusPlaced: string;
+      statusCollected: string;
+      statusCancelled: string;
+      statusExpired: string;
+      itemsLine: (n: number) => string;
+      /** Shown when the checkout is switched off in Settings. */
+      checkoutOff: string;
+    };
+
     deals: {
       title: string;
       subtitle: string;
@@ -302,7 +453,14 @@ export interface Dict {
       /** Group headers. Each settings group saves on its own, so each is named. */
       shopSection: string;
       paymentSection: string;
+      checkoutSection: string;
       appearanceSection: string;
+      checkoutEnabled: string;
+      checkoutEnabledHelper: string;
+      onlinePayments: string;
+      onlinePaymentsHelper: string;
+      /** Shown when no payment provider is configured server-side. */
+      onlinePaymentsUnavailable: string;
       shopOpen: string;
       shopOpenHelper: string;
       closedMessage: string;
@@ -442,6 +600,98 @@ const he: Dict = {
     orderNoteHeading: "הזמנה",
     clear: "ניקוי העגלה",
     bundleApplied: (times, minQty) => `מבצע ${minQty} יחידות · ${times}×`,
+    placeOrder: "שליחת הזמנה",
+    orderInstead: "שולחים הזמנה ומקבלים מספר לדלפק.",
+  },
+
+  checkout: {
+    title: "הזמנה",
+    steps: { review: "העגלה", details: "פרטים", payment: "תשלום" },
+    stepAria: (index, total) => `שלב ${index} מתוך ${total}`,
+    back: "חזרה",
+    continue: "המשך",
+    placeOrder: "שליחת הזמנה",
+    placing: "שולח…",
+
+    emptyTitle: "אין מה להזמין",
+    emptyMessage: "העגלה ריקה — הוסיפו משהו מהחנות.",
+    disabledTitle: "הזמנות סגורות כרגע",
+    disabledMessage: "אפשר לעיין ולשלם בדלפק כרגיל.",
+
+    detailsIntro: "הכל לא חובה. שם עוזר לנו לקרוא לכם כשההזמנה מוכנה.",
+    name: "שם",
+    namePlaceholder: "איך לקרוא לכם",
+    optional: "לא חובה",
+    phone: "טלפון",
+    phonePlaceholder: "050-0000000",
+    phoneHelper: "לא חובה. רק אם צריך להתקשר.",
+    phoneInvalid: "מספר טלפון לא תקין",
+    note: "הערה",
+    notePlaceholder: "משהו שכדאי שנדע",
+    honeypotLabel: "חברה",
+
+    method: "תשלום",
+    methodCounter: "תשלום בדלפק",
+    methodCounterHelper: "ביט או מזומן, כשאתם אוספים.",
+    methodCard: "תשלום בכרטיס",
+    methodCardHelper: "בעמוד מאובטח של חברת הסליקה. פרטי הכרטיס לא עוברים דרכנו.",
+    methodCardUnavailable: "תשלום בכרטיס עדיין לא זמין.",
+
+    summary: "סיכום",
+    itemCount: (n) => (n === 1 ? "פריט אחד" : `${n} פריטים`),
+
+    orderTitle: "ההזמנה שלך",
+    orderNumber: "מספר הזמנה",
+    showAtCounter: "הראו את המסך הזה בדלפק.",
+    payAtCounter: "תשלום בדלפק",
+    payAtCounterHelper: "ביט או מזומן. הסכום כבר שמור אצלנו.",
+    payByCard: "תשלום בכרטיס",
+    payingTitle: "מעבירים לתשלום",
+    payingHelper: "אל תסגרו את הדף עד שהתשלום מסתיים.",
+    paymentWindow: "עמוד התשלום",
+    expiresIn: (minutes) => `ההזמנה שמורה עוד ${minutes} דקות`,
+    expiredTitle: "ההזמנה פגה",
+    expiredMessage: "המחירים מתעדכנים במהלך היום, אז צריך להזמין מחדש.",
+    paidTitle: "התשלום התקבל",
+    paidMessage: "הראו את מספר ההזמנה בדלפק.",
+    collectedTitle: "ההזמנה נמסרה",
+    collectedMessage: "תודה, ונתראה בפעם הבאה.",
+    cancelledTitle: "ההזמנה בוטלה",
+    cancelledMessage: "לא חויבתם. אפשר להזמין שוב מהחנות.",
+    flaggedTitle: "התשלום דורש בדיקה",
+    flaggedMessage: "הסכום שהתקבל לא תואם להזמנה. גשו לדלפק — אל תשלמו שוב.",
+    awaitingTitle: "ממתינים לתשלום",
+    awaitingMessage: "אם התשלום כבר בוצע, המסך יתעדכן תוך כמה שניות.",
+
+    cancelOrder: "ביטול ההזמנה",
+    cancelConfirmTitle: "לבטל את ההזמנה?",
+    cancelConfirmBody: "אפשר להזמין שוב מהחנות בכל רגע.",
+    keepOrder: "להשאיר",
+
+    privacyTitle: "מה שמור אצלנו",
+    privacyBody: "רק מה שכתבתם כאן וההזמנה עצמה. אפשר למחוק את הפרטים האישיים עכשיו.",
+    forget: "מחיקת הפרטים שלי",
+    forgetDone: "הפרטים נמחקו",
+    forgetConfirmTitle: "למחוק את השם והטלפון?",
+    forgetConfirmBody: "ההזמנה נשארת, בלי הפרטים האישיים.",
+
+    retry: "ניסיון נוסף",
+    backToShop: "חזרה לחנות",
+    copySummary: "העתקת ההזמנה",
+    viewOrder: "לצפייה בהזמנה",
+
+    errors: {
+      generic: "משהו השתבש. נסו שוב.",
+      offline: "אין חיבור. בדקו את האינטרנט ונסו שוב.",
+      rateLimited: "יותר מדי נסיונות. חכו רגע ונסו שוב.",
+      unavailable: "חלק מהפריטים כבר לא זמינים — עדכנו את העגלה.",
+      expired: "ההזמנה פגה. הזמינו מחדש.",
+      alreadyPaid: "ההזמנה כבר שולמה.",
+      providerDown: "שירות התשלומים לא זמין כרגע. אפשר לשלם בדלפק.",
+      cartEmpty: "העגלה ריקה.",
+      notFound: "לא מצאנו את ההזמנה.",
+      disabled: "הזמנות סגורות כרגע.",
+    },
   },
 
   manager: {
@@ -455,7 +705,7 @@ const he: Dict = {
     noAccessMessage:
       "החשבון הזה מחובר אבל אינו מורשה לנהל את הקטלוג. פנו לבעל החנות כדי לקבל גישה.",
 
-    tabs: { catalogue: "קטלוג", deals: "מבצעים", settings: "הגדרות" },
+    tabs: { catalogue: "קטלוג", orders: "הזמנות", deals: "מבצעים", settings: "הגדרות" },
 
     categories: "קטגוריות",
     subclasses: "תתי־קטגוריות",
@@ -511,6 +761,39 @@ const he: Dict = {
       hint: "אפשר לצלם ישירות מהטלפון.",
     },
 
+    orders: {
+      title: "הזמנות",
+      subtitle: "מה מחכה בדלפק.",
+      openOnly: "פתוחות",
+      all: "הכל",
+      none: "אין הזמנות פתוחות",
+      noneMessage: "הזמנה חדשה תופיע כאן ברגע שתישלח.",
+      collect: "נמסר",
+      collectAria: (number) => `סימון הזמנה ${number} כנמסרה`,
+      cancel: "ביטול",
+      cancelAria: (number) => `ביטול הזמנה ${number}`,
+      confirmCancelTitle: (number) => `לבטל את הזמנה ${number}?`,
+      confirmCancelBody: "הלקוח יראה שההזמנה בוטלה.",
+      customer: "לקוח",
+      noCustomer: "בלי שם",
+      note: "הערה",
+      copy: "העתקה",
+      copied: "ההזמנה הועתקה",
+      paidLabel: "שולם",
+      unpaidLabel: "לא שולם",
+      pendingLabel: "בתשלום",
+      flaggedLabel: "לבדיקה",
+      flaggedHelper: "הסכום שהתקבל שונה מסכום ההזמנה. אל תמסרו לפני בדיקה.",
+      methodCounter: "בדלפק",
+      methodCard: "כרטיס",
+      statusPlaced: "פתוחה",
+      statusCollected: "נמסרה",
+      statusCancelled: "בוטלה",
+      statusExpired: "פגה",
+      itemsLine: (n) => (n === 1 ? "פריט אחד" : `${n} פריטים`),
+      checkoutOff: "קבלת הזמנות כבויה בהגדרות — לקוחות לא יכולים לשלוח הזמנה חדשה.",
+    },
+
     deals: {
       title: "מבצעים",
       subtitle: "מבצע חל על כל הפריטים בהיקף שנבחר — אפשר לשלב דגמים שונים.",
@@ -537,7 +820,13 @@ const he: Dict = {
       title: "הגדרות",
       shopSection: "החנות",
       paymentSection: "תשלום ויצירת קשר",
+      checkoutSection: "הזמנות",
       appearanceSection: "מראה ושפה",
+      checkoutEnabled: "לקבל הזמנות",
+      checkoutEnabledHelper: "כשזה כבוי אפשר עדיין לעיין ולשלם בדלפק — פשוט בלי הזמנה מראש.",
+      onlinePayments: "תשלום בכרטיס",
+      onlinePaymentsHelper: "דורש חשבון סליקה פעיל.",
+      onlinePaymentsUnavailable: "עדיין לא הוגדר ספק סליקה, אז האפשרות לא תוצג ללקוחות.",
       shopOpen: "החנות פתוחה",
       shopOpenHelper: "כשכבוי, המבקרים רואים הודעת סגירה במקום הקטלוג.",
       closedMessage: "הודעת סגירה",
@@ -668,6 +957,98 @@ const en: Dict = {
     orderNoteHeading: "Order",
     clear: "Empty the cart",
     bundleApplied: (times, minQty) => `${minQty}-item deal · ${times}×`,
+    placeOrder: "Place order",
+    orderInstead: "Send the order and get a number for the counter.",
+  },
+
+  checkout: {
+    title: "Checkout",
+    steps: { review: "Cart", details: "Details", payment: "Payment" },
+    stepAria: (index, total) => `Step ${index} of ${total}`,
+    back: "Back",
+    continue: "Continue",
+    placeOrder: "Place order",
+    placing: "Sending…",
+
+    emptyTitle: "Nothing to order",
+    emptyMessage: "Your cart is empty — add something from the shop.",
+    disabledTitle: "Orders are closed right now",
+    disabledMessage: "You can still browse and pay at the counter as usual.",
+
+    detailsIntro: "All optional. A name helps us call you when it's ready.",
+    name: "Name",
+    namePlaceholder: "What to call you",
+    optional: "Optional",
+    phone: "Phone",
+    phonePlaceholder: "050-0000000",
+    phoneHelper: "Optional. Only if we need to call.",
+    phoneInvalid: "That doesn't look like a phone number",
+    note: "Note",
+    notePlaceholder: "Anything we should know",
+    honeypotLabel: "Company",
+
+    method: "Payment",
+    methodCounter: "Pay at the counter",
+    methodCounterHelper: "Bit or cash, when you collect.",
+    methodCard: "Pay by card",
+    methodCardHelper: "On the payment provider's own secure page. Card details never pass through us.",
+    methodCardUnavailable: "Card payment isn't available yet.",
+
+    summary: "Summary",
+    itemCount: (n) => (n === 1 ? "1 item" : `${n} items`),
+
+    orderTitle: "Your order",
+    orderNumber: "Order number",
+    showAtCounter: "Show this screen at the counter.",
+    payAtCounter: "Pay at the counter",
+    payAtCounterHelper: "Bit or cash. We already have the amount.",
+    payByCard: "Pay by card",
+    payingTitle: "Taking you to payment",
+    payingHelper: "Don't close this page until the payment finishes.",
+    paymentWindow: "Payment page",
+    expiresIn: (minutes) => `Held for another ${minutes} minutes`,
+    expiredTitle: "This order expired",
+    expiredMessage: "Prices change through the day, so it needs ordering again.",
+    paidTitle: "Payment received",
+    paidMessage: "Show the order number at the counter.",
+    collectedTitle: "Order collected",
+    collectedMessage: "Thanks — see you next time.",
+    cancelledTitle: "Order cancelled",
+    cancelledMessage: "You weren't charged. You can order again from the shop.",
+    flaggedTitle: "This payment needs checking",
+    flaggedMessage: "The amount received doesn't match the order. Come to the counter — please don't pay again.",
+    awaitingTitle: "Waiting for payment",
+    awaitingMessage: "If you've already paid, this screen updates within a few seconds.",
+
+    cancelOrder: "Cancel this order",
+    cancelConfirmTitle: "Cancel this order?",
+    cancelConfirmBody: "You can order again from the shop at any time.",
+    keepOrder: "Keep it",
+
+    privacyTitle: "What we hold",
+    privacyBody: "Only what you typed here, and the order itself. You can remove your personal details now.",
+    forget: "Remove my details",
+    forgetDone: "Details removed",
+    forgetConfirmTitle: "Remove your name and phone number?",
+    forgetConfirmBody: "The order stays; the personal details do not.",
+
+    retry: "Try again",
+    backToShop: "Back to the shop",
+    copySummary: "Copy the order",
+    viewOrder: "View the order",
+
+    errors: {
+      generic: "Something went wrong. Try again.",
+      offline: "No connection. Check the internet and try again.",
+      rateLimited: "Too many attempts. Wait a moment and try again.",
+      unavailable: "Some items aren't available any more — update your cart.",
+      expired: "This order expired. Please order again.",
+      alreadyPaid: "This order is already paid.",
+      providerDown: "Card payment isn't reachable right now. You can pay at the counter.",
+      cartEmpty: "Your cart is empty.",
+      notFound: "We couldn't find that order.",
+      disabled: "Orders are closed right now.",
+    },
   },
 
   manager: {
@@ -681,7 +1062,7 @@ const en: Dict = {
     noAccessMessage:
       "This account is signed in but isn't allowed to manage the catalogue. Ask the shop owner for access.",
 
-    tabs: { catalogue: "Catalogue", deals: "Deals", settings: "Settings" },
+    tabs: { catalogue: "Catalogue", orders: "Orders", deals: "Deals", settings: "Settings" },
 
     categories: "Categories",
     subclasses: "Subclasses",
@@ -737,6 +1118,39 @@ const en: Dict = {
       hint: "You can take one with the phone camera.",
     },
 
+    orders: {
+      title: "Orders",
+      subtitle: "What is waiting at the counter.",
+      openOnly: "Open",
+      all: "All",
+      none: "No open orders",
+      noneMessage: "A new order appears here the moment it is sent.",
+      collect: "Handed over",
+      collectAria: (number) => `Mark order ${number} as handed over`,
+      cancel: "Cancel",
+      cancelAria: (number) => `Cancel order ${number}`,
+      confirmCancelTitle: (number) => `Cancel order ${number}?`,
+      confirmCancelBody: "The customer will see that it was cancelled.",
+      customer: "Customer",
+      noCustomer: "No name",
+      note: "Note",
+      copy: "Copy",
+      copied: "Order copied",
+      paidLabel: "Paid",
+      unpaidLabel: "Unpaid",
+      pendingLabel: "Paying",
+      flaggedLabel: "Needs checking",
+      flaggedHelper: "The amount received differs from the order total. Do not hand it over before checking.",
+      methodCounter: "Counter",
+      methodCard: "Card",
+      statusPlaced: "Open",
+      statusCollected: "Handed over",
+      statusCancelled: "Cancelled",
+      statusExpired: "Expired",
+      itemsLine: (n) => (n === 1 ? "1 item" : `${n} items`),
+      checkoutOff: "Accepting orders is switched off in Settings — customers cannot send a new one.",
+    },
+
     deals: {
       title: "Deals",
       subtitle: "A deal covers everything in the scope you choose — different designs can be mixed.",
@@ -763,7 +1177,13 @@ const en: Dict = {
       title: "Settings",
       shopSection: "Shop",
       paymentSection: "Payment & contact",
+      checkoutSection: "Orders",
       appearanceSection: "Appearance & language",
+      checkoutEnabled: "Accept orders",
+      checkoutEnabledHelper: "With this off, people can still browse and pay at the counter — they just cannot order ahead.",
+      onlinePayments: "Card payment",
+      onlinePaymentsHelper: "Needs an active merchant account.",
+      onlinePaymentsUnavailable: "No payment provider is configured yet, so this stays hidden from customers.",
       shopOpen: "Shop is open",
       shopOpenHelper: "When off, visitors see a closed message instead of the catalogue.",
       closedMessage: "Closed message",
@@ -894,6 +1314,98 @@ const ar: Dict = {
     orderNoteHeading: "طلب",
     clear: "إفراغ السلة",
     bundleApplied: (times, minQty) => `عرض ${minQty} قطع · ${times}×`,
+    placeOrder: "إرسال الطلب",
+    orderInstead: "أرسل الطلب واحصل على رقم للكاونتر.",
+  },
+
+  checkout: {
+    title: "إتمام الطلب",
+    steps: { review: "السلة", details: "التفاصيل", payment: "الدفع" },
+    stepAria: (index, total) => `الخطوة ${index} من ${total}`,
+    back: "رجوع",
+    continue: "متابعة",
+    placeOrder: "إرسال الطلب",
+    placing: "جارٍ الإرسال…",
+
+    emptyTitle: "لا يوجد ما يُطلب",
+    emptyMessage: "السلة فارغة — أضف شيئاً من المتجر.",
+    disabledTitle: "الطلبات مغلقة حالياً",
+    disabledMessage: "يمكنك التصفّح والدفع عند الكاونتر كالمعتاد.",
+
+    detailsIntro: "كل الحقول اختيارية. الاسم يساعدنا على مناداتك عند الجهوزية.",
+    name: "الاسم",
+    namePlaceholder: "بماذا نناديك",
+    optional: "اختياري",
+    phone: "الهاتف",
+    phonePlaceholder: "050-0000000",
+    phoneHelper: "اختياري. فقط إن احتجنا الاتصال.",
+    phoneInvalid: "رقم الهاتف غير صحيح",
+    note: "ملاحظة",
+    notePlaceholder: "أي شيء يجدر بنا معرفته",
+    honeypotLabel: "الشركة",
+
+    method: "الدفع",
+    methodCounter: "الدفع عند الكاونتر",
+    methodCounterHelper: "Bit أو نقداً، عند الاستلام.",
+    methodCard: "الدفع بالبطاقة",
+    methodCardHelper: "على صفحة آمنة تخصّ شركة الدفع. بيانات البطاقة لا تمرّ عبرنا.",
+    methodCardUnavailable: "الدفع بالبطاقة غير متاح بعد.",
+
+    summary: "الملخّص",
+    itemCount: (n) => (n === 1 ? "قطعة واحدة" : `${n} قطع`),
+
+    orderTitle: "طلبك",
+    orderNumber: "رقم الطلب",
+    showAtCounter: "اعرض هذه الشاشة عند الكاونتر.",
+    payAtCounter: "الدفع عند الكاونتر",
+    payAtCounterHelper: "Bit أو نقداً. المبلغ محفوظ لدينا.",
+    payByCard: "الدفع بالبطاقة",
+    payingTitle: "جارٍ التحويل إلى الدفع",
+    payingHelper: "لا تُغلق الصفحة حتى انتهاء الدفع.",
+    paymentWindow: "صفحة الدفع",
+    expiresIn: (minutes) => `الطلب محفوظ ${minutes} دقيقة أخرى`,
+    expiredTitle: "انتهت صلاحية الطلب",
+    expiredMessage: "الأسعار تتغيّر خلال اليوم، لذا يلزم إعادة الطلب.",
+    paidTitle: "تم استلام الدفع",
+    paidMessage: "اعرض رقم الطلب عند الكاونتر.",
+    collectedTitle: "تم تسليم الطلب",
+    collectedMessage: "شكراً، ونراك في المرة القادمة.",
+    cancelledTitle: "تم إلغاء الطلب",
+    cancelledMessage: "لم يتم خصم أي مبلغ. يمكنك الطلب مجدداً من المتجر.",
+    flaggedTitle: "الدفع يحتاج مراجعة",
+    flaggedMessage: "المبلغ المستلم لا يطابق الطلب. توجّه إلى الكاونتر — لا تدفع مرة أخرى.",
+    awaitingTitle: "بانتظار الدفع",
+    awaitingMessage: "إن كنت قد دفعت، ستتحدّث الشاشة خلال ثوانٍ.",
+
+    cancelOrder: "إلغاء الطلب",
+    cancelConfirmTitle: "إلغاء هذا الطلب؟",
+    cancelConfirmBody: "يمكنك الطلب مجدداً من المتجر في أي وقت.",
+    keepOrder: "الإبقاء عليه",
+
+    privacyTitle: "ما نحتفظ به",
+    privacyBody: "فقط ما كتبته هنا، والطلب نفسه. يمكنك حذف بياناتك الشخصية الآن.",
+    forget: "حذف بياناتي",
+    forgetDone: "تم حذف البيانات",
+    forgetConfirmTitle: "حذف الاسم ورقم الهاتف؟",
+    forgetConfirmBody: "يبقى الطلب، بدون البيانات الشخصية.",
+
+    retry: "محاولة أخرى",
+    backToShop: "العودة إلى المتجر",
+    copySummary: "نسخ الطلب",
+    viewOrder: "عرض الطلب",
+
+    errors: {
+      generic: "حدث خطأ ما. حاول مجدداً.",
+      offline: "لا يوجد اتصال. تحقّق من الإنترنت وحاول مجدداً.",
+      rateLimited: "محاولات كثيرة. انتظر قليلاً ثم حاول مجدداً.",
+      unavailable: "بعض القطع لم تعد متوفّرة — حدّث السلة.",
+      expired: "انتهت صلاحية الطلب. أعد الطلب من فضلك.",
+      alreadyPaid: "تم دفع هذا الطلب مسبقاً.",
+      providerDown: "خدمة الدفع غير متاحة حالياً. يمكنك الدفع عند الكاونتر.",
+      cartEmpty: "السلة فارغة.",
+      notFound: "لم نعثر على الطلب.",
+      disabled: "الطلبات مغلقة حالياً.",
+    },
   },
 
   manager: {
@@ -907,7 +1419,7 @@ const ar: Dict = {
     noAccessMessage:
       "هذا الحساب مسجّل الدخول لكنه غير مخوّل لإدارة الكتالوج. تواصل مع صاحب المتجر للحصول على صلاحية.",
 
-    tabs: { catalogue: "الكتالوج", deals: "العروض", settings: "الإعدادات" },
+    tabs: { catalogue: "الكتالوج", orders: "الطلبات", deals: "العروض", settings: "الإعدادات" },
 
     categories: "الفئات",
     subclasses: "الفئات الفرعية",
@@ -963,6 +1475,39 @@ const ar: Dict = {
       hint: "يمكنك التصوير مباشرة بالهاتف.",
     },
 
+    orders: {
+      title: "الطلبات",
+      subtitle: "ما ينتظر عند الكاونتر.",
+      openOnly: "المفتوحة",
+      all: "الكل",
+      none: "لا توجد طلبات مفتوحة",
+      noneMessage: "سيظهر الطلب الجديد هنا فور إرساله.",
+      collect: "تم التسليم",
+      collectAria: (number) => `تعليم الطلب ${number} كمُسلَّم`,
+      cancel: "إلغاء",
+      cancelAria: (number) => `إلغاء الطلب ${number}`,
+      confirmCancelTitle: (number) => `إلغاء الطلب ${number}؟`,
+      confirmCancelBody: "سيرى الزبون أنّ الطلب أُلغي.",
+      customer: "الزبون",
+      noCustomer: "بدون اسم",
+      note: "ملاحظة",
+      copy: "نسخ",
+      copied: "تم نسخ الطلب",
+      paidLabel: "مدفوع",
+      unpaidLabel: "غير مدفوع",
+      pendingLabel: "قيد الدفع",
+      flaggedLabel: "يحتاج مراجعة",
+      flaggedHelper: "المبلغ المستلم يختلف عن مجموع الطلب. لا تُسلّم قبل المراجعة.",
+      methodCounter: "الكاونتر",
+      methodCard: "بطاقة",
+      statusPlaced: "مفتوح",
+      statusCollected: "تم التسليم",
+      statusCancelled: "ملغى",
+      statusExpired: "منتهٍ",
+      itemsLine: (n) => (n === 1 ? "قطعة واحدة" : `${n} قطع`),
+      checkoutOff: "استقبال الطلبات مُوقَف في الإعدادات — لا يستطيع الزبائن إرسال طلب جديد.",
+    },
+
     deals: {
       title: "العروض",
       subtitle: "العرض يشمل كل ما ضمن النطاق المختار — يمكن المزج بين التصاميم.",
@@ -989,7 +1534,13 @@ const ar: Dict = {
       title: "الإعدادات",
       shopSection: "المتجر",
       paymentSection: "الدفع والتواصل",
+      checkoutSection: "الطلبات",
       appearanceSection: "المظهر واللغة",
+      checkoutEnabled: "استقبال الطلبات",
+      checkoutEnabledHelper: "عند الإيقاف يبقى التصفّح والدفع عند الكاونتر ممكناً — دون طلب مسبق فقط.",
+      onlinePayments: "الدفع بالبطاقة",
+      onlinePaymentsHelper: "يتطلّب حساب دفع فعّالاً.",
+      onlinePaymentsUnavailable: "لم يُضبط مزوّد دفع بعد، لذا يبقى هذا مخفياً عن الزبائن.",
       shopOpen: "المتجر مفتوح",
       shopOpenHelper: "عند الإيقاف، يرى الزوار رسالة إغلاق بدل الكتالوج.",
       closedMessage: "رسالة الإغلاق",

@@ -29,9 +29,19 @@ interface Props {
   live: boolean;
   ownerEmail: string | null;
   invites: { email: string; role: string }[];
+  /* Whether a payment provider has its credentials server-side. Resolved on
+     the server and passed in, because the answer lives in environment
+     variables that must never reach a browser bundle. */
+  cardProviderConfigured: boolean;
 }
 
-export function SettingsView({ settings, live, ownerEmail, invites }: Props) {
+export function SettingsView({
+  settings,
+  live,
+  ownerEmail,
+  invites,
+  cardProviderConfigured,
+}: Props) {
   const { t, locale, setLocale } = useI18n();
   const { theme, setTheme } = useTheme();
   const router = useRouter();
@@ -42,6 +52,8 @@ export function SettingsView({ settings, live, ownerEmail, invites }: Props) {
   const [bitLink, setBitLink] = useState(settings.bitPaymentLink);
   const [phone, setPhone] = useState(settings.whatsappPhone);
   const [announceHe, setAnnounceHe] = useState(settings.announcement?.he ?? "");
+  const [checkoutEnabled, setCheckoutEnabled] = useState(settings.checkoutEnabled);
+  const [onlinePayments, setOnlinePayments] = useState(settings.onlinePaymentsEnabled);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<"owner" | "staff">("staff");
   const [errors, setErrors] = useState<{ bitLink?: string; phone?: string; invite?: string }>({});
@@ -173,6 +185,59 @@ export function SettingsView({ settings, live, ownerEmail, invites }: Props) {
           error={errors.phone}
         />
         <Button onClick={savePayment} loading={busy === "payment"} disabled={!live} fullWidth>
+          {t.common.save}
+        </Button>
+      </div>
+
+      {/* ---- Orders ----
+          Its own group with its own Save, like everything else here. The two
+          switches are not the same kind of thing and the footers say so:
+          the first stops new orders arriving, the second decides whether card
+          payment is offered inside one. ---- */}
+      <ListGroup header={s.checkoutSection} footer={s.checkoutEnabledHelper}>
+        <ListRow
+          title={s.checkoutEnabled}
+          trailing={
+            <Switch
+              checked={checkoutEnabled}
+              onChange={setCheckoutEnabled}
+              label={s.checkoutEnabled}
+              disabled={!live}
+            />
+          }
+        />
+        <ListRow
+          title={s.onlinePayments}
+          subtitle={cardProviderConfigured ? undefined : s.onlinePaymentsUnavailable}
+          trailing={
+            <Switch
+              checked={onlinePayments}
+              onChange={setOnlinePayments}
+              label={s.onlinePayments}
+              /* Off *and* untouchable with no provider behind it. A switch
+                 that turns on a button which dead-ends at a counter is worse
+                 than no switch. */
+              disabled={!live || !cardProviderConfigured}
+            />
+          }
+        />
+      </ListGroup>
+
+      <div className="mb-8 flex flex-col gap-4">
+        <p className="text-footnote px-4" style={{ color: "var(--label-secondary)" }}>
+          {s.onlinePaymentsHelper}
+        </p>
+        <Button
+          onClick={() =>
+            saveGroup("checkout", {
+              checkoutEnabled,
+              onlinePaymentsEnabled: onlinePayments,
+            })
+          }
+          loading={busy === "checkout"}
+          disabled={!live}
+          fullWidth
+        >
           {t.common.save}
         </Button>
       </div>

@@ -206,4 +206,25 @@ export interface ShopSettings {
   /** International format, digits only: "972549109603". */
   whatsappPhone: string;
   announcement: Localized | null;
+
+  /**
+   * Whether a customer may place an order at all.
+   *
+   * The operator's kill switch over the checkout, and it **fails closed**: it
+   * gates a write into live operations — an order somebody has to fulfil — so
+   * a settings read that fails must leave ordering off, not on. Distinct from
+   * `open`, which closes the whole storefront; this leaves browsing and the
+   * pay-at-the-counter total working while stopping new orders.
+   * PLAYBOOK §4.1.5.
+   */
+  checkoutEnabled: boolean;
+  /**
+   * Whether card payment is offered inside the checkout.
+   *
+   * Ships false and stays false until a Grow merchant account exists. Even
+   * then it is only half the question: the provider also has to be configured
+   * server-side (`cardPaymentAvailable()`), because a switch that turns on a
+   * button with no credentials behind it is a dead end at a counter.
+   */
+  onlinePaymentsEnabled: boolean;
 }

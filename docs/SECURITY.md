@@ -165,29 +165,91 @@ It **fails open**. The limiter exists to bound a loop, not to hold a door shut,
 and a broken limiter must not stop the owner pricing a keychain at the counter.
 The door is `requireOwner()`.
 
-## 8. What is deliberately absent
+## 8. The checkout — the one public write path
 
-- **No unauthenticated write endpoint exists.** PLAYBOOK §4 does not apply
-  here. It will the moment a contact form or online ordering is added.
-- **No customer data is stored.** No accounts, no orders, no addresses. The
-  cart lives in the visitor's own `localStorage`. This is why there is no
-  data-rights flow yet — and why one is needed the day ordering ships.
-- **No cookie-consent banner**, because there is nothing to consent to:
-  `grep -rE "gtag|GTM-|fbevents|hotjar|mixpanel|segment" src/` returns nothing,
-  and browser storage holds only locale, theme and cart. Adding *any* analytics
-  or third-party embed is the trigger to build one — PLAYBOOK §3.
+Full detail in [`PAYMENTS.md`](./PAYMENTS.md). What matters here is that this
+is the **only** endpoint in the project a stranger can reach with no session,
+so PLAYBOOK §4 applies to it and to nothing else. It gets its own opener,
+`src/lib/publicRoute.ts`, deliberately separate from `route.ts`: two threat
+models sharing one function is how the wrong assumptions get applied to the
+wrong endpoint.
+
+The rails, in execution order: same-origin → `Content-Type: application/json`
+→ a body ceiling read from `content-length` → rate limiting **per-IP and
+globally** → a honeypot answered with a cheerful 200 → validation that *builds*
+the stored object rather than checking the caller's.
+
+Three further rules the payment side rests on:
+
+- **Nothing believes a browser.** Not the redirect to a success URL, not the
+  `postMessage` from the payment frame, not the webhook body. Each is a prompt
+  to perform a server-to-server read; that read is the evidence.
+- **A webhook resolves its order only by the reference we stored.** The body's
+  own idea of which order it concerns is never used for the lookup — that would
+  let a stranger nominate an order to mark paid.
+- **An amount that does not reconcile exactly is `flagged`, never `paid`** —
+  in both directions, with no tolerance.
+
+Order tokens are stored as a SHA-256, so the database never holds a live bearer
+credential. `orders`, `order_items` and `payment_events` grant **nothing** to
+any client role — not even `SELECT`, because an order carries a name and a
+phone number. Migration 007, and note the GRANT/REVOKE ordering there: the
+revoke names `public`, which also strips `service_role` (§2 above, PLAYBOOK
+§1.7), so the server role is granted back explicitly straight afterwards.
+
+## 9. Content-Security-Policy
+
+Built per request in `src/proxy.ts` from `src/lib/csp.ts`, because two of its
+directives depend on the path and one on a fresh random value.
+
+Scripts get a per-response nonce plus `'strict-dynamic'`; the header is set on
+the *request* as well as the response so Next stamps the same nonce onto its
+own bootstrap. **`style-src` keeps `'unsafe-inline'`** — a known, accepted
+weakness, not an oversight: this design system styles with inline `style`
+attributes several hundred call sites deep, `style-src-attr` has no nonce
+mechanism, and inline style cannot execute. Closing it is a refactor, not a
+header change.
+
+`frame-ancestors` is `'none'` everywhere except `/checkout/frame-return`, which
+our own checkout frames by design. `frame-src` is `'none'` until a payment
+provider is configured, and then names exactly its checkout origin — read from
+`paymentFrameOrigins()`, the same function the server-side URL allowlist uses
+before any provider URL reaches an `<iframe src>`. One source, so the policy
+and the code cannot disagree.
+
+## 10. What is deliberately absent
+
+- **No card data reaches us, by construction.** The fields live in the
+  provider's own iframe on the provider's own origin. `redactPayload` in
+  `lib/payments/log.ts` is the belt to that brace, for the one case that would
+  otherwise be invisible: a provider echoing something back in a callback.
+- **No accounts, no addresses, no email, no stored IP.** An order holds an
+  optional name and an optional phone number, both anonymisable, both cleared
+  by the retention job at 90 days. `DELETE /api/checkout/[token]` is the
+  customer's own button for it, on the same screen that lists what it removes.
+- **No refunds from the manager.** A refund happens at the provider, with a
+  human deciding it — not by writing a column here.
+- **No cookie-consent banner**, and the checkout did not change that:
+  `grep -rE "gtag|GTM-|fbevents|hotjar|mixpanel|segment" src/` still returns
+  nothing, the analytics hooks are server-side only, and browser storage holds
+  locale, theme, cart, and one `sessionStorage` breadcrumb during a payment.
+  Adding *any* third-party script or embed is the trigger — PLAYBOOK §3.
 
 ---
 
 ## Before deploying
 
-- [ ] `npm run check` passes (lint, typecheck, 36 tests).
+- [ ] `npm run check` passes (lint, typecheck, 78 tests).
 - [ ] `scripts/audit-security.sql` run in the SQL editor — no `anon` or
-      `authenticated` write grant on any table, no `public_exec = true` on a
-      `SECURITY DEFINER` function.
-- [ ] An actual unauthenticated `curl` against a write route returns 401, and a
-      foreign `Origin` returns 403. Not "the migration succeeded" — a real
-      request. This is exactly how PLAYBOOK §1.2 was caught.
+      `authenticated` write grant on any table, **no grant of any kind on
+      `orders`, `order_items` or `payment_events`**, and no `public_exec = true`
+      on a `SECURITY DEFINER` function.
+- [ ] An actual unauthenticated `curl` against a manager write route returns
+      401, and a foreign `Origin` returns 403. Not "the migration succeeded" —
+      a real request. This is exactly how PLAYBOOK §1.2 was caught.
+- [ ] The public checkout endpoint too: `POST /api/checkout` without
+      `Content-Type: application/json` returns 415, with a foreign `Origin`
+      returns 403, and `GET /api/checkout/<made-up-token>` returns 404.
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` is set server-side only and is **not**
       prefixed `NEXT_PUBLIC_`.
 - [ ] `bootstrap_owner_email()` names the address the owner will actually sign

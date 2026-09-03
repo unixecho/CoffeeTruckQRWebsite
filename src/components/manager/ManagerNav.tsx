@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Boxes, Settings, Tag } from "lucide-react";
+import { Boxes, ClipboardList, Settings, Tag } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { haptic } from "@/lib/haptics";
 import { ICON_SIZE } from "@/components/ios/Icon";
@@ -15,11 +15,18 @@ import { useI18n } from "@/lib/i18n";
  * a persistent sidebar from `lg` up. Both are always mounted and toggled with
  * CSS, so nothing re-mounts on a route change.
  *
- * Three destinations. iOS caps a tab bar at five and there is no reason to get
- * near that — everything else is reached from the screen it belongs to.
+ * Four destinations. iOS caps a tab bar at five, and this is the ceiling —
+ * everything else is reached from the screen it belongs to. Orders sits second
+ * rather than last because it is the only tab with a queue behind it: the
+ * catalogue is edited between customers, orders are read during one.
  */
-const DESTINATIONS: { href: string; icon: LucideIcon; key: "catalogue" | "deals" | "settings" }[] = [
+const DESTINATIONS: {
+  href: string;
+  icon: LucideIcon;
+  key: "catalogue" | "orders" | "deals" | "settings";
+}[] = [
   { href: "/manager", icon: Boxes, key: "catalogue" },
+  { href: "/manager/orders", icon: ClipboardList, key: "orders" },
   { href: "/manager/deals", icon: Tag, key: "deals" },
   { href: "/manager/settings", icon: Settings, key: "settings" },
 ];

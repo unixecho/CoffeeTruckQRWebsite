@@ -66,7 +66,18 @@ console.log("\n=== 2. Anonymous cannot change a price ===");
 }
 
 console.log("\n=== 3. Private tables are invisible to anonymous ===");
-for (const table of ["owners", "owner_invites", "audit_log", "rate_limits"]) {
+/* The last three are the strictest tables in the schema: every other one
+   grants `anon` SELECT, and these grant nothing at all, because they hold a
+   customer's name and phone number. Migration 007. */
+for (const table of [
+  "owners",
+  "owner_invites",
+  "audit_log",
+  "rate_limits",
+  "orders",
+  "order_items",
+  "payment_events",
+]) {
   const r = await rest(`${table}?select=*&limit=1`);
   check(`SELECT ${table} refused`, !r.ok, `${r.status}`);
 }
@@ -93,6 +104,9 @@ for (const [fn, body] of [
   ["check_rate_limit", { p_key: "x", p_max: 999999, p_window_seconds: 1 }],
   ["cleanup_expired_rows", {}],
   ["bootstrap_owner_email", {}],
+  // Takes the retention windows as parameters, so an anonymous caller passing
+  // zeroes would delete every order on the system.
+  ["expire_and_age_orders", { p_anonymize_after_days: 0, p_delete_after_months: 0 }],
 ]) {
   const r = await fetch(`${url}/rest/v1/rpc/${fn}`, {
     method: "POST",
@@ -136,6 +150,16 @@ console.log("\n=== 7. The app's own boundaries ===");
   const upload = await fetch(`${site}/api/manager/upload`, { method: "POST" });
   check("upload without a session is 401", upload.status === 401, `${upload.status}`);
 
+  const orderPatch = await fetch(
+    `${site}/api/manager/orders/11111111-1111-4111-8111-111111111111`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "collect" }),
+    }
+  );
+  check("order PATCH without a session is 401", orderPatch.status === 401, `${orderPatch.status}`);
+
   /* Grepping the whole page for the hostile value proves nothing: Next echoes
      the raw searchParams into the RSC payload regardless of what the component
      does with them. The question is what value reached the sign-in button, so
@@ -178,6 +202,46 @@ console.log("\n=== 7. The app's own boundaries ===");
     const html = await (await fetch(`${site}/login?next=${encodeURIComponent(good)}`)).text();
     check(`legitimate path preserved: ${good}`, propOf(html).includes(good), propOf(html).join(","));
   }
+}
+
+/* The public checkout is the only endpoint a stranger can reach with no
+   session, so its rails get re-tested live rather than trusted to the code
+   that implements them — the same reasoning as everything above. PLAYBOOK §4.
+
+   These pass whether or not ordering is switched on: a refusal is a refusal.
+   The one thing they do NOT prove is that an order can be placed, which is
+   deliberate — this script's job is to establish what cannot happen. */
+console.log("\n=== 8. The public checkout's rails ===");
+{
+  const noType = await fetch(`${site}/api/checkout`, { method: "POST" });
+  check("checkout without JSON content-type is 415", noType.status === 415, `${noType.status}`);
+
+  const foreign = await fetch(`${site}/api/checkout`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Origin: "https://evil.example" },
+    body: "{}",
+  });
+  check("checkout from a foreign Origin is 403", foreign.status === 403, `${foreign.status}`);
+
+  const junk = await fetch(`${site}/api/checkout`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      lines: [{ productId: "not-a-uuid", quantity: 1 }],
+      paymentMethod: "counter",
+      clientRequestId: "11111111-1111-4111-8111-111111111111",
+    }),
+  });
+  check("checkout with a junk product id is 400", junk.status === 400, `${junk.status}`);
+
+  const unknown = await fetch(`${site}/api/checkout/made-up-token-aaaaaaaaaaaaaaaaaaaa`);
+  check("an unknown order token is 404", unknown.status === 404, `${unknown.status}`);
+
+  const hook = await fetch(`${site}/api/payments/webhook/not-a-provider`, {
+    method: "POST",
+    body: "x=1",
+  });
+  check("an unknown webhook provider is 404", hook.status === 404, `${hook.status}`);
 }
 
 console.log(`\n${fail === 0 ? "ALL CLEAR" : "PROBLEMS FOUND"} — ${pass} passed, ${fail} failed\n`);

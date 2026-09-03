@@ -206,6 +206,14 @@ const DEFAULT_SETTINGS: ShopSettings = {
   bitPaymentLink: "",
   whatsappPhone: "972549109603",
   announcement: null,
+  /* Both default to false, and that is the fail-closed side. These are read
+     through `read(key, fallback)` below, so this object is also what a
+     *missing row* resolves to — a database without migration 007 applied, or
+     a settings read that failed. Ordering must be off in both cases: an order
+     that cannot be stored is an order the owner never sees, taken from a
+     customer who thinks it was. PLAYBOOK §4.1.5. */
+  checkoutEnabled: false,
+  onlinePaymentsEnabled: false,
 };
 
 function toSettings(rows: { key: string; value: unknown }[]): ShopSettings {
@@ -221,6 +229,11 @@ function toSettings(rows: { key: string; value: unknown }[]): ShopSettings {
     bitPaymentLink: read("bit_payment_link", DEFAULT_SETTINGS.bitPaymentLink),
     whatsappPhone: read("whatsapp_phone", DEFAULT_SETTINGS.whatsappPhone),
     announcement: read<Localized | null>("announcement", null),
+    checkoutEnabled: read("checkout_enabled", DEFAULT_SETTINGS.checkoutEnabled),
+    onlinePaymentsEnabled: read(
+      "online_payments_enabled",
+      DEFAULT_SETTINGS.onlinePaymentsEnabled
+    ),
   };
 }
 

@@ -30,6 +30,30 @@ commands. Four steps need a browser and cannot be automated from a terminal.
 - [ ] **(owner)** Set the **Bit payment link** in Settings. It ships empty, and
       the storefront deliberately hides the pay button rather than showing a
       dead one.
+- [x] **Migration 007 applied** to the linked project on 2026-09-03, and
+      verified afterwards: `anon` gets 401 on both SELECT and INSERT for
+      `orders`, `order_items` and `payment_events`; `service_role` reads all
+      three. Test orders were placed, exercised and deleted — the tables are
+      empty. `checkout_enabled` and `online_payments_enabled` are both **false**,
+      which is the decision, not a to-do: this stand takes payment at the
+      counter and ordering belongs to the standalone 3D Prints store.
+
+      One cosmetic consequence: the order-number sequence sits at 2, so if
+      ordering is ever switched on here the first real order is `#0003`.
+
+### When the Osek Patur registration and Grow account come through
+
+- [ ] Five environment variables and two switches —
+      [`docs/PAYMENTS.md`](docs/PAYMENTS.md) §2. No code change; the adapter is
+      written, wired in and unit-tested against a stubbed transport.
+- [ ] Verify the three `TODO(grow-credentials)` blocks in
+      `src/lib/payments/providers/grow.ts` against Grow's own integration
+      guide. Endpoints, field names, status codes. A wrong name fails loudly on
+      the first sandbox call, which is the right time to find out.
+- [ ] **(owner)** Confirm the order-retention window with an accountant.
+      Migration 007 deletes orders at 24 months and clears names and phone
+      numbers at 90 days; both are function parameters, and Israeli
+      bookkeeping rules — not this repo — set the floor.
 
 **Check `bootstrap_owner_email()` in `supabase/migrations/003_owners.sql`
 before pushing.** It is set to `nikolsburgj@gmail.com`. That address, on its
@@ -55,6 +79,123 @@ land on `/no-access` with no way to grant yourself access.
 ---
 
 ## Session log
+
+### 2026-09-03 (second session) — Orders, checkout, and the Grow-shaped hole
+
+**Nothing a customer sees has changed.** The stand still works the way it did:
+browse, see a total, pay cash or Bit at the counter. `checkout_enabled` ships
+false and is false in the live project.
+
+What landed is the machinery behind that switch — an order lifecycle, a
+checkout, a manager screen, and a payment-provider port with Grow written
+against it — built now so that turning it on later, in this store or in the
+standalone 3D Prints one, is a switch rather than a project. Grow itself waits
+on the עוסק פטור registration; nothing about that is a code problem.
+
+**Grow is written and switched off.** `src/lib/payments/providers/grow.ts` is
+wired into the same pipeline the counter flow uses and reports itself
+unconfigured, so nothing offers it. Turning it on once the registration and
+merchant account come through is five environment variables and two switches in
+Settings — no code change, no migration, no rewrite of the checkout. That was
+the point of the exercise, and the things that genuinely cannot be known yet
+are confined to three blocks in that one file, each tagged
+`TODO(grow-credentials)`.
+
+**Two status axes, not one.** An order tracks *has the money moved* and *has
+the customer walked away with it* separately, because they genuinely diverge —
+a card order is paid before it is collected, a counter order is both at once, a
+refunded order was collected and then paid back. The legal transitions are pure
+functions in `payments/status.ts` with the same test treatment `pricing.ts`
+gets: it is the second module here where being wrong costs real money.
+
+**Nothing believes a browser about money.** Not the redirect to a success URL,
+not the `postMessage` from the payment frame, not the webhook body — each only
+*prompts* a server-to-server read of the transaction, and that read is the
+evidence. A payment whose amount does not reconcile exactly becomes `flagged`,
+never `paid`, in either direction; the manager shows it in red and refuses to
+offer the hand-over button.
+
+**The first public write endpoint this project has ever had.** PLAYBOOK §4 now
+applies, and it gets its own opener (`lib/publicRoute.ts`) rather than an
+option on the manager's: same-origin, JSON content-type, a body ceiling read
+before the body, rate limiting per-IP **and** globally, a honeypot answered
+with a cheerful 200, and validation that *builds* the stored object instead of
+checking the caller's. The global-limit trade-off is written down in that file
+rather than inherited silently.
+
+**The first customer data this project has ever held**, so the things PLAYBOOK
+§1.4 says get retrofitted badly are in from the start: a retention job with the
+windows as parameters, and a self-service "remove my details" button sitting on
+the same screen that lists exactly what it removes.
+
+**A real CSP, at last.** Per-response nonce plus `strict-dynamic` for scripts,
+built in `proxy.ts`. `style-src` keeps `'unsafe-inline'` and that is written
+down as an accepted weakness rather than hidden — this design system styles
+with inline `style` attributes several hundred call sites deep, and closing it
+is a refactor, not a header.
+
+**Verified against a running server and the real database, not by reading:**
+
+- Every rail on `/api/checkout`: 415 without a JSON content-type, 403 to a
+  foreign `Origin`, 400 with the offending field named, 200-and-nothing-written
+  on a filled honeypot, 404 for a made-up token, 404 for an unknown provider,
+  401 on the manager route with no session.
+- A real order placed end to end, twice, and the pricing engine's number stored
+  on it: ₪105 of items, one 2-for-₪50 deal, ₪85 total, ₪20 saved.
+- **Idempotency:** three POSTs with one `clientRequestId` produced exactly one
+  order, each reply carrying a freshly rotated token.
+- **Sanitising:** a customer name padded with extra spaces and carrying a
+  right-to-left override (U+202E) was stored as the two plain words דנה לוי —
+  whitespace collapsed and the override stripped, which on the order screen is
+  the difference between reading a price and reading it backwards.
+  `"+972 (54) 910-9603"` stored as digits.
+- **Expiry on read**, not just nightly: an order past its window flipped to
+  `expired` and withdrew both of its capabilities on the next GET.
+- **Data rights:** the customer's own DELETE cleared the name and phone, kept
+  the order and the note, and was idempotent.
+- **Retention:** `expire_and_age_orders(0, 24)` cleared the identifying
+  columns and stamped `anonymized_at`; `cleanup_expired_rows()` calls it; both
+  return 401 to `anon`.
+- **Database guards:** a duplicate `(provider, provider_event_id)` is refused
+  (23505), two orders cannot claim one payment reference (23505), and an
+  invented `payment_status` is refused by the check constraint (23514).
+- **Lockdown:** `anon` gets 401 on SELECT *and* INSERT for all three new
+  tables. Not just "the migration succeeded" — real requests.
+- The CSP is present on every response with a fresh nonce, and Next stamps the
+  same nonce onto its own bootstrap: **zero script tags without one** in the
+  production HTML, and no `unsafe-eval` outside development.
+- `npm run check` — lint, typecheck, **121 tests** (was 36). `npm run build` —
+  34 routes. All test orders deleted afterwards; the tables are empty.
+
+**Two defects found this way and fixed:**
+
+1. The nonce on the two inline no-flash scripts produced a hydration mismatch
+   on every page. Browsers deliberately blank a script's `nonce` attribute
+   after load so a CSS-selector injection cannot read it back, so React's
+   client render legitimately disagrees with the server's.
+   `suppressHydrationWarning` on those two, with the reason beside them.
+2. The cancel and forget endpoints returned an order without its `can` block,
+   which the order screen applies straight into the state it renders from — so
+   the next paint would have read `can.cancel` off `undefined`. Every endpoint
+   that hands back an order now hands back the whole shape.
+
+**Still unexercised, and why.** The manager's own Orders screen needs a Google
+session, which cannot be produced from here — its two actions are covered by
+`canCollect` in the state-machine tests and its list query was run by hand
+against the real schema, but nobody has looked at it rendered. And the Grow
+webhook against a live provider waits on credentials; its adapter is tested
+against a stubbed transport, which pins the flow but cannot pin Grow's field
+names.
+
+**One small refactor, and the reason for it.** The text sanitisers and the
+result shape moved from `lib/validate.ts` into a new `lib/parse.ts`, which
+`validate.ts` re-exports so no call site changed. Two parsing surfaces now
+exist with different threat models, and the sanitiser that strips bidi
+overrides has to be *the same code* in both — a copy is a security control that
+quietly stops matching. It also made those functions unit-testable, which they
+were not behind `next/server`.
+
+---
 
 ### 2026-09-03 — Rebuilt as a Next.js + Supabase app
 

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { buildCsp, newNonce } from "@/lib/csp";
 
 /* ==========================================================================
    The manager gate
@@ -27,7 +28,29 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 const MANAGER_PREFIX = "/manager";
 
 export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  const { pathname } = request.nextUrl;
+
+  /* A fresh nonce per response, and the policy built around it. `lib/csp.ts`
+     explains why scripts get a nonce and inline styles do not. */
+  const nonce = newNonce();
+  const csp = buildCsp({
+    nonce,
+    pathname,
+    isDevelopment: process.env.NODE_ENV === "development",
+  });
+
+  /* The header goes on the **request** as well as the response. Next reads it
+     back while rendering and stamps the same nonce onto the script tags it
+     injects itself — without this, `strict-dynamic` blocks the framework's own
+     bootstrap and nothing hydrates. */
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("content-security-policy", csp);
+
+  const forward = { request: { headers: requestHeaders } };
+
+  let response = NextResponse.next(forward);
+  response.headers.set("content-security-policy", csp);
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -44,7 +67,11 @@ export async function proxy(request: NextRequest) {
       },
       setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
+        /* A different response object, so the policy has to be set on it
+           again. A refreshed session that arrives without a CSP would be a
+           page that silently loses its protection once an hour. */
+        response = NextResponse.next(forward);
+        response.headers.set("content-security-policy", csp);
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options)
         );
@@ -59,7 +86,6 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
   const isManager = pathname === MANAGER_PREFIX || pathname.startsWith(`${MANAGER_PREFIX}/`);
 
   if (!isManager) return response;

@@ -6,9 +6,21 @@ Guidance for working in this repository.
 
 A storefront and catalogue manager for a coffee-truck side business selling
 3D-printed items. Customers scan a QR code at the truck, browse, build a cart,
-see a total, and pay manually via **Bit** at the counter. There is no online
-checkout — the site's job is to present the catalogue, price it correctly, and
-hand off to payment.
+see a total, and pay **cash or Bit at the counter**, four feet away. The site's
+job is to present the catalogue, price it correctly, and hand off to a person.
+
+**This shop does not take orders, and that is a decision rather than a gap.**
+Ordering ahead belongs to the standalone 3D Prints store; here the customer is
+already standing at the till, and a queue of orders for a stand that has no
+queue is worse than what it replaces.
+
+The ordering and payment machinery is nevertheless **built, tested, and shipped
+switched off** — `checkout_enabled` and `online_payments_enabled` both default
+to false, so the storefront behaves exactly as it did. It exists so that the
+day either store wants it, it is a switch rather than a project, and so that
+integrating **Grow** once the עוסק פטור registration comes through is five
+environment variables rather than a rewrite. Read
+[`docs/PAYMENTS.md`](./docs/PAYMENTS.md) before touching any of it.
 
 The **manager** is the other half and the one under real pressure: the owner
 uses it on a phone, one-handed, standing at the truck, to add a keychain they
@@ -37,16 +49,23 @@ npm run build      # what Vercel runs
 
 ```
 src/app/(root)          landing "/" and "/shop"
+src/app/checkout/       the order flow, and the order screen by token
 src/app/manager/        owner-only, gated by src/proxy.ts
-src/app/api/manager/    every write. Owner-checked, one route per entity.
+src/app/api/manager/    every owner write. Owner-checked, one route per entity.
+src/app/api/checkout/   the ONE public write path. Different rails — PLAYBOOK §4.
+src/app/api/payments/   provider callbacks. Believes nothing; reads back.
 src/components/ios/     the design system. Reuse it; do not hand-roll UI.
 src/components/shop/    storefront
+src/components/checkout/ the checkout and order screens
 src/components/manager/ manager screens
 src/lib/                domain model, pricing, i18n, auth, data access
+src/lib/payments/       the provider port, the state machine, the config
+src/lib/orders.ts       the only module that writes an order or a payment event
 src/data/seed.json      the real catalogue, as a read-only fallback
-supabase/migrations/    schema, grants, RLS. 001–005 always ship together.
+supabase/migrations/    schema, grants, RLS. 001–006 always ship together.
 legacy/                 the old static site, preserved. Do not edit or revive.
 docs/SETUP.md           the owner's one-time provisioning checklist
+docs/PAYMENTS.md        the payment architecture, and what Grow still needs
 PLAYBOOK.md             cross-project security and Israeli-law reference
 ```
 
@@ -80,9 +99,19 @@ the business rule, not just the schema.
   rules at the group's own scope. A heading built with the wrong one advertises
   a price the till will not honour — that exact bug shipped once and is now
   pinned by a test.
-- `src/lib/pricing.test.ts` is the only test suite, deliberately: this is the
-  one module where being wrong costs real money, and it is pure. It includes a
-  brute-force cross-check and an exhaustive sweep. **Keep it passing.**
+- `pricing.test.ts` is one of six suites now, and the rule for what gets tested
+  is unchanged: **pure, and being wrong costs real money or opens a hole.**
+  The others are `payments/status.test.ts` (the order state machine, swept
+  exhaustively), `payments/validate.test.ts` (the exact key set the public
+  checkout parser produces), `payments/url.test.ts` (what may become an
+  `<iframe src>`), `payments/log.test.ts` (the card-data redactor) and
+  `payments/providers/grow.test.ts` (the adapter's flow, against a stubbed
+  transport). **Keep them passing.**
+- Tests run through `scripts/test-resolver.mjs`, which teaches `node --test`
+  the extensionless imports the rest of the codebase writes, and through
+  `--conditions=react-server`, which makes `server-only` a no-op instead of a
+  throw. Both live with the test runner rather than as conventions leaking
+  into `src/` — see the comment in that file.
 
 ## Security — the model, not a checklist
 
@@ -103,6 +132,15 @@ Full detail in [`docs/SECURITY.md`](./docs/SECURITY.md); the rules that bite:
   so revoking from `anon` alone does nothing.
 - After any RLS or grant change, re-test with a real unauthenticated request.
   "The migration succeeded" is not evidence.
+- **`/api/checkout` is the one endpoint a stranger can reach with no session**,
+  so it uses `src/lib/publicRoute.ts` rather than `route.ts` — PLAYBOOK §4's
+  rail stack, deliberately a separate function so the manager's assumptions
+  cannot leak onto it. `orders` grants **nothing** to any client role, not even
+  `SELECT`; it holds a name and a phone number.
+- **Nothing believes a browser about money.** Not a redirect, not a
+  `postMessage`, not a webhook body — each only prompts a server-to-server read
+  of the transaction. An amount that does not reconcile exactly becomes
+  `flagged`, never `paid`, in either direction.
 
 ## Design system
 

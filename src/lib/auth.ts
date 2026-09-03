@@ -2,6 +2,7 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 import { createClient, createServiceClient, isSupabaseConfigured } from "./supabase/server";
+import { allowedOrigins } from "./site";
 import type { Owner, OwnerRole } from "./types";
 
 /* ==========================================================================
@@ -159,13 +160,10 @@ export function checkOrigin(request: Request): NextResponse | null {
   const origin = request.headers.get("origin");
   if (!origin) return null;
 
-  const expected = [
-    process.env.NEXT_PUBLIC_SITE_URL,
-    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
-    process.env.NODE_ENV === "development" ? "http://localhost:3000" : undefined,
-  ].filter(Boolean);
-
-  if (expected.some((allowed) => origin === allowed)) return null;
+  // `allowedOrigins()` in lib/site.ts is the one definition of "this site",
+  // shared with the CSP in proxy.ts and with the payment return URLs. Three
+  // places working it out independently is how they drift apart.
+  if (allowedOrigins().includes(origin)) return null;
 
   return NextResponse.json({ error: "bad_origin" }, { status: 403 });
 }

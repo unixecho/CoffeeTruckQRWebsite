@@ -6,9 +6,13 @@
                     ┌──────────────────────────────────────────┐
    QR code  ─────▶  │  /            landing                    │
                     │  /shop        catalogue + cart           │  public
+                    │  /checkout    order · details · payment  │
+                    │  /checkout/…  the order, by token        │
                     └────────────────┬─────────────────────────┘
                                      │  readCatalogue()   ← runs as the visitor,
                                      │                       RLS filters the rows
+                                     │  POST /api/checkout ← the ONE public
+                                     │                       write path
                     ┌────────────────▼─────────────────────────┐
                     │            Supabase Postgres             │
                     └────────────────▲─────────────────────────┘
@@ -18,6 +22,10 @@
                     ┌────────────────┴─────────────────────────┐
                     │  requireOwner() on every single write     │
                     └──────────────────────────────────────────┘
+
+   provider   ────▶  POST /api/payments/webhook/[provider]
+                     …which believes nothing, and reads the transaction
+                     back from the provider before an order settles.
 ```
 
 Reads on the storefront are Server Components hitting Supabase directly as the
@@ -31,6 +39,9 @@ ownership first and then uses the service-role client. See
 categories ──┬── subclasses ──┬── products ── product_images
              │                │        │
              └────────────────┴────────┴──── pricing_rules (scope, scope_id)
+                                       │
+                          orders ── order_items (snapshotted name + price)
+                             └───── payment_events (every callback, applied or not)
 ```
 
 Three levels, because **bundle deals are sold per subclass**. "Any three small
@@ -83,6 +94,28 @@ bug shipped once and is now pinned by a test.
 Invariants, asserted in `pricing.test.ts`: never charges above base price,
 never bills a bundle it did not fill, units are conserved, and it agrees with a
 brute-force reference on small carts.
+
+## Orders and payments
+
+The full account is [`PAYMENTS.md`](./PAYMENTS.md); the shape in one paragraph.
+
+An order carries **two independent statuses** — has the money moved, and has
+the customer walked away with the thing. They genuinely diverge (a card order
+is paid before it is collected; a counter order is both at once), and the legal
+transitions live in `src/lib/payments/status.ts` as pure functions with the
+same test treatment `pricing.ts` gets.
+
+The payment provider sits behind a four-method port. `manual` — pay at the
+counter — is a real implementation of it, not a stub: it is what the business
+does today and it stays afterwards, because a stand on a phone tether needs a
+path that works with no network. `grow` is written and waiting on credentials;
+switching over is five environment variables and a switch in Settings, and it
+touches no other file.
+
+`src/lib/orders.ts` is the only module that writes an order or a payment event,
+which is what makes two rules enforceable in one place: every amount is
+computed here from the live catalogue by the same `priceCart` the storefront
+runs, and every status change goes through the state machine.
 
 ## The read-only fallback
 

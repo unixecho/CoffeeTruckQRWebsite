@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --test --experimental-strip-types src/lib/**/*.test.ts",
+    "test": "node --test --experimental-strip-types --conditions=react-server --import ./scripts/test-resolver.mjs src/lib/**/*.test.ts",
     "seed": "node --experimental-strip-types scripts/seed.ts",
     "db:push": "supabase db push",
     "check": "npm run lint && npm run typecheck && npm run test",
