@@ -83,6 +83,31 @@ order by anon_update desc, anon_insert desc, anon_delete desc, t.table_name;
 
 
 -- ---------------------------------------------------------------------------
+-- 2b. Can the SERVER role still work?
+--
+-- Query 2 asks whether the client roles are locked out. This asks the other
+-- half, and it is the half that was missing when migration 002 shipped:
+-- revoking from PUBLIC also stripped `service_role`, because PUBLIC was the
+-- only route it had to these tables. Every write was dead while the public
+-- site kept working perfectly, because reads go through `anon`.
+--
+-- BAD: any `false` on a table the backend writes to — which is all of them.
+--
+-- Fixed by migration 006. PLAYBOOK.md §1.7.
+-- ---------------------------------------------------------------------------
+
+select
+  t.table_name,
+  has_table_privilege('service_role', 'public.' || t.table_name, 'SELECT') as svc_select,
+  has_table_privilege('service_role', 'public.' || t.table_name, 'INSERT') as svc_insert,
+  has_table_privilege('service_role', 'public.' || t.table_name, 'UPDATE') as svc_update,
+  has_table_privilege('service_role', 'public.' || t.table_name, 'DELETE') as svc_delete
+from information_schema.tables t
+where t.table_schema = 'public'
+order by svc_insert, t.table_name;
+
+
+-- ---------------------------------------------------------------------------
 -- 3. Is row-level security actually on?
 --
 -- BAD: `rls_enabled = false` on any table.

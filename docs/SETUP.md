@@ -44,7 +44,7 @@ Opens a browser. Paste the code it shows you back into the terminal.
 Either in the dashboard at <https://supabase.com/dashboard>, or:
 
 ```bash
-npx supabase projects create coffee-truck-shop --region eu-central-1 --size micro
+npx supabase projects create mobile-3dprint-shop --region eu-central-1 --size micro
 ```
 
 `eu-central-1` (Frankfurt) is the closest region to Israel — it is the same

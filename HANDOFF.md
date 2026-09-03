@@ -155,10 +155,12 @@ Defects found and fixed during that pass:
    to match the filename or the file silently stops running — which here would
    mean the manager stops being gated.
 
-**One thing to be aware of:** a stray `.mcp.json` appeared in
-the repo root mid-session, pointing a Supabase MCP server at project ref
-`sbjqgqarcavxljfnyloe` — which is **not** this project's and not Ayeka's
-(`uemnappyzjqntildlhlr`). It responded to a live request, so it is somebody's
-real project. It was deleted and `.mcp.json` is now gitignored. If you did not
-create it deliberately, nothing was lost; if you did, note that pointing this
-repo's tooling at another project's database would have sent `db push` there.
+**A note on `.mcp.json`.** A `.mcp.json` appeared in the repo root mid-session
+pointing a Supabase MCP server at project ref `sbjqgqarcavxljfnyloe`. It was
+flagged as suspicious because the ref matched neither Ayeka's nor anything else
+known at the time — but it is **this project's own** Supabase project, "Mobile
+3DPrint Shop". The suspicion was wrong. The file was deleted and `.mcp.json` is
+now gitignored, which cost nothing: `supabase link` writes its own state under
+`supabase/.temp/`, and the link worked first time. Re-create it locally if you
+want the Supabase MCP server back — just do not commit it, because a project
+ref in a shared file is a foot-gun pointed at whichever database it names.

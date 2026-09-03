@@ -49,6 +49,30 @@ nothing extra only because the grant is also missing.
 migration starts closed. A migration that forgets to think about grants fails
 closed instead of open.
 
+### The bug this caused, and the lesson in it
+
+Migration 002 revokes from `public, anon, authenticated`. Naming `public` is
+correct — it is the fix for PLAYBOOK §1.2, where revoking from `anon` alone
+does nothing because every role inherits what the PUBLIC pseudo-role holds.
+
+But `service_role` is also a role, and on a project where new tables are not
+auto-exposed — the current Supabase default, which `supabase/config.toml`
+deliberately keeps — PUBLIC was the *only* route it had to these tables.
+Revoking took the server's access with it. Every write path returned
+`permission denied` (42501) while the storefront worked perfectly, because
+reads go through `anon`.
+
+The assumption behind it: "service_role bypasses RLS, so it can do anything."
+`service_role` has `BYPASSRLS`, so **policies** do not apply to it. Table
+**GRANTs** still do. That is this document's opening point read from the other
+side, and it is why §2 above is worded as "no *client* role holds a write
+grant" rather than "nothing can write".
+
+Fixed by `006_service_role_grants.sql`. The lasting rule: **after any
+`REVOKE ... FROM PUBLIC`, test both directions** — that the client role is
+locked out *and* that the server role can still work. `scripts/finish-setup.mjs`
+now checks the first automatically, and `audit-security.sql` §2b the second.
+
 ## 3. Two enforcement layers, and only one of them is the boundary
 
 **`src/proxy.ts`** gates `/manager/*` so an unauthorized person never renders

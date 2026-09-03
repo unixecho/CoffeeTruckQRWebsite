@@ -7,6 +7,16 @@ import { StoreView } from "@/components/shop/StoreView";
 import { ClosedNotice } from "@/components/shop/ClosedNotice";
 import { readCatalogue } from "@/lib/catalog";
 
+/* Rendered per request, never prerendered.
+
+   The owner adds a keychain at the truck and shows it to the customer standing
+   in front of them; a cached page would show yesterday's catalogue. Traffic
+   here is a handful of QR-code scans, so there is nothing to gain by caching
+   and a real thing to lose. If that ever changes, the move is ISR with
+   on-demand revalidation from the manager's write routes — not a blanket
+   `revalidate`, which would reintroduce the same staleness with a timer. */
+export const dynamic = "force-dynamic";
+
 export default async function ShopPage() {
   const catalogue = await readCatalogue();
 

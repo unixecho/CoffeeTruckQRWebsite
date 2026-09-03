@@ -137,7 +137,8 @@ export function DealsView({ categories, subclasses, products, rules, live }: Pro
                         {rule.minQty} · {formatAgorot(rule.priceAgorot)}
                       </span>
                       {"  "}
-                      <span className="ltr-nums tabular">
+                      {/* "₪8 ליחידה" — translated, so not forced LTR. */}
+                      <span className="tabular">
                         ({t.manager.deals.perUnit(formatAgorot(perUnit))})
                       </span>
                     </>

@@ -1,8 +1,8 @@
 {
-  "name": "coffee-truck-shop",
+  "name": "mobile-3dprint-shop",
   "version": "1.0.0",
   "private": true,
-  "description": "Storefront and catalogue manager for the coffee-truck 3D-print stand",
+  "description": "Mobile 3D Print Shop — storefront and catalogue manager for the coffee-truck stand",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,7 +12,8 @@
     "test": "node --test --experimental-strip-types src/lib/**/*.test.ts",
     "seed": "node --experimental-strip-types scripts/seed.ts",
     "db:push": "supabase db push",
-    "check": "npm run lint && npm run typecheck && npm run test"
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "security": "node scripts/security-sweep.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

@@ -1,6 +1,7 @@
 import "server-only";
 
-import { createClient, isSupabaseConfigured } from "./supabase/server";
+import { isSupabaseConfigured } from "./supabase/server";
+import { createPublicClient } from "./supabase/public";
 import SEED from "@/data/seed.json";
 import type {
   Category,
@@ -266,7 +267,7 @@ export async function readCatalogue(): Promise<Catalogue> {
   if (!isSupabaseConfigured()) return seedCatalogue();
 
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
 
     const [categories, subclasses, products, rules, settings] = await Promise.all([
       supabase.from("categories").select("*").order("sort_order"),
@@ -295,6 +296,13 @@ export async function readCatalogue(): Promise<Catalogue> {
       live: true,
     };
   } catch (error) {
+    /* Next signals "this route cannot be static" by throwing. That is control
+       flow, not a failure, and swallowing it silently bakes stale data into a
+       prerendered page — which is exactly how the seed snapshot shipped as the
+       live storefront once. Anything carrying a `digest` belongs to the
+       framework; let it through. */
+    if (error && typeof error === "object" && "digest" in error) throw error;
+
     console.error("[catalogue] read threw, falling back to seed:", error);
     return seedCatalogue();
   }
@@ -343,6 +351,7 @@ export async function readCatalogueAsOwner(): Promise<Catalogue> {
       live: true,
     };
   } catch (error) {
+    if (error && typeof error === "object" && "digest" in error) throw error;
     console.error("[catalogue] owner read threw:", error);
     return seedCatalogue();
   }

@@ -357,6 +357,21 @@ body {
   problem, it is a different and wrong claim. Any expression combining digits
   with a separator gets wrapped in this. Placement still mirrors correctly
   because the containing row keeps `text-align: start`.
+
+  ⚠ ONLY for strings with no letters in them.
+
+  This sets `direction: ltr`, which applies to everything inside it — words
+  included. Wrap a translated string and the words are forced into LTR order
+  too. "5 ב־₪35" (5 for ₪35) then renders with the "5" on the left and reads
+  backwards in Hebrew, which is exactly the bug this class exists to prevent,
+  reintroduced from the other side.
+
+  Right:  ₪35 · 3 · ₪25 · 1 · ₪10 / 3 · ₪25 · ×4
+  Wrong:  5 ב־₪35 · נשארו 3 · ₪10 · ליחידה
+
+  For a mixed string, leave it alone — bidi already renders "₪35" as its own
+  LTR run inside an RTL line. If one number in it genuinely needs protecting,
+  wrap just that number, not the sentence around it.
 */
 .ltr-nums {
   direction: ltr;

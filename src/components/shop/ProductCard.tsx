@@ -105,11 +105,10 @@ export function ProductCard({
           <span className="text-body tabular ltr-nums font-semibold">
             {formatAgorot(product.priceAgorot)}
           </span>
+          {/* No `.ltr-nums`: this is translated text around a number, not a
+              bare number. See the note in StoreView. */}
           {bundle && (
-            <span
-              className="text-caption-1 ltr-nums tabular"
-              style={{ color: "var(--ios-orange)" }}
-            >
+            <span className="text-caption-1 tabular" style={{ color: "var(--ios-orange)" }}>
               {t.shop.bundleHint(bundle.qty, formatAgorot(bundle.priceAgorot))}
             </span>
           )}

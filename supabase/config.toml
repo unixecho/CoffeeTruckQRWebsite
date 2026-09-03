@@ -8,7 +8,7 @@
 #
 # Full reference: https://supabase.com/docs/guides/local-development/cli/config
 
-project_id = "coffee-truck-shop"
+project_id = "mobile-3dprint-shop"
 
 [api]
 enabled = true

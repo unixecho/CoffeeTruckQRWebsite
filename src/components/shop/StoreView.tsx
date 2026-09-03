@@ -194,9 +194,16 @@ export function StoreView({ categories, subclasses, products, rules }: Props) {
                         {group.title && (
                           <h3 className="text-subheadline font-semibold">{group.title}</h3>
                         )}
+                        {/* No `.ltr-nums` here. The deal reads "5 ב־₪35" — a
+                            translated word between two numbers — and forcing
+                            LTR drags the Hebrew along with the digits, so it
+                            comes out reading backwards. Left alone, the bidi
+                            algorithm renders "₪35" as its own LTR run inside
+                            the RTL line, which is what is wanted. `.ltr-nums`
+                            is only ever for strings with no letters in them. */}
                         {deal && (
                           <span
-                            className="text-footnote ltr-nums tabular font-medium"
+                            className="text-footnote tabular font-medium"
                             style={{ color: "var(--ios-orange)" }}
                           >
                             {deal}

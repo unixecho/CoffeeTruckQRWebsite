@@ -163,11 +163,14 @@ export function CartSheet() {
 
                   <span className="flex min-w-0 flex-1 flex-col">
                     <span className="text-subheadline truncate font-medium">{name}</span>
+                    {/* Only the price is isolated; "ליחידה" beside it must
+                        keep the line's own direction. */}
                     <span
-                      className="text-footnote tabular ltr-nums"
+                      className="text-footnote tabular"
                       style={{ color: "var(--label-secondary)" }}
                     >
-                      {formatAgorot(product.priceAgorot)} · {t.shop.each}
+                      <span className="ltr-nums">{formatAgorot(product.priceAgorot)}</span> ·{" "}
+                      {t.shop.each}
                     </span>
                   </span>
 

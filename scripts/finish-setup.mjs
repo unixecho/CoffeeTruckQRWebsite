@@ -253,6 +253,34 @@ try {
   warn("could not reach the REST endpoint");
 }
 
+/* The other direction, and the one that was missing the first time this ran.
+   Revoking from PUBLIC in migration 002 also stripped `service_role`, because
+   PUBLIC was the only route it had to these tables — so the storefront worked
+   perfectly while every write was dead. Migration 006 fixes it; this makes
+   sure it stays fixed. PLAYBOOK.md §1.7. */
+try {
+  const response = await fetch(`${url}/rest/v1/products?select=id&limit=1`, {
+    headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
+  });
+  if (response.ok) {
+    ok("the server role can reach the tables — writes will work");
+  } else {
+    const body = await response.json().catch(() => ({}));
+    console.error(
+      [
+        "",
+        `✖ The service role cannot read the catalogue (${response.status}).`,
+        `  ${body.message ?? ""}`,
+        "  Every write path is dead, even though the public site works.",
+        "  Check migration 006 applied. PLAYBOOK.md §1.7.",
+      ].join("\n")
+    );
+    process.exit(1);
+  }
+} catch {
+  warn("could not test the server role's access");
+}
+
 /* An anonymous WRITE must fail. This is the check worth having: it is the one
    that catches a grant nobody meant to give. PLAYBOOK.md #1.2 was found
    exactly this way — by re-testing live rather than trusting the migration. */

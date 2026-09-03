@@ -142,8 +142,10 @@ export function ProductSheet({
           </p>
         )}
 
+        {/* "נשארו 3" is a word and a number, so it keeps the line's own
+            direction — forcing LTR would put the count before the word. */}
         {product.stock !== null && product.stock > 0 && (
-          <p className="text-footnote ltr-nums" style={{ color: "var(--ios-orange)" }}>
+          <p className="text-footnote tabular" style={{ color: "var(--ios-orange)" }}>
             {t.shop.onlyLeft(product.stock)}
           </p>
         )}

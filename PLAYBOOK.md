@@ -79,6 +79,10 @@ first four rows.
 - [ ] Auth providers actually enabled at the platform level match what the
       app's UI claims — check via the public, unauthenticated
       `GET /auth/v1/settings` endpoint, not the app's own login screen.
+- [ ] After every `REVOKE ... FROM PUBLIC`, the **server** role was re-tested
+      as well as the client roles — revoking from `PUBLIC` also strips
+      `service_role`, and the public site keeps working while every write is
+      dead. §1.7.
 
 ### §1.1 SECURITY DEFINER + auto-updatable view + blanket grant — CRITICAL
 
@@ -172,6 +176,61 @@ something forces the question:
   confirm them. Nullable FKs with no cascade (e.g. a fraud/security log
   referencing the user) should be nulled, not left to error the delete out
   — this anonymizes the security record instead of destroying it.
+
+### §1.7 Revoking from PUBLIC also strips service_role — HIGH
+
+> Found 2026-09-03 in the coffee-truck rebuild. **This section originated
+> here, not in Ayeka Bar — copy it back to the source project.**
+
+The exact inverse of §1.2, and it bites the moment you get §1.2 right.
+
+§1.2 says every lockdown revoke must name `PUBLIC` explicitly, because every
+role inherits what `PUBLIC` holds. True. But `service_role` is also a role,
+and it also inherits from `PUBLIC`. On a project where new tables are **not**
+auto-exposed — the current Supabase cloud default — `PUBLIC` can be the only
+route `service_role` has to a table you just created. Revoking it takes the
+server's access with it.
+
+**The assumption that causes it:** "service_role bypasses RLS, so it can do
+anything." Half true, and the dangerous half. `service_role` has `BYPASSRLS`,
+so **policies** do not apply to it. Table **GRANTs** still do. Grants and RLS
+are two independent layers — the same point §1 opens with, read from the other
+side.
+
+**Why it is easy to miss:** the public site keeps working perfectly. Reads go
+through `anon`, which the same migration granted correctly. Only writes break,
+and only on the server, so nothing fails until the first admin action — which
+in the found case was a seed script, run after the migration was already
+declared successful.
+
+**Symptom:** `permission denied for table <anything>`, SQLSTATE `42501`, from
+a client using the service key. PostgREST even hands you the fix in `hint`:
+`Grant the required privileges to the current role with: GRANT INSERT ON
+public.x TO service_role;`
+
+**Detect** — the audit in §1.6 asks about `anon` and `authenticated` and will
+show nothing wrong. Ask about the server role too:
+
+```sql
+select t.table_name,
+       has_table_privilege('service_role', 'public.'||t.table_name, 'SELECT') as svc_select,
+       has_table_privilege('service_role', 'public.'||t.table_name, 'INSERT') as svc_insert,
+       has_table_privilege('service_role', 'public.'||t.table_name, 'UPDATE') as svc_update
+from information_schema.tables t
+where t.table_schema = 'public'
+order by svc_insert, t.table_name;
+-- any `false` on a table the backend writes to is the bug.
+```
+
+**Fix:** grant `service_role` back explicitly, table by table rather than
+`ALL TABLES IN SCHEMA`, so a future table does not inherit server-side write
+access without somebody deciding it should. Add the matching
+`ALTER DEFAULT PRIVILEGES ... GRANT ALL ON TABLES TO service_role` so the next
+migration does not reproduce it.
+
+**The general rule:** after any `REVOKE ... FROM PUBLIC`, re-test **both**
+directions — that the client role is locked out *and* that the server role can
+still work. Testing only the first is how this ships.
 
 ### §1.5 Day-one conventions
 
