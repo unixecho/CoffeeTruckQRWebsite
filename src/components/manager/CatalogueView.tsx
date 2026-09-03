@@ -11,7 +11,7 @@ import { EmptyState, useToast } from "@/components/ios/Feedback";
 import { ICON_SIZE, IconTile } from "@/components/ios/Icon";
 import { resolveIcon, resolveTint } from "@/lib/categoryIcons";
 import { formatAgorot } from "@/lib/money";
-import { ladderFor } from "@/lib/pricing";
+import { groupLadder } from "@/lib/pricing";
 import { localize, type Category, type PricingRule, type Product, type Subclass } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
 import { imageUrl } from "@/lib/images";
@@ -192,7 +192,7 @@ export function CatalogueView({ categories, subclasses, products, rules, live }:
                 <div className="stagger">
                   {own.map((subclass, subIndex) => {
                     const inSubclass = inCategory.filter((p) => p.subclassId === subclass.id);
-                    const deal = dealCaption(inSubclass[0], rules, t);
+                    const deal = dealCaption(subclass.id, inSubclass, rules, t);
 
                     return (
                       <div key={subclass.id}>
@@ -499,27 +499,21 @@ function swap(ids: string[], from: number, to: number): string[] {
 }
 
 /**
- * "3 for ₪25" for a subclass, derived from whatever product is in it.
+ * "3 for ₪25" for a subclass.
  *
- * Read from the pricing engine rather than from the rule rows directly, so the
- * caption can never claim a deal the engine would not actually apply.
+ * Only rules scoped to the subclass itself count. Deriving this from a sample
+ * product would pick up that product's own private deal and label the whole
+ * subclass with it — the owner would then be looking at a caption that does
+ * not match what the till charges.
  */
 function dealCaption(
-  sample: Product | undefined,
+  subclassId: string,
+  items: Product[],
   rules: PricingRule[],
   t: ReturnType<typeof useI18n>["t"]
 ): string | undefined {
-  if (!sample) return undefined;
-
-  const ladder = ladderFor(
-    {
-      id: sample.id,
-      categoryId: sample.categoryId,
-      subclassId: sample.subclassId,
-      priceAgorot: sample.priceAgorot,
-    },
-    rules
-  );
+  const cheapest = items.length > 0 ? Math.min(...items.map((p) => p.priceAgorot)) : 0;
+  const ladder = groupLadder("subclass", subclassId, cheapest, rules);
 
   const best = ladder.at(-1);
   if (!best || best.qty < 2) return undefined;

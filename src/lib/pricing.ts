@@ -333,6 +333,47 @@ export function ladderFor(
     .map(([qty, priceAgorot]) => ({ qty, priceAgorot }));
 }
 
+/**
+ * The ladder for a *group* — a subclass or a category — rather than an item.
+ *
+ * Distinct from `ladderFor` on purpose, and the distinction is not cosmetic.
+ * `ladderFor` answers "what can this one product be had for", which correctly
+ * includes a rule scoped to that product alone. A heading above a grid of
+ * products is answering a different question: "what deal do all of these
+ * share". Using `ladderFor` on a sample product to answer it advertises one
+ * item's private deal as though it covered the whole group — a wrong claim to
+ * a customer, and exactly the sort that is only noticed at the till.
+ *
+ * So this considers only rules at the given scope, and returns nothing when
+ * there are none. `basePriceAgorot` is used solely to seed the "1 for X" rung
+ * and should be the cheapest item in the group.
+ */
+export function groupLadder(
+  scope: Exclude<PricingScope, "product">,
+  scopeId: string,
+  basePriceAgorot: Agorot,
+  rules: PricingRule[],
+  now: Date = new Date()
+): { qty: number; priceAgorot: Agorot }[] {
+  const applicable = rules.filter(
+    (rule) => rule.scope === scope && rule.scopeId === scopeId && isRuleLive(rule, now)
+  );
+  if (applicable.length === 0) return [];
+
+  const byQty = new Map<number, Agorot>();
+  byQty.set(1, basePriceAgorot);
+  for (const rule of applicable) {
+    const current = byQty.get(rule.minQty);
+    if (current === undefined || rule.priceAgorot < current) {
+      byQty.set(rule.minQty, rule.priceAgorot);
+    }
+  }
+
+  return [...byQty]
+    .sort(([a], [b]) => a - b)
+    .map(([qty, priceAgorot]) => ({ qty, priceAgorot }));
+}
+
 /** Narrows a full Product to what the solver needs. */
 export function toPriced(product: Product): PricedProduct {
   return {

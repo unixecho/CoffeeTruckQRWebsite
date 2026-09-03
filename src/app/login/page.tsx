@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { KeyRound } from "lucide-react";
 import { SignInButton } from "@/components/SignInButton";
 import { AuthShell } from "@/components/AuthShell";
 import { safeNext } from "@/lib/redirect";
@@ -25,7 +24,7 @@ export default async function LoginPage({
   const { next } = await searchParams;
 
   return (
-    <AuthShell icon={KeyRound} titleKey="signIn" bodyKey="signInBlurb">
+    <AuthShell variant="signin">
       <SignInButton next={safeNext(next)} />
     </AuthShell>
   );

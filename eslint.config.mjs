@@ -1,18 +1,36 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 
-const compat = new FlatCompat({ baseDirectory: dirname(fileURLToPath(import.meta.url)) });
-
+/**
+ * Flat config, using the configs `eslint-config-next` 16 exports directly.
+ *
+ * Not `FlatCompat`: that path re-validates the config through the legacy
+ * eslintrc schema, which cannot serialise the plugin graph these ship and
+ * fails with a circular-structure error before a single file is linted.
+ */
 const config = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-  { ignores: ["legacy/**", ".next/**", "node_modules/**", "graphify-out/**"] },
+  ...nextCoreWebVitals,
+  ...nextTypescript,
+  {
+    ignores: [
+      "legacy/**",
+      ".next/**",
+      "node_modules/**",
+      "graphify-out/**",
+      "scripts/**",
+      "next-env.d.ts",
+    ],
+  },
   {
     rules: {
       /* Derive state during render; `useEffect` is for real external systems
-         only. Ported from the 3D Prints house rules. */
+         only. A missing dependency here is almost always a state sync that
+         should not have been an effect at all. */
       "react-hooks/exhaustive-deps": "error",
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
     },
   },
 ];

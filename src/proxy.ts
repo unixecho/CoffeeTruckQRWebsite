@@ -4,6 +4,10 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 /* ==========================================================================
    The manager gate
 
+   Next 16 renamed this file convention from `middleware` to `proxy`; the
+   export name has to match the filename or it silently stops running, which
+   for this file means the manager stops being gated.
+
    Two jobs, in this order:
 
    1. Refresh the Supabase session on every request, so a signed-in owner
@@ -13,7 +17,7 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
    Step 2 is a *convenience* boundary, not the security boundary. It stops a
    stranger seeing the catalogue editor; it does not stop anyone calling the
    API. That is why every write route calls `requireOwner()` again — see
-   `lib/auth.ts`. Middleware runs on navigation, and curl does not navigate.
+   `lib/auth.ts`. This runs on navigation, and curl does not navigate.
 
    Deliberately absent: any rule touching the storefront. The shop is public,
    it should be cacheable, and running an auth round trip on every product
@@ -22,7 +26,7 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 
 const MANAGER_PREFIX = "/manager";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

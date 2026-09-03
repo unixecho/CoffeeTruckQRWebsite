@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ShieldX } from "lucide-react";
 import { AuthShell } from "@/components/AuthShell";
 import { SignOutButton } from "@/components/SignInButton";
 import { BackToShopLink } from "@/components/BackToShopLink";
@@ -24,12 +23,7 @@ export const metadata: Metadata = {
  */
 export default function NoAccessPage() {
   return (
-    <AuthShell
-      icon={ShieldX}
-      titleKey="noAccessTitle"
-      bodyKey="noAccessMessage"
-      footer={<BackToShopLink />}
-    >
+    <AuthShell variant="noAccess" footer={<BackToShopLink />}>
       <SignOutButton />
     </AuthShell>
   );

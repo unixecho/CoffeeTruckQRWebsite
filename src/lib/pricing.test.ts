@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert";
 import { test } from "node:test";
-import { ladderFor, priceCart, type PricedProduct } from "./pricing.ts";
+import { groupLadder, ladderFor, priceCart, type PricedProduct } from "./pricing.ts";
 import type { PricingRule, PricingScope } from "./types.ts";
 
 /* ==========================================================================
@@ -426,4 +426,76 @@ test("ladderFor keeps the cheaper of two rules for the same quantity", () => {
     { qty: 1, priceAgorot: 1000 },
     { qty: 3, priceAgorot: 2200 },
   ]);
+});
+
+/* --------------------------------------------------------------------------
+   Group ladders
+
+   The bug these pin: a heading above a grid of products was derived from
+   `ladderFor` on a sample product, which correctly includes that product's OWN
+   deal — so "2 for 50" on a single dragon was rendered as the whole Figures
+   category's offer. A customer would have taken any two figures to the counter
+   expecting 50.
+   -------------------------------------------------------------------------- */
+
+test("groupLadder ignores a product-scope rule inside the group", () => {
+  const rules = [rule("dragon", "product", "dragon", 2, 5000)];
+  assert.deepEqual(groupLadder("subclass", SUBCLASS_SMALL, 1000, rules), []);
+  assert.deepEqual(groupLadder("category", CATEGORY, 1000, rules), []);
+});
+
+test("groupLadder returns the group's own rungs, seeded with the base price", () => {
+  assert.deepEqual(groupLadder("subclass", SUBCLASS_SMALL, 1000, KEYCHAIN_LADDER), [
+    { qty: 1, priceAgorot: 1000 },
+    { qty: 3, priceAgorot: 2500 },
+    { qty: 5, priceAgorot: 3500 },
+  ]);
+});
+
+test("groupLadder does not leak another group's deal", () => {
+  const rules = [rule("other", "subclass", SUBCLASS_BIG, 3, 2500)];
+  assert.deepEqual(groupLadder("subclass", SUBCLASS_SMALL, 1000, rules), []);
+});
+
+test("groupLadder respects the active flag and the date window", () => {
+  const parked = rule("p", "subclass", SUBCLASS_SMALL, 3, 2500, { active: false });
+  assert.deepEqual(groupLadder("subclass", SUBCLASS_SMALL, 1000, [parked]), []);
+
+  const seasonal = rule("s", "subclass", SUBCLASS_SMALL, 3, 2500, {
+    startsAt: "2026-09-01T00:00:00Z",
+    endsAt: "2026-09-30T23:59:59Z",
+  });
+  assert.deepEqual(
+    groupLadder("subclass", SUBCLASS_SMALL, 1000, [seasonal], new Date("2026-08-01T00:00:00Z")),
+    []
+  );
+  assert.equal(
+    groupLadder("subclass", SUBCLASS_SMALL, 1000, [seasonal], new Date("2026-09-15T00:00:00Z"))
+      .length,
+    2
+  );
+});
+
+test("a heading built from groupLadder agrees with what priceCart charges", () => {
+  // The invariant the bug broke: if the shop advertises "N for X" on a group,
+  // then buying N different items from that group must actually cost X.
+  const stock = catalogue(
+    product("a", 1000, SUBCLASS_SMALL),
+    product("b", 1500, SUBCLASS_SMALL),
+    product("c", 1200, SUBCLASS_SMALL)
+  );
+  const ladder = groupLadder("subclass", SUBCLASS_SMALL, 1000, KEYCHAIN_LADDER);
+  const rung = ladder.find((entry) => entry.qty === 3);
+  assert.ok(rung, "the 3-rung is advertised");
+
+  const charged = priceCart(
+    [
+      { productId: "a", quantity: 1 },
+      { productId: "b", quantity: 1 },
+      { productId: "c", quantity: 1 },
+    ],
+    stock,
+    KEYCHAIN_LADDER
+  );
+  assert.equal(charged.totalAgorot, rung.priceAgorot);
 });
