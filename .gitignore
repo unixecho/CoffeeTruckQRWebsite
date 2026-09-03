@@ -26,3 +26,8 @@ __pycache__/
 # be auto-generated: a wrong project_ref here points tooling at somebody
 # else's database. See HANDOFF.md, 2026-09-03.
 .mcp.json
+
+# A local reconstitution of the original site's images and fonts, so
+# legacy/index.html renders without committing 12 MB the repo already tracks
+# once under public/. See legacy/README.md.
+legacy/assets/
