@@ -11,27 +11,33 @@ it refers to is already committed on `rebuild/next-supabase`.
 > first — the whole app is built, tested and pushed to the branch
 > `rebuild/next-supabase`, and what is left is provisioning plus a merge.
 >
-> I have already run, or am about to run, `npx supabase login`. Walk me through
-> `docs/SETUP.md` one step at a time, doing every part you can do yourself and
-> stopping to tell me exactly what to click for the parts that need a browser.
+> I have already run these two myself, because neither can be done from a
+> non-interactive shell:
 >
-> Order:
+> ```
+> npx supabase login
+> npx supabase link --project-ref <ref>
+> ```
 >
-> 1. Create and link the Supabase project, then `db push` the five migrations.
->    Before pushing, confirm `bootstrap_owner_email()` in migration 003 is the
->    Google address I will actually sign in with.
-> 2. Google OAuth client + enabling Google in the Supabase dashboard. Give me
->    the exact redirect URI to paste.
-> 3. Env vars in `.env.local`, then verify locally that `/manager` shows the
->    real catalogue instead of the read-only banner.
-> 4. `node scripts/seed-supabase.mjs` — run `--dry-run` first and show me what
->    it would do.
-> 5. Run `scripts/audit-security.sql` in the Supabase SQL editor and check the
->    results against what its header says a bad row looks like. Then hit a
->    write endpoint with curl and no session and confirm it answers 401.
-> 6. Env vars in Vercel, redeploy, and check the preview.
-> 7. **Only once the deployed site is confirmed working**, fast-forward `main`
+> Take it from there:
+>
+> 1. Run `node scripts/finish-setup.mjs`. It pushes the migrations, writes
+>    `.env.local` from the project's API keys, loads the catalogue and verifies
+>    the result. Read its output back to me and stop if anything is off —
+>    especially the anonymous-write check.
+> 2. Walk me through the Google OAuth client and enabling Google in the
+>    Supabase dashboard. Give me the exact redirect URI to paste.
+> 3. Start the dev server and confirm `/manager` shows the real catalogue
+>    rather than the read-only banner, and that sign-in works.
+> 4. Run `scripts/audit-security.sql` in the Supabase SQL editor and check the
+>    results against what its header says a bad row looks like.
+> 5. Tell me the four variables to put into Vercel, then redeploy and check the
+>    preview.
+> 6. **Only once the deployed site is confirmed working**, fast-forward `main`
 >    and push. Do not do this earlier — see the GitHub Pages note below.
+>
+> Before step 1, confirm `bootstrap_owner_email()` in migration 003 is the
+> Google address I will actually sign in with.
 >
 > Then: I have keychains with me. Help me add them through the manager on my
 > phone, and set up the clicker / small / big subclasses with the right bundle

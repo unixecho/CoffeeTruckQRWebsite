@@ -5,8 +5,22 @@ Supabase project to finish creating.
 
 **Four of these steps need a browser and cannot be automated:** signing in to
 Supabase, creating the Google OAuth client, enabling Google in the Supabase
-dashboard, and setting the environment variables in Vercel. Everything else is
-a command you can paste.
+dashboard, and setting the environment variables in Vercel.
+
+Everything in between is done by one script. The short version, if you would
+rather not read the rest:
+
+```bash
+npx supabase login                        # browser
+npx supabase link --project-ref YOUR_REF  # prompts for the DB password
+node scripts/finish-setup.mjs             # migrations, keys, catalogue, checks
+```
+
+`finish-setup.mjs` pushes the migrations, reads the project's API keys and
+writes `.env.local` itself, loads the catalogue, and then verifies the result —
+including that an anonymous write is *refused*, which is the check that catches
+a grant nobody meant to give. It never prints a key, and it is safe to re-run.
+The long form below explains each step if something goes wrong.
 
 Until this is done the site still works — the storefront falls back to
 `src/data/seed.json` and the manager shows a "read-only" banner and refuses to
@@ -49,23 +63,20 @@ Copy the **project ref** from the dashboard URL — the part after
 npx supabase link --project-ref YOUR_PROJECT_REF
 ```
 
-### 1.4 Push the schema
+### 1.4 Push the schema, write the env, load the catalogue
 
 ```bash
-npx supabase db push
+node scripts/finish-setup.mjs
 ```
 
-This applies `supabase/migrations/001` through `005`: the catalogue tables, the
+Applies `supabase/migrations/001` through `005` — the catalogue tables, the
 grants and row-level security, the owners table, the photo bucket, and rate
-limiting plus the audit log.
+limiting plus the audit log — then does §3 and §4 below for you.
 
-Check it did what it should:
+Run `node scripts/finish-setup.mjs --dry-run` first if you want to see what it
+would touch without changing anything.
 
-```bash
-npx supabase db push --dry-run
-```
-
-should now report nothing left to apply.
+Doing it by hand instead is `npx supabase db push`, then §3 and §4 manually.
 
 ---
 
@@ -117,7 +128,8 @@ tells you what is *actually* enabled rather than what a login screen claims.
 
 ## 3. Environment variables
 
-Copy `.env.example` to `.env.local` and fill it in. Dashboard →
+**`finish-setup.mjs` already wrote `.env.local` for you.** This section is what
+it did, so you can check or redo it by hand. Dashboard →
 **Project Settings → API**:
 
 | Variable | Where it comes from | Secret? |
@@ -144,6 +156,8 @@ you should be sent to a Google sign-in.
 ---
 
 ## 4. Load the catalogue
+
+**`finish-setup.mjs` already did this.** To run it alone:
 
 ```bash
 node scripts/seed-supabase.mjs
