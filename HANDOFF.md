@@ -1,109 +1,112 @@
 # Session Handoff
 
-Running log of work on this project. At the **end of each session**, Claude:
+Running log. At the end of each session: tick off what landed, add a dated
+entry, and flag anything still open or needing the owner.
 
-1. Checks off completed items in **Backlog / open items**.
-2. Adds a dated entry to the **Session log** with a short summary.
-3. Flags anything still open or needing the owner (e.g. real links, decisions).
-
-> Tip: start a session by skimming the top entry of the Session log and the open
-> items below.
+Start a session by reading the top entry below and the open items.
 
 ---
 
-## Backlog / open items
+## Open items
 
-Unchecked = not done yet. Owner actions are marked **(owner)**.
+**(owner)** marks something only you can do — it needs a browser login and
+cannot be automated from here.
 
-- [ ] **(owner)** Replace the placeholder `BIT_PAYMENT_LINK` in `app.js` with the
-      real Bit payment page once available (currently a sample link).
-- [ ] **(owner)** Confirm the WhatsApp number (`+972 54-910-9603`) and the
-      prefilled messages read the way you want.
-- [ ] Enable real "Online Ordering" (button exists on the landing page but is
-      intentionally disabled / "coming soon").
-- [ ] Consider persisting the cart to `localStorage` so it survives a refresh.
-- [ ] Add real product photography where placeholders/emoji are still used.
-- [ ] **Make `products.json` the single source of truth for categories.** Today
-      the manager (`manager.html`) reads category *keys* from the `categories`
-      block in `app.js`, and a brand-new category created in the manager has no
-      translated label on the site until its key is added to `app.js` (he/en/ar).
-      Idea: let the JSON itself carry category definitions (key + localized
-      labels), have `app.js` build its category list from the JSON instead of the
-      hardcoded `i18n.categories` blocks, and have the manager edit those
-      definitions. Then adding a category in the manager would "just work" on the
-      site with no `app.js` edit. Deferred — needs an `app.js` refactor.
+### Before this is live
+
+- [ ] **(owner)** Provision Supabase and connect it. Full checklist in
+      [`docs/SETUP.md`](docs/SETUP.md). Roughly: `npx supabase login`, create the
+      project, `supabase link`, `supabase db push`, then copy three keys into
+      `.env.local` and into the Vercel project.
+- [ ] **(owner)** Create the Google OAuth client and enable Google in the
+      Supabase Auth dashboard. Without it there is no way into the manager.
+      `docs/SETUP.md` §2 has the exact redirect URI.
+- [ ] **(owner)** Set the real **Bit payment link** in the manager's Settings
+      screen. It ships empty, and the storefront deliberately hides the pay
+      button rather than showing a dead one.
+- [ ] Run `node scripts/seed-supabase.mjs` once the database is up, to load the
+      11 existing products and their photos.
+
+### Known open
+
+- [ ] The Vercel project `mobile-3dprint-shop` reports `live: false` and
+      `framework: null` — it was set up for the old static site. `vercel.json`
+      now pins `framework: "nextjs"`, which overrides the dashboard setting at
+      build time, but if the first deploy behaves oddly check the project's
+      Framework Preset in the Vercel UI.
+- [ ] No custom domain. The shop is at `mobile-3dprint-shop.vercel.app`; the QR
+      code on the truck must point there, not at the old GitHub Pages URL.
+- [ ] GitHub Pages is still serving the old site from `main` until the first
+      Vercel production deploy replaces the QR target. Turn Pages off once the
+      new URL is confirmed working.
+- [ ] Accessibility statement (הצהרת נגישות) is **not** written yet.
+      `PLAYBOOK.md` §2.2 explains why it is required regardless of the revenue
+      threshold, and what it has to say.
 
 ---
 
 ## Session log
 
-### 2026-06-16 — Product manager tool (`manager.html`)
+### 2026-09-03 — Rebuilt as a Next.js + Supabase app
 
-- Added a standalone, dependency-free **product manager** (`manager.html`, opened
-  at `/manager.html` on the local server; marked `noindex`). It loads the live
-  `data/products.json`, lets the owner add / edit / duplicate / delete / reorder
-  items in a guided form, and writes out a clean `products.json`.
-- **Safe by construction:** the file is always re-serialized from validated,
-  normalized objects (never hand-patched), in the repo's exact field order with a
-  trailing newline — it can't be saved half-broken. Validation blocks duplicate
-  IDs, bad ID format, missing Hebrew name (primary language), invalid price,
-  missing image, and malformed bundle tiers. An unsaved-changes guard warns before
-  leaving. In Chrome/Edge it can Open→edit→Save straight to disk via the File
-  System Access API; elsewhere it downloads the file.
-- **Auto-discovery (no hardcoded lists):** category keys are read from the
-  `categories` block in `app.js` and merged with keys present in the catalog;
-  image paths are read from the `assets/` directory listing the dev server
-  exposes, merged with images already referenced. New categories can be created
-  inline in the editor (camelCase key). Graceful fallback to default keys +
-  catalog data if `app.js` / the listing can't be read.
-- Verified in-browser: load, validation, new-category create + save, schema/field
-  order, image + category discovery — no console errors.
-- **Open follow-up (see backlog):** a brand-new category still needs its localized
-  label added to `app.js` to display translated on the site. The agreed direction
-  is to eventually make `products.json` itself the source of truth for category
-  definitions so the manager update is all that's needed. Deferred.
-- Status: shipped to `main`.
+The static GitHub Pages site is gone. Everything below is new, on the branch
+`rebuild/next-supabase`. The old site is preserved intact under `legacy/`.
 
-### 2026-06-14 — Unified typography (Rubik)
+**Why the rebuild.** The catalogue was a JSON file edited by hand or through a
+one-off `manager.html`, product photos had to be committed to git, and bundle
+pricing only worked within a single product row — a customer taking three
+*different* keychains did not get the 3-for-₪25 deal. All three problems are
+structural, not bugs.
 
-- Replaced the `system-ui` stack (which rendered Hebrew, Latin, and Arabic in
-  different fonts and faux-bolded the non-standard weights) with **Rubik**,
-  self-hosted as variable woff2 subsets in `assets/fonts/`.
-- Added `@font-face` blocks with per-subset `unicode-range`, set the body font,
-  and preloaded the Hebrew + Latin subsets. Verified all three languages now
-  render in one consistent typeface.
-- Status: shipped to `main`.
+**The stack**, taken from the two reference projects as asked:
 
-### 2026-06-14 — Project docs + suggestions button
+| From | What |
+|---|---|
+| 3D Prints | The whole design language — Apple-HIG semantic tokens, the `components/ios/` library, dark-first, motion curves, the 44pt/contrast floor. Next 16 / React 19 / Tailwind 4. |
+| Ayeka Bar | The architecture — Supabase with RLS and default-deny grants, middleware auth with an owner allowlist, trilingual i18n, and `PLAYBOOK.md`, which is now in this repo too. |
 
-- Added `CLAUDE.md` (project overview, architecture, conventions, workflow).
-- Added this `HANDOFF.md` session-handoff log.
-- Added a **suggestions / requests** button on the landing page, beneath the
-  "straight to Bit" button, that opens WhatsApp with a prefilled message so
-  customers can send ideas and special requests. Localized in he/en/ar.
-- Status: shipped to `main`.
+**The catalogue is now three levels: category → subclass → product.** The middle
+level is the point of the rebuild. A deal attaches to a *scope*, and a subclass
+deal is filled by any mix of products inside it — "any three small keychains for
+₪25" now actually means that. Keychains ship with three subclasses ready to
+fill: clickers, small, big.
 
-### 2026-06-12 — UI polish + features
+**Pricing is solved exactly, not greedily.** The obvious "apply the biggest
+bundle, charge the rest at full price" overcharges: with 2-for-₪18 and 3-for-₪25
+over a ₪10 base, five items are cheapest as 3+2 = ₪43, but biggest-first gives
+₪45. `src/lib/pricing.ts` runs a small dynamic program instead, and
+`pricing.test.ts` pins it with 24 tests including a brute-force cross-check and
+an exhaustive sweep asserting it never charges above base price and never bills
+a bundle it did not fill.
 
-- **Motion polish:** animated cart drawer (slide-up) and overlay (fade) instead
-  of instant toggle; animated toast; hover/active/focus states on all buttons;
-  staggered product-card entrance; view transitions; hero phone float; respects
-  `prefers-reduced-motion`.
-- **Language switcher:** globe stays pinned top-left in every language; menu
-  expands horizontally beside it with separators and an active-language
-  highlight.
-- **Quick Bit button** on the landing page for customers who already know what
-  they want and want to pay directly.
-- **Product lightbox:** tapping a product card opens a detail view (large image,
-  description, price, add-to-cart) over a blurred backdrop; closes via ×,
-  backdrop tap, or Escape.
-- **WhatsApp contact widget:** permanent bottom-right floating button with a
-  prefilled (gender-neutral) inquiry message about 3D printing.
-- Status: all shipped to `main`.
+**Security, per `PLAYBOOK.md` §1.** No client role holds a write grant on any
+table — RLS scopes rows, not columns, so a table-level UPDATE on `products`
+would let a signed-in visitor rewrite a price under a perfectly correct row
+policy. Every write goes through an API route that re-checks ownership
+(middleware guards navigation; curl does not navigate). Every `SECURITY DEFINER`
+function is revoked from `PUBLIC` explicitly, which is the revoke people miss.
+Rate limiting is a Postgres table, not an in-memory counter that means nothing
+across serverless instances. Retention is scheduled on day one.
 
-### Pre-2026-06-12 — Baseline (prior work, from git history)
+**Deliberate carry-overs from the old site**
 
-- Flying-particle add-to-cart animation and cart highlight pulse.
-- Bit payment link wiring and cart animation refactor.
-- Products sorted by price ascending after fetch.
-- Product image paths fixed; assets renamed.
+- Rubik stays, self-hosted, covering all three scripts. The iOS type scale is
+  layered on top of it rather than the SF Pro/Inter stack the source system uses.
+- The cart now persists to `localStorage` — it was on the old backlog. Only
+  `{productId, quantity}` is stored, never a price, so an owner's edit is
+  reflected immediately instead of a stale total resurfacing.
+- The old backlog item "make the catalogue the source of truth for categories"
+  is resolved by construction: categories are database rows with their own
+  localized labels, so adding one in the manager needs no code change. That was
+  the deferred `app.js` refactor.
+
+**One data correction, made deliberately.** The old catalogue advertised
+"1 for ₪10 / 3 for ₪25 / **5 for ₪35**" in all three languages, but its
+`pricingTier` charged **₪40** for five. They had disagreed since the row was
+written. The seed takes the advertised ₪35 — undercharging by ₪5 beats charging
+someone more than the sign in front of them says. Change it in the manager if
+₪40 was the intent.
+
+**Not built, on purpose:** online ordering and payment capture. The shop still
+ends at "here is your total, pay with Bit at the counter", which is what the
+business actually does. Nothing here forecloses adding it later.
