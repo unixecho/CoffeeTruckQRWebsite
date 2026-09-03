@@ -24,10 +24,28 @@ served — is tagged:
 git show original-static-site --stat
 ```
 
-`original-static-site` points at `d33d86c`, the last commit before the rebuild,
-where `index.html`, `app.js`, `animations.js`, `style.css`, `data/` and
-`assets/` all sat at the repository root and the site ran by opening it. That
-tag is the copy to trust. Nothing can move it and nothing can overwrite it.
+`original-static-site` points at `c9120d9` — the tip of `main` as the old site
+last ran, with `index.html`, `app.js`, `animations.js`, `style.css`, `data/`
+and `assets/` all at the repository root. That tag is the copy to trust.
+Nothing can move it and nothing can overwrite it.
+
+**`legacy/` here is older than that**, which is worth knowing before trusting
+it. It was snapshotted at `d33d86c`, and `main` carried on for five more
+commits afterwards — a "small keychains" product split out from the clickers,
+two real photographs of the stand, a fix for an Arabic zain (ز) that had crept
+into seven Hebrew strings in place of a zayin (ז), and a tier quantity selector
+in the product modal. None of that is in this folder.
+
+Two of those are worth knowing about for the *new* site as well:
+
+- The zayin fix is already good — neither `src/data/seed.json` nor the live
+  Supabase catalogue contains an Arabic character inside a Hebrew field.
+- The two stand photographs are **not** in the new catalogue, and neither is
+  the small-keychains/clickers split. The new catalogue still carries them as
+  one product, `keychains-and-clickers`. Recovering the photos is
+  `git show original-static-site:assets/clickers.jpg > clickers.jpg` (and the
+  same for `small-keychains.jpg`); adding them to the shop is a job for the
+  manager's photo upload, which is what it is for.
 
 ### To look at it again
 
